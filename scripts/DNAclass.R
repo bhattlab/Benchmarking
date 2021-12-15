@@ -1,0 +1,246 @@
+library(ggplot2)
+library(tidyverse)
+library(paletteer)
+library(ggsignif)
+library(here)
+library(RColorBrewer)
+library(reshape2)
+library(metagenomeSeq)
+library(vegan)
+library(cowplot)
+
+##### EDITING METADATA ######
+#Split SampleID into donor, condition, replicate 
+metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+
+##### SPECIES-LEVEL RELATIVE ABUNDANCE #####
+# Read in species percentage bracken data
+species <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_species_percentage.txt"), sep="\t", header=TRUE)
+
+#Color palette
+n_taxa <- 30
+myCols <- colorRampPalette(brewer.pal(9, "Set1"))
+barplot_pal <- myCols(n_taxa)
+barplot_pal <- sample(barplot_pal)
+barplot_pal[n_taxa + 1] <- "gray"
+
+abundance_threshold <- sort(rowSums(species), decreasing = T)[n_taxa]
+bracken_plot <- species[rowSums(species) >= abundance_threshold,]
+bracken_plot <- rbind(bracken_plot, t(data.frame("Other" =  100 - colSums(bracken_plot))))
+
+bracken_plot$Species <- row.names(bracken_plot)
+bracken_plot$Species <- gsub("\\(miscellaneous\\)", "", bracken_plot$Species)
+bracken_long <- melt(bracken_plot, id.vars = "Species", variable.name = "Sample", value.name = "rel_abundance")
+bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
+
+# Merging the metadata with the bracken_long
+colnames(metadata)[3]<-"Sample"
+bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
+#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
+
+# set factor in correct plotting order
+bracken_pheno$Species <- factor(bracken_pheno$Species, levels = bracken_plot$Species)
+
+#Stacked bar plot for all samples
+plot_bracken <- function(counts, title){
+  g <- ggplot(counts, aes(x=Sample, y=rel_abundance, fill=Species)) +
+    geom_bar(stat="identity") +
+    labs(
+      title = title,
+      x = "",
+      y = "Relative Abundance (%)"
+    ) +
+    scale_fill_manual(values = barplot_pal) +
+    guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
+    #theme_cowplot(12) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(face = "plain", size = 14),
+      axis.text.x = element_text(size = 10, angle = 90, hjust = 1, vjust = 0.5),
+      legend.text = element_text(size = 10)
+    ) +
+    scale_y_continuous(limits = c(0, 100.1), expand = c(0, 0))
+  
+  return(g)
+}
+
+plot_bracken(bracken_pheno, "Species-Level Relative Abundance") + theme(legend.position = "none")
+ggsave(here("outputs/figures/OverallDNA_species_abundance.pdf"), dpi=300, w=20, h=4)
+
+##### GENUS-LEVEL RELATIVE ABUNDANCE #####
+# Read in genus percentage bracken data
+genus <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
+
+#Color palate
+n_taxa <- 20
+myCols <- colorRampPalette(brewer.pal(9, "Set1"))
+barplot_pal <- myCols(n_taxa)
+barplot_pal <- sample(barplot_pal)
+barplot_pal[n_taxa + 1] <- "gray"
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+
+abundance_threshold <- sort(rowSums(genus), decreasing = T)[n_taxa]
+bracken_plot <- genus[rowSums(genus) >= abundance_threshold,]
+bracken_plot <- rbind(bracken_plot, t(data.frame("Other" =  100 - colSums(bracken_plot))))
+
+bracken_plot$Genus <- row.names(bracken_plot)
+bracken_plot$Genus <- gsub("\\(miscellaneous\\)", "", bracken_plot$Genus)
+bracken_long <- melt(bracken_plot, id.vars = "Genus", variable.name = "Sample", value.name = "rel_abundance")
+bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
+
+# Merge in the metadata
+colnames(metadata)[3]<-"Sample"
+bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
+#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
+
+# Correct the plotting order
+bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
+
+# plot in order of decreasing relative abundance of desired taxon
+#bracken_pheno$label <- factor(bracken_pheno$label, levels = c("Donor1 F1", "Donor1 F2","Donor1 F3","Donor1 FO1","Donor1 FO2","Donor1 FO3", "Donor1 C1","Donor1 C2","Donor1 C3","Donor1 CL1","Donor1 CL2","Donor1 CL3", "Donor1 H1","Donor1 H2","Donor1 H3", "Donor2 F1","Donor2 F2","Donor2 F3", "Donor2 FO1", "Donor2 FO2","Donor2 FO3","Donor2 C1","Donor2 C2","Donor2 C3", "Donor2 H1", "Donor2 H2", "Donor2 H3"))
+
+plot_bracken <- function(counts, title){
+  g <- ggplot(counts, aes(x=Sample, y=rel_abundance, fill=Genus)) +
+    geom_bar(stat="identity") +
+    labs(
+      title = title,
+      x = "",
+      y = "Relative Abundance (%)"
+    ) +
+    scale_fill_manual(values = barplot_pal) +
+    guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
+    #theme_cowplot(12) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(face = "plain", size = 14),
+      axis.text.x = element_text(size = 10, angle = 90, hjust = 1, vjust = 0.5),
+      legend.text = element_text(size = 10)
+    ) +
+    scale_y_continuous(limits = c(0, 100.1), expand = c(0, 0))
+  
+  return(g)
+}
+
+plot_bracken(bracken_pheno, "Genus-Level Relative Abundance") #+ theme(legend.position = "none")
+
+ggsave(here("outputs/figures/OverallDNA_genus_abundance.pdf"), dpi=300, w=20, h=5)
+
+#####GENUS-LEVEL FACET BY DONOR######
+bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
+
+plot_bracken_facet <- function(counts, title){
+  g <- ggplot(counts %>% filter(Donor!="NCO" & Donor!="PCO"), aes(x=Sample, y=rel_abundance, fill=Genus)) +
+    geom_bar(stat="identity") +
+    labs(
+      title = title,
+      x = "",
+      y = "Relative Abundance (%)"
+    ) +
+    scale_fill_manual(values = barplot_pal) +
+    guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
+    #theme_cowplot(12) +
+    theme_bw() +
+    theme(
+      plot.title = element_text(face = "plain", size = 14),
+      axis.text.x = element_text(size = 10, angle = 90, hjust = 1, vjust = 0.5),
+      legend.text = element_text(size = 10)
+    ) +
+    scale_y_continuous(limits = c(0, 100.1), expand = c(0, 0))  + 
+    facet_wrap(~Donor, ncol = 5, scales = "free")
+  
+  return(g)
+}
+plot_bracken_facet(bracken_pheno, "Genus-Level Relative Abundance") + theme(legend.position = "none")
+ggsave(here("outputs/figures/DNA_genus_composition_facet.pdf"), dpi=300, w=15, h=7)
+
+
+
+##### BRAY CURTIS PCoA #####
+# Read in count data
+cts <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_species_reads.txt"), sep="\t", header = TRUE) 
+cts <- cts %>% select(!starts_with("NCO") & !starts_with("PCO") & !matches("D03.ZH.R2"))
+
+mr <- newMRexperiment(cts)
+p <- cumNormStatFast(mr)
+mr_css <- cumNorm(mr, p = p)
+counts_css <- MRcounts(mr_css, norm = T, log = T)
+vare_dis <- vegdist(t(counts_css), method = "bray")
+
+# calculate MDS
+mds <- cmdscale(vare_dis, eig = TRUE, x.ret = TRUE)
+mds_values <- mds$points
+wa_scores <- wascores(mds_values, t(cts)) # check that cts is the right thing to pass in here
+wa_scores <- data.frame(sample = rownames(wa_scores),
+                        x = wa_scores[,1],
+                        y = wa_scores[,2])
+n_taxa <- 10
+wa_scores_1<- head(arrange(wa_scores, desc(abs(wa_scores$x))), n = n_taxa)
+wa_scores_2<- head(arrange(wa_scores, desc(abs(wa_scores$y))), n = n_taxa)
+wa_scores_final <- rbind(wa_scores_1, wa_scores_2)
+
+# calculate percentage of variation that each MDS axis accounts for
+mds_var_per <- round(mds$eig/sum(mds$eig) * 100, 1)
+mds_var_per
+
+mds_var_per_df <- data_frame(mds_var_per)
+names(mds_var_per_df) <- c("PercentVariation")
+mds_var_per_df$Axis <- seq.int(nrow(mds_var_per_df))
+ggplot(mds_var_per_df, aes(x = Axis, y = PercentVariation)) +
+  geom_line(alpha = 0.3) +
+  geom_point() +
+  labs(
+    x = "Dimension",
+    y = "Percent Variation"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(face = "plain", size = 14),
+    axis.text.x = element_text(size = 10, vjust = 0.5),
+    legend.text = element_text(size = 10)
+  ) +
+  scale_y_continuous(limits = c(0, 100.1), expand = c(0, 0))
+
+ggsave(here("outputs/figures/DNA_MDS_Scree.pdf"), dpi=300, w=7, h=5)
+
+#Plot
+mds_data <- data.frame(Sample = gsub("\\.", "_", rownames(mds_values)),
+                       x = mds_values[,1],
+                       y = mds_values[,2])
+
+# merge pheno data
+metadata <- filter(metadata, Donor!="NCO" & Donor!="PCO")
+mds_meta <- merge(mds_data, metadata, by = "Sample")
+
+maicolors <- paletteer_d("ggthemes::Tableau_10")
+mds_plot <- ggplot(mds_meta, aes(x, y)) +
+  stat_ellipse(aes(color = Donor), type = 't', size = 0.5, show.legend = F) +
+  geom_point(size = 1, alpha = 0.7, aes(color=Donor)) +
+  scale_color_manual(values = maicolors) +
+  labs(x = paste("MDS 1 (", mds_var_per[1], "%)",sep=""),
+       y = paste("MDS 2 (", mds_var_per[2], "%)",sep=""),
+       title = "Species-Level Bray Curtis",
+       color = "") +
+  theme_classic() +
+  coord_fixed() +
+  #background_grid()+
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE))
+
+mds_plot
+
+ggsave(here("outputs/figures/DNASpecies_Bray_Curtis.pdf"), dpi=300, w=5, h=6)
