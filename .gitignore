@@ -1,7 +1,27 @@
 .DS_Store
 ._.DS_Store
+# exclude extraneous preprocessing files
+XTvFlex/01_processing/01*
+XTvFlex/01_processing/02*
+XTvFlex/01_processing/04*
+XTvFlex/01_processing/05*
+XTvFlex/01_processing/00_qc_reports/pre*
+XTvFlex/01_processing/00_qc_reports/post_fastqc/
+XTvFlex/01_processing/00_qc_reports/post_multiqc/multiqc_data/
+
+# exclude extraneous classification files
+XTvFlex/02_kraken2_classification/classification/
+XTvFlex/02_kraken2_classification/kraken2_processing_completed.txt
 
 # History files
+XTvFlex/Rplots.pdf
+XTvFlex/.cache/
+XTvFlex/.java/
+scripts/.Rhistory
+scripts/._extractionPlots.R
+._FlexvsXTPlots.R
+._Benchmarking.Rproj
+.Rproj.user
 .Rhistory
 .Rapp.history
 scripts/.Rhistory

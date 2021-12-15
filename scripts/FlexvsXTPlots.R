@@ -5,15 +5,22 @@ library(ggsignif)
 library(here)
 library(RColorBrewer)
 library(reshape2)
+library(metagenomeSeq) # need to figure out how to install
+library(devtools)
+library(vegan)
+library(DESeq2)
+library(genefilter)
+library(cowplot)
+library(ggpubr)
+library(PairedData)
 
+##### SPECIES-LEVEL RELATIVE ABUNDANCE #####
 n_taxa <- 30
 myCols <- colorRampPalette(brewer.pal(9, "Set1"))
 barplot_pal <- myCols(n_taxa)
 barplot_pal <- sample(barplot_pal)
 barplot_pal[n_taxa + 1] <- "gray"
 
-
-##### SPECIES-LEVEL RELATIVE ABUNDANCE #####
 # Read in species percentage bracken data
 species <- read.csv(here("XTvFlex/02_kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_species_percentage.txt"), sep="\t", header=TRUE)
 
@@ -32,7 +39,7 @@ bracken_plot$Species <- gsub("\\(miscellaneous\\)", "", bracken_plot$Species)
 bracken_long <- melt(bracken_plot, id.vars = "Species", variable.name = "Sample", value.name = "rel_abundance")
 bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "-", Sample))
 
-# merge in pheno date
+# merge in pheno data
 bracken_pheno <- merge(bracken_long, groupings, by = "Sample")
 bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
 
@@ -86,8 +93,8 @@ plot_bracken_facet <- function(counts, title){
   return(g)
 }
 plot_bracken_facet(bracken_pheno, "Species-Level Relative Abundance") 
-ggsave(here("outputs/figures/XTvFlex_species_composition_facet.pdf"), dpi=300, w=9, h=5)
-ggsave(here("outputs/figures/XTvFlex_species_composition_facet.jpg"), dpi=300, w=9, h=5)
+#ggsave(here("outputs/figures/XTvFlex_species_composition_facet.pdf"), dpi=300, w=9, h=5)
+#ggsave(here("outputs/figures/XTvFlex_species_composition_facet.jpg"), dpi=300, w=9, h=5)
 
 
 ##### GENUS-LEVEL RELATIVE ABUNDANCE #####
@@ -123,9 +130,6 @@ bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
 # set factor in correct plotting order
 bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
 
-# plot in order of decreasing relative abundance of desired taxon
-#bracken_pheno$label <- factor(bracken_pheno$label, levels = c("Donor1 F1", "Donor1 F2","Donor1 F3","Donor1 FO1","Donor1 FO2","Donor1 FO3", "Donor1 C1","Donor1 C2","Donor1 C3","Donor1 CL1","Donor1 CL2","Donor1 CL3", "Donor1 H1","Donor1 H2","Donor1 H3", "Donor2 F1","Donor2 F2","Donor2 F3", "Donor2 FO1", "Donor2 FO2","Donor2 FO3","Donor2 C1","Donor2 C2","Donor2 C3", "Donor2 H1", "Donor2 H2", "Donor2 H3"))
-
 plot_bracken <- function(counts, title){
   g <- ggplot(counts, aes(x=label, y=rel_abundance, fill=Genus)) +
     geom_bar(stat="identity") +
@@ -150,8 +154,8 @@ plot_bracken <- function(counts, title){
 
 plot_bracken(bracken_pheno, "Genus-Level Relative Abundance") + theme(legend.position = "none")
 
-ggsave(here("outputs/figures/XTvFlex_genus_composition.pdf"), dpi=300, w=7, h=5)
-ggsave(here("outputs/figures/XTvFlex_genus_composition.jpg"), dpi=300, w=7, h=5)
+#ggsave(here("outputs/figures/XTvFlex_genus_composition.pdf"), dpi=300, w=7, h=5)
+#ggsave(here("outputs/figures/XTvFlex_genus_composition.jpg"), dpi=300, w=7, h=5)
 
 
 # to do
@@ -178,6 +182,251 @@ plot_bracken_facet <- function(counts, title){
   return(g)
 }
 plot_bracken_facet(bracken_pheno, "Genus-Level Relative Abundance") 
-ggsave(here("outputs/figures/XTvFlex_genus_composition_facet.pdf"), dpi=300, w=9, h=5)
-ggsave(here("outputs/figures/XTvFlex_genus_composition_facet.jpg"), dpi=300, w=9, h=5)
+#ggsave(here("outputs/figures/XTvFlex_genus_composition_facet.pdf"), dpi=300, w=9, h=5)
+#ggsave(here("outputs/figures/XTvFlex_genus_composition_facet.jpg"), dpi=300, w=9, h=5)
 
+
+##### BRAY CURTIS #####
+## css normalize
+cts <- read.csv(here("XTvFlex/02_kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_species_reads.txt"), sep="\t", header = TRUE) # read in count data
+
+mr <- newMRexperiment(cts)
+p <- cumNormStatFast(mr)
+mr_css <- cumNorm(mr, p = p)
+counts_css <- MRcounts(mr_css, norm = T, log = T)
+vare_dis <- vegdist(t(counts_css), method = "bray")
+
+# calculate MDS
+mds <- cmdscale(vare_dis, eig = TRUE, x.ret = TRUE)
+mds_values <- mds$points
+wa_scores <- wascores(mds_values, t(cts)) # check that cts is the right thing to pass in here
+wa_scores <- data.frame(sample = rownames(wa_scores),
+                        x = wa_scores[,1],
+                        y = wa_scores[,2])
+n_taxa <- 10
+wa_scores_1<- head(arrange(wa_scores, desc(abs(wa_scores$x))), n = n_taxa)
+wa_scores_2<- head(arrange(wa_scores, desc(abs(wa_scores$y))), n = n_taxa)
+wa_scores_final <- rbind(wa_scores_1, wa_scores_2)
+
+# calculate percentage of variation that each MDS axis accounts for
+mds_var_per <- round(mds$eig/sum(mds$eig) * 100, 1)
+mds_var_per
+
+mds_var_per_df <- data_frame(mds_var_per)
+names(mds_var_per_df) <- c("PercentVariation")
+mds_var_per_df$Axis <- seq.int(nrow(mds_var_per_df))
+ggplot(mds_var_per_df, aes(x = Axis, y = PercentVariation)) +
+  geom_line(alpha = 0.3) +
+  geom_point() +
+  labs(
+    x = "Dimension",
+    y = "Percent Variation"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(face = "plain", size = 14),
+    axis.text.x = element_text(size = 10, vjust = 0.5),
+    legend.text = element_text(size = 10)
+  ) +
+  scale_y_continuous(limits = c(0, 100.1), expand = c(0, 0))
+
+#ggsave(here("outputs/figures/mds_scree.pdf"), dpi=300, w=7, h=5)
+
+# plot
+mds_data <- data.frame(Sample = gsub("\\.", "-", rownames(mds_values)),
+                       x = mds_values[,1],
+                       y = mds_values[,2])
+
+# merge pheno data
+mds_meta <- merge(mds_data, groupings, by = "Sample")
+
+mds_plot <- ggplot(mds_meta, aes(x, y)) +
+  geom_point(size = 3, alpha = 0.7, aes(shape=Method, color=Donor)) +
+  labs(x = paste("MDS 1 (", mds_var_per[1], "%)",sep=""),
+       y = paste("MDS 2 (", mds_var_per[2], "%)",sep=""),
+       title = "Species-Level Bray Curtis",
+       color = "") +
+  theme_classic() +
+  coord_fixed() +
+  background_grid()+
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE))
+ 
+mds_plot
+
+#ggsave(here("outputs/figures/xt_braycurtis_mds.pdf"), dpi=300, w=5, h=6)
+#ggsave(here("outputs/figures/xt_braycurtis_mds.jpg"), dpi=300, w=5, h=6)
+
+
+
+##### DIFFERENTIAL ABUNDANCE #####
+
+
+### NOTE : THIS ISN'T PAIRED, BUT WITH ALL XT SAMPLES ###
+count_data <- read.csv(here("XTvFlex/02_kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_genus_reads.txt"), sep="\t", header = TRUE) # read in count data
+head(count_data)
+row.names(count_data)
+metaData <- groupings <- read.table(here("XTvFlex/groups_and_conditions.tsv"), sep="\t", header = TRUE)
+metaData <- mutate(metaData, Sample=gsub("-", ".", Sample))
+head(metaData)
+
+# filter metadata to only include first XT replicates for each sample
+metaData <- metaData %>% filter(Method == "Flex" | Replicate == "A")
+metaData <- mutate(metaData, Donor=as.factor(Donor))
+metaData <- mutate(metaData, Metehod=as.factor(Method))
+
+count_data <- count_data %>% select(!ends_with("B")) %>% select(!ends_with("C"))
+
+
+dds <- DESeqDataSetFromMatrix(countData = count_data, colData = metaData, design = ~ Method)
+dds <- estimateSizeFactors(dds, type = "poscounts")
+idx <- genefilter(counts(dds, normalized = TRUE), pOverA(0.2, 500))  # 20% need to be over 500
+dds <- dds[idx, ]
+dds <- DESeq(dds, parallel = T)
+res <- results(dds, name="Method_XT_vs_Flex", alpha = 0.05)
+resultsNames(dds)
+
+resOrdered <- res %>%
+  as_tibble(rownames = "genus") %>%
+  arrange(pvalue) %>%
+  mutate(group = ifelse(log2FoldChange < 0, "Flex", "XT"))
+
+res_df_filt <- resOrdered %>%
+  filter(padj < 0.05, abs(log2FoldChange) > 0.5) %>%
+  arrange(log2FoldChange)
+res_df_filt$genus <- factor(res_df_filt$genus,
+                            levels = as.character(res_df_filt$genus))
+
+deseq_genera <- ggplot(res_df_filt, aes(log2FoldChange, genus, fill = group)) +
+  #geom_point(size = 2, color = "black", pch = 21) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  theme_cowplot() +
+  theme(axis.text.y = element_text(face = "italic")) +
+  #scale_fill_manual(values = hotcold) +
+  # scale_x_continuous(breaks = seq(-2, 2, 1)) +
+  labs(
+    x = "Log2 Fold Change",
+    y = "Genus",
+    fill = ""
+  ) +
+  background_grid() +
+  theme(legend.position = "top",
+        legend.justification = "center")
+
+deseq_genera
+ggsave(here("outputs/figures/XTvFlex_genus_deseq.pdf"), dpi=300, w=6, h=5)
+
+### TRYIING DESEQ WITH PAIRED ANALYSIS
+count_data <- read.csv(here("XTvFlex/02_kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_genus_reads.txt"), sep="\t", header = TRUE) # read in count data
+head(count_data)
+row.names(count_data)
+metaData <- groupings <- read.table(here("XTvFlex/groups_and_conditions.tsv"), sep="\t", header = TRUE)
+metaData <- mutate(metaData, Sample=gsub("-", ".", Sample))
+
+
+# filter metadata and count data to only include first XT replicates for each sample
+metaData <- metaData %>% filter(Method == "Flex" | Replicate == "A")
+metaData <- mutate(metaData, Donor=as.factor(Donor))
+metaData <- mutate(metaData, Method=as.factor(Method))
+count_data <- count_data %>% select(!ends_with("B")) %>% select(!ends_with("C"))
+
+
+dds <- DESeqDataSetFromMatrix(countData = count_data, colData = metaData, design = ~ Donor + Method)
+dds <- estimateSizeFactors(dds, type = "poscounts")
+idx <- genefilter(counts(dds, normalized = TRUE), pOverA(0.2, 500))  # 20% need to be over 500
+dds <- dds[idx, ]
+dds <- DESeq(dds, parallel = T)
+res <- results(dds, name="Method_XT_vs_Flex", alpha = 0.05)
+resultsNames(dds)
+
+resOrdered <- res %>%
+  as_tibble(rownames = "genus") %>%
+  arrange(pvalue) %>%
+  mutate(group = ifelse(log2FoldChange < 0, "Flex", "XT"))
+
+res_df_filt <- resOrdered %>%
+  filter(padj < 0.05, abs(log2FoldChange) > 0.5) %>%
+  arrange(log2FoldChange)
+res_df_filt$genus <- factor(res_df_filt$genus,
+                            levels = as.character(res_df_filt$genus))
+
+deseq_genera <- ggplot(res_df_filt, aes(log2FoldChange, genus, fill = group)) +
+  #geom_point(size = 2, color = "black", pch = 21) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  theme_cowplot() +
+  theme(axis.text.y = element_text(face = "italic")) +
+  #scale_fill_manual(values = hotcold) +
+  # scale_x_continuous(breaks = seq(-2, 2, 1)) +
+  labs(
+    x = "Log2 Fold Change",
+    y = "Genus",
+    fill = ""
+  ) +
+  background_grid() +
+  theme(legend.position = "top",
+        legend.justification = "center")
+
+deseq_genera
+#ggsave(here("outputs/figures/XTvFlex_genus_deseq_paired.pdf"), dpi=300, w=6, h=5)
+
+
+### tryig to shrink log fold change and plot
+plotMA(res, ylim=c(-2,2), alpha = 0.001, xlab="Mean of Normalized Counts", ylab="Log2 Fold Change")
+
+
+##### ALPHA DIVERSITY #####
+# Species level
+
+benchmark_s <- read.table(here("XTvFlex/02_kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_species_percentage.txt"), sep="\t")
+benchmark_groups <- read.table(here("XTvFlex/groups_and_conditions.tsv"), sep="\t", header = TRUE)
+benchmark_groups <- mutate(benchmark_groups, sample=gsub("-", ".", Sample))
+
+benchmark_groups <- benchmark_groups %>% filter(Method == "Flex" | Replicate == "A")
+benchmark_groups <- mutate(benchmark_groups, Donor=as.factor(Donor))
+benchmark_groups <- mutate(benchmark_groups, Metehod=as.factor(Method))
+
+benchmark_s <- benchmark_s %>% select(!ends_with("B")) %>% select(!ends_with("C"))
+
+
+
+shannon_div_s <- diversity(t(benchmark_s), index = "shannon")
+div <- data.frame("shannon_div" = shannon_div_s, "sample" = names(shannon_div_s))
+div_meta <- merge(div, benchmark_groups, by = "sample")
+
+# pval with wilcox
+pval <- compare_means(shannon_div ~ Method, data = div_meta, method = "wilcox.test", p.adjust.method = "fdr")
+pval
+
+# trying with fisher t test
+pval <- compare_means(shannon_div ~ Method, data = div_meta, method = "t.test", p.adjust.method = "fdr")
+pval
+
+# div_plot <- ggplot(div_meta, aes(x = Method, y = shannon_div)) +
+#   geom_jitter(position = position_jitterdodge(jitter.width = 0.75), alpha = 0.8, aes(fill = Method), color = "darkgray") +
+#   geom_boxplot(outlier.shape = NA, aes(fill = Method), alpha = 0.5) +
+#   labs(x = "",
+#        y = "Shannon Diversity",
+#        title = "Shannon Diversity (Species)",
+#        fill="") +
+#   theme_cowplot(14) +
+#   theme(
+#     axis.text.x = element_text(size = 12, angle = 45, hjust = 1),
+#     legend.position = "none"
+#   ) +
+#   background_grid(major = "y")
+# 
+# div_plot
+
+## trying paired plots
+ggpaired(div_meta, x="Method", y="shannon_div", fill="Method", line.color="gray", id="Donor") + 
+  stat_compare_means(paired=TRUE) + 
+  theme_cowplot() + 
+  ylim(c(4,5)) +
+  labs(x = "", 
+       y = "Shannon Diveristy", 
+       title = "Shannon Diversity (Species)", 
+       fill = "") +
+  theme(axis.title.x = element_blank()) + theme(legend.position="none")
+
+ggsave(here("outputs/figures/XTvFlex_alphadiv.jpg"), dpi=300, w=5, h=5)
+ggsave(here("outputs/figures/XTvFlex_alphadiv.pdf"), dpi=300, w=5, h=5)
