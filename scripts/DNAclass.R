@@ -8,6 +8,7 @@ library(reshape2)
 library(metagenomeSeq)
 library(vegan)
 library(cowplot)
+library(ggpubr)
 
 ##### EDITING METADATA ######
 #Split SampleID into donor, condition, replicate 
@@ -20,6 +21,10 @@ metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3",
 #Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
 metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
 metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+#Separate the Condition column to create preservation method and temperature columns
+#Mai did and no work metadata <- metadata %>% separate(Condition, c("Preservation", "Temperature"), remove=FALSE)
+metadata <- mutate(metadata, Preservation=substr(Condition,1,1))
+metadata <- mutate(metadata, Temperature=substr(Condition,2,2))
 
 ##### SPECIES-LEVEL RELATIVE ABUNDANCE #####
 # Read in species percentage bracken data
@@ -224,6 +229,7 @@ mds_data <- data.frame(Sample = gsub("\\.", "_", rownames(mds_values)),
 
 # merge pheno data
 metadata <- filter(metadata, Donor!="NCO" & Donor!="PCO")
+mds_data <-rename (mds_data, Sample=SampleID)
 mds_meta <- merge(mds_data, metadata, by = "Sample")
 
 maicolors <- paletteer_d("ggthemes::Tableau_10")
@@ -237,10 +243,61 @@ mds_plot <- ggplot(mds_meta, aes(x, y)) +
        color = "") +
   theme_classic() +
   coord_fixed() +
-  #background_grid()+
+  background_grid()+
   theme(legend.position = "bottom", legend.title = element_blank()) +
   guides(fill = guide_legend(nrow = 2, byrow = TRUE))
 
 mds_plot
 
 ggsave(here("outputs/figures/DNASpecies_Bray_Curtis.pdf"), dpi=300, w=5, h=6)
+
+#MDS colored by preservation method -NOT DONE
+condition_colors <- paletteer_d("nbapalettes::lakers_alt")
+mds_plot <- ggplot(mds_meta, aes(x, y)) +
+  geom_point(size = 1, alpha = 0.7, aes(color=Preservation)) +
+  scale_color_manual(values = condition_colors) +
+  scale_fill_manual(values = condition_colors) +
+  labs(x = paste("MDS 1 (", mds_var_per[1], "%)",sep=""),
+       y = paste("MDS 2 (", mds_var_per[2], "%)",sep=""),
+       title = "Species-Level Bray Curtis",
+       color = "") +
+  theme_classic() +
+  coord_fixed() +
+  background_grid()+
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE))
+
+mds_plot
+
+ggsave(here("outputs/figures/DNASpecies_Bray_Curtis_Preservation.pdf"), dpi=300, w=5, h=6)
+
+#####Shannon Diversity Plots#####
+benchmark_s <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_species_percentage.txt"), sep="\t")
+benchmark_groups <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+benchmark_groups <- benchmark_groups %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+benchmark_groups <- mutate(benchmark_groups, sample=gsub("_", ".", SampleID))
+benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
+
+shannon_div_s <- diversity(t(benchmark_s), index = "shannon")
+div <- data.frame("shannon_div" = shannon_div_s, "sample" = names(shannon_div_s))
+div_meta <- merge(div, benchmark_groups, by = "sample")
+
+maicolors <- paletteer_d("ggthemes::Tableau_10")
+div_plot <- ggplot(div_meta, aes(Donor, shannon_div)) + 
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.6),
+              alpha = 0.85, aes(fill = Donor), color = "darkgray") +
+  geom_boxplot(outlier.shape = NA, aes(fill = Donor), alpha = 0.5) +
+  labs(x = "",
+       y = "Shannon Diversity",
+       fill = "") +
+  scale_color_manual(values = maicolors) +
+  scale_y_continuous(limits = c(2, 6.6)) +
+  theme_cowplot(12) +
+  theme(axis.text.x = element_text(size = 12),
+        legend.position = "none",
+        plot.margin = unit(c(0.2, 0.5, 0, 0.2), unit = "cm")) 
+div_plot
+
+ggsave(here("outputs/figures/DNA_alphadiv.pdf"), dpi=300, w=5, h=5)
+ggsave(here("outputs/figures/DNA_alphadiv.jpg"), dpi=300, w=5, h=5)
