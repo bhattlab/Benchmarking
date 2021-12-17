@@ -5,7 +5,7 @@ library(ggsignif)
 library(here)
 library(RColorBrewer)
 library(reshape2)
-library(metagenomeSeq) # need to figure out how to install
+library(metagenomeSeq)
 library(devtools)
 library(vegan)
 library(DESeq2)
@@ -275,7 +275,7 @@ metaData <- metaData %>% filter(Method == "Flex" | Replicate == "A")
 metaData <- mutate(metaData, Donor=as.factor(Donor))
 metaData <- mutate(metaData, Metehod=as.factor(Method))
 
-count_data <- count_data %>% select(!ends_with("B")) %>% select(!ends_with("C"))
+count_data <- count_data %>% dplyr::select(!ends_with("B")) %>% dplyr::select(!ends_with("C"))
 
 
 dds <- DESeqDataSetFromMatrix(countData = count_data, colData = metaData, design = ~ Method)
@@ -328,7 +328,7 @@ metaData <- mutate(metaData, Sample=gsub("-", ".", Sample))
 metaData <- metaData %>% filter(Method == "Flex" | Replicate == "A")
 metaData <- mutate(metaData, Donor=as.factor(Donor))
 metaData <- mutate(metaData, Method=as.factor(Method))
-count_data <- count_data %>% select(!ends_with("B")) %>% select(!ends_with("C"))
+count_data <- count_data %>% dplyr::select(!ends_with("B")) %>% dplyr::select(!ends_with("C"))
 
 
 dds <- DESeqDataSetFromMatrix(countData = count_data, colData = metaData, design = ~ Donor + Method)
@@ -387,8 +387,6 @@ benchmark_groups <- mutate(benchmark_groups, Metehod=as.factor(Method))
 
 benchmark_s <- benchmark_s %>% select(!ends_with("B")) %>% select(!ends_with("C"))
 
-
-
 shannon_div_s <- diversity(t(benchmark_s), index = "shannon")
 div <- data.frame("shannon_div" = shannon_div_s, "sample" = names(shannon_div_s))
 div_meta <- merge(div, benchmark_groups, by = "sample")
@@ -400,22 +398,6 @@ pval
 # trying with fisher t test
 pval <- compare_means(shannon_div ~ Method, data = div_meta, method = "t.test", p.adjust.method = "fdr")
 pval
-
-# div_plot <- ggplot(div_meta, aes(x = Method, y = shannon_div)) +
-#   geom_jitter(position = position_jitterdodge(jitter.width = 0.75), alpha = 0.8, aes(fill = Method), color = "darkgray") +
-#   geom_boxplot(outlier.shape = NA, aes(fill = Method), alpha = 0.5) +
-#   labs(x = "",
-#        y = "Shannon Diversity",
-#        title = "Shannon Diversity (Species)",
-#        fill="") +
-#   theme_cowplot(14) +
-#   theme(
-#     axis.text.x = element_text(size = 12, angle = 45, hjust = 1),
-#     legend.position = "none"
-#   ) +
-#   background_grid(major = "y")
-# 
-# div_plot
 
 ## trying paired plots
 ggpaired(div_meta, x="Method", y="shannon_div", fill="Method", line.color="gray", id="Donor") + 
