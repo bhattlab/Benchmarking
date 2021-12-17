@@ -13,6 +13,9 @@ XTvFlex/01_processing/00_qc_reports/post_multiqc/multiqc_data/
 XTvFlex/02_kraken2_classification/classification/
 XTvFlex/02_kraken2_classification/kraken2_processing_completed.txt
 
+# ignore hidden files
+.*
+outputs/figures/._*
 # History files
 XTvFlex/Rplots.pdf
 XTvFlex/.cache/
