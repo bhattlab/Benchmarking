@@ -301,3 +301,52 @@ div_plot
 
 ggsave(here("outputs/figures/DNA_alphadiv.pdf"), dpi=300, w=5, h=5)
 ggsave(here("outputs/figures/DNA_alphadiv.jpg"), dpi=300, w=5, h=5)
+
+#####Attempt at Maaslin2 for diff abundance#####
+if(!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install(version = "3.12") 
+BiocManager::install("Maaslin2", version="3.12")
+
+#library(Maaslin2)
+
+#Other installation method to be able to use References
+#install.packages("devtools")
+# library(devtools)
+devtools::install_github("biobakery/maaslin2")
+# 
+# library(Maaslin2)
+# to get help on usage of Maaslin2 ?Maaslin2
+
+#Reading in metadata dataframe and creating metadata file for Maaslin2
+benchmark_groups <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+benchmark_groups <- benchmark_groups %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+benchmark_groups <- mutate(benchmark_groups, sample=gsub("_", ".", SampleID))
+benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
+benchmark_groups <- mutate(benchmark_groups, Kit=substr(Condition,1,1))
+benchmark_groups <- mutate(benchmark_groups, Temperature=substr(Condition,2,2))
+benchmark_groups <- mutate(benchmark_groups, Kit=ifelse(Kit=="N", "No Preservative", ifelse(Kit=="O", "Omnigene", "Zymo")))
+benchmark_groups <- mutate(benchmark_groups, Temperature=ifelse(Temperature=="F", "Frozen", ifelse(Temperature=="R", "Room Temp", "Hot")))
+rownames(benchmark_groups) <- benchmark_groups$sample
+
+#Exporting metdata
+write.table(benchmark_groups, here("outputs/tables/DNA_metadata.tsv"), row.names = FALSE, sep="\t", quote=FALSE)  
+
+#Transpose the classification file
+kraken_genus <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE))
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_genus, benchmark_groups, here('DNA/3.maaslin'), transform = "NONE",
+  fixed_effects = c('Kit', 'Temperature'),
+  random_effects = c('Donor'),
+  normalization = 'NONE',
+  standardize = FALSE,
+  min_abundance = 0.01,
+  min_prevalence = 0.1, 
+  reference = 'Kit,No Preservative')
+
+
+
