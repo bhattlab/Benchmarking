@@ -1,0 +1,110 @@
+2022-01-20 11:11:48 INFO::Writing function arguments to log file
+2022-01-20 11:11:48 DEBUG::Function arguments
+2022-01-20 11:11:48 DEBUG::Output folder: /oak/stanford/scg/lab_asbhatt/dmaghini/projects/benchmarking/Benchmarking/XTvFlex/04_maaslin2
+2022-01-20 11:11:48 DEBUG::Min Abundance: 0.050000
+2022-01-20 11:11:48 DEBUG::Min Prevalence: 0.200000
+2022-01-20 11:11:48 DEBUG::Normalization: TSS
+2022-01-20 11:11:48 DEBUG::Transform: LOG
+2022-01-20 11:11:48 DEBUG::Analysis method: LM
+2022-01-20 11:11:48 DEBUG::Max significance: 0.250000
+2022-01-20 11:11:48 DEBUG::Random effects: Donor
+2022-01-20 11:11:48 DEBUG::Fixed effects: Method
+2022-01-20 11:11:48 DEBUG::Correction method: BH
+2022-01-20 11:11:48 DEBUG::Standardize: FALSE
+2022-01-20 11:11:48 DEBUG::Cores: 1
+2022-01-20 11:11:48 INFO::Verifying options selected are valid
+2022-01-20 11:11:48 INFO::Determining format of input files
+2022-01-20 11:11:48 INFO::Input format is data samples as rows and metadata samples as rows
+2022-01-20 11:11:48 DEBUG::The following samples were found to have features but no metadata. They will be removed. XT_D08.NFlex.R1.C,XT_D07.NFlex.R1.C,XT_D10.NFlex.R1.C,XT_D05.NFlex.R1.C,XT_D05.NFlex.R1.B,XT_D08.NFlex.R1.B,XT_D02.NFlex.R1.B,XT_D07.NFlex.R1.B,XT_D09.NFlex.R1.B,XT_D03.NFlex.R1.C,XT_D04.NFlex.R1.C,XT_D06.NFlex.R1.B,XT_D03.NFlex.R1.B,XT_D10.NFlex.R1.B,XT_D09.NFlex.R1.C,XT_D04.NFlex.R1.B,XT_D06.NFlex.R1.C,XT_D02.NFlex.R1.C,XT_D01.NFlex.R1.C,XT_D01.NFlex.R1.B
+2022-01-20 11:11:48 DEBUG::A total of 20 samples were found in both the data and metadata
+2022-01-20 11:11:48 DEBUG::Reordering data/metadata to use same sample ordering
+2022-01-20 11:11:48 INFO::Formula for random effects: expr ~ (1 | Donor)
+2022-01-20 11:11:48 INFO::Formula for fixed effects: expr ~  Method
+2022-01-20 11:11:48 INFO::Filter data based on min abundance and min prevalence
+2022-01-20 11:11:48 INFO::Total samples in data: 20
+2022-01-20 11:11:48 INFO::Min samples required with min abundance for a feature not to be filtered: 4.000000
+2022-01-20 11:11:48 INFO::Total filtered features: 303
+2022-01-20 11:11:48 INFO::Filtered feature names from abundance and prevalence filtering:
+2022-01-20 11:11:48 INFO::Running selected normalization method: TSS
+2022-01-20 11:11:48 INFO::Total filtered features with variance filtering: 0
+2022-01-20 11:11:48 INFO::Filtered feature names from variance filtering:
+2022-01-20 11:11:48 INFO::Bypass z-score application to metadata
+2022-01-20 11:11:48 INFO::Running selected transform method: LOG
+2022-01-20 11:11:48 INFO::Running selected analysis method: LM
+2022-01-20 11:11:48 INFO::Fitting model to feature number 1, Bacteroides
+2022-01-20 11:11:48 INFO::Fitting model to feature number 2, Faecalibacterium
+2022-01-20 11:11:48 INFO::Fitting model to feature number 3, Ruminococcus
+2022-01-20 11:11:49 INFO::Fitting model to feature number 4, Blautia
+2022-01-20 11:11:49 INFO::Fitting model to feature number 5, unclassified.Lachnospiraceae
+2022-01-20 11:11:49 INFO::Fitting model to feature number 6, Clostridium
+2022-01-20 11:11:49 INFO::Fitting model to feature number 7, unclassified.Ruminococcaceae
+2022-01-20 11:11:50 INFO::Fitting model to feature number 8, Bifidobacterium
+2022-01-20 11:11:50 INFO::Fitting model to feature number 9, Eubacterium
+2022-01-20 11:11:50 INFO::Fitting model to feature number 10, Parabacteroides
+2022-01-20 11:11:50 INFO::Fitting model to feature number 11, Alistipes
+2022-01-20 11:11:50 INFO::Fitting model to feature number 12, Roseburia
+2022-01-20 11:11:50 INFO::Fitting model to feature number 13, Coprococcus
+2022-01-20 11:11:51 INFO::Fitting model to feature number 14, Prevotella
+2022-01-20 11:11:51 INFO::Fitting model to feature number 15, unclassified.Clostridiales..miscellaneous.
+2022-01-20 11:11:51 INFO::Fitting model to feature number 16, Collinsella
+2022-01-20 11:11:51 INFO::Fitting model to feature number 17, Dorea
+2022-01-20 11:11:51 INFO::Fitting model to feature number 18, Firmicutes..environmental.samples
+2022-01-20 11:11:51 INFO::Fitting model to feature number 19, Anaerostipes
+2022-01-20 11:11:52 INFO::Fitting model to feature number 20, unclassified.Firmicutes.sensu.stricto..miscellaneous.
+2022-01-20 11:11:52 INFO::Fitting model to feature number 21, Oscillibacter
+2022-01-20 11:11:52 INFO::Fitting model to feature number 22, unclassified.Clostridiaceae
+2022-01-20 11:11:52 INFO::Fitting model to feature number 23, Fusicatenibacter
+2022-01-20 11:11:52 INFO::Fitting model to feature number 24, Subdoligranulum
+2022-01-20 11:11:52 INFO::Fitting model to feature number 25, Gemmiger
+2022-01-20 11:11:52 INFO::Fitting model to feature number 26, Lachnoclostridium
+2022-01-20 11:11:53 INFO::Fitting model to feature number 27, Butyricicoccus
+2022-01-20 11:11:53 INFO::Fitting model to feature number 28, Anaerobutyricum
+2022-01-20 11:11:53 INFO::Fitting model to feature number 29, Streptococcus
+2022-01-20 11:11:53 INFO::Fitting model to feature number 30, Dialister
+2022-01-20 11:11:53 INFO::Fitting model to feature number 31, Lachnospira
+2022-01-20 11:11:53 INFO::Fitting model to feature number 32, Odoribacter
+2022-01-20 11:11:54 INFO::Fitting model to feature number 33, Sutterella
+2022-01-20 11:11:54 INFO::Fitting model to feature number 34, Coprobacillus
+2022-01-20 11:11:54 INFO::Fitting model to feature number 35, Flavonifractor
+2022-01-20 11:11:54 INFO::Fitting model to feature number 36, unclassified.Oscillospiraceae
+2022-01-20 11:11:54 INFO::Fitting model to feature number 37, Barnesiella
+2022-01-20 11:11:54 INFO::Fitting model to feature number 38, Staphylococcus
+2022-01-20 11:11:55 INFO::Fitting model to feature number 39, unclassified.Erysipelotrichaceae
+2022-01-20 11:11:55 INFO::Fitting model to feature number 40, unclassified.Bacteroidaceae
+2022-01-20 11:11:55 INFO::Fitting model to feature number 41, Akkermansia
+2022-01-20 11:11:55 INFO::Fitting model to feature number 42, Clostridiales..environmental.samples
+2022-01-20 11:11:55 INFO::Fitting model to feature number 43, Bilophila
+2022-01-20 11:11:55 INFO::Fitting model to feature number 44, Clostridioides
+2022-01-20 11:11:56 INFO::Fitting model to feature number 45, Phascolarctobacterium
+2022-01-20 11:11:56 INFO::Fitting model to feature number 46, unclassified.Coriobacteriaceae
+2022-01-20 11:11:56 INFO::Fitting model to feature number 47, Lachnospiraceae..environmental.samples
+2022-01-20 11:11:56 INFO::Fitting model to feature number 48, Escherichia
+2022-01-20 11:11:56 INFO::Fitting model to feature number 49, Erysipelatoclostridium
+2022-01-20 11:11:56 INFO::Fitting model to feature number 50, Eggerthella
+2022-01-20 11:11:57 INFO::Fitting model to feature number 51, Enterococcus
+2022-01-20 11:11:57 INFO::Fitting model to feature number 52, crAss.like.viruses
+2022-01-20 11:11:57 INFO::Fitting model to feature number 53, unclassified.Rikenellaceae
+2022-01-20 11:11:57 INFO::Fitting model to feature number 54, Intestinimonas
+2022-01-20 11:11:57 INFO::Fitting model to feature number 55, Butyricimonas
+2022-01-20 11:11:57 INFO::Fitting model to feature number 56, Eisenbergiella
+2022-01-20 11:11:57 INFO::Fitting model to feature number 57, Acinetobacter
+2022-01-20 11:11:58 INFO::Fitting model to feature number 58, unclassified.Bacteroidales..miscellaneous.
+2022-01-20 11:11:58 INFO::Fitting model to feature number 59, Dysosmobacter
+2022-01-20 11:11:58 INFO::Fitting model to feature number 60, unclassified.Eubacteriaceae
+2022-01-20 11:11:58 INFO::Fitting model to feature number 61, Prevotellaceae..environmental.samples
+2022-01-20 11:11:58 INFO::Fitting model to feature number 62, Desulfotomaculum
+2022-01-20 11:11:59 INFO::Fitting model to feature number 63, Tyzzerella
+2022-01-20 11:11:59 INFO::Fitting model to feature number 64, Hungatella
+2022-01-20 11:11:59 INFO::Fitting model to feature number 65, Ruthenibacterium
+2022-01-20 11:11:59 INFO::Fitting model to feature number 66, Romboutsia
+2022-01-20 11:11:59 INFO::Fitting model to feature number 67, Carnobacterium
+2022-01-20 11:11:59 INFO::Fitting model to feature number 68, Pseudoflavonifractor
+2022-01-20 11:11:59 INFO::Fitting model to feature number 69, Anaerotruncus
+2022-01-20 11:12:00 INFO::Fitting model to feature number 70, Desulfovibrio
+2022-01-20 11:12:00 INFO::Fitting model to feature number 71, Lactobacillus
+2022-01-20 11:12:00 INFO::Fitting model to feature number 72, Gordonibacter
+2022-01-20 11:12:00 INFO::Counting total values for each feature
+2022-01-20 11:12:00 WARNING::Deleting existing residuals file: /oak/stanford/scg/lab_asbhatt/dmaghini/projects/benchmarking/Benchmarking/XTvFlex/04_maaslin2/residuals.rds
+2022-01-20 11:12:00 INFO::Writing residuals to file /oak/stanford/scg/lab_asbhatt/dmaghini/projects/benchmarking/Benchmarking/XTvFlex/04_maaslin2/residuals.rds
+2022-01-20 11:12:00 INFO::Writing all results to file (ordered by increasing q-values): /oak/stanford/scg/lab_asbhatt/dmaghini/projects/benchmarking/Benchmarking/XTvFlex/04_maaslin2/all_results.tsv
+2022-01-20 11:12:00 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.250000 ) to file (ordered by increasing q-values): /oak/stanford/scg/lab_asbhatt/dmaghini/projects/benchmarking/Benchmarking/XTvFlex/04_maaslin2/significant_results.tsv
