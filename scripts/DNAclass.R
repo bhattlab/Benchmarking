@@ -309,7 +309,7 @@ if(!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install(version = "3.12") 
 BiocManager::install("Maaslin2", version="3.12")
 
-#library(Maaslin2)
+library(Maaslin2)
 
 #Other installation method to be able to use References
 #install.packages("devtools")
@@ -346,7 +346,58 @@ fit_data <- Maaslin2(
   standardize = FALSE,
   min_abundance = 0.01,
   min_prevalence = 0.1, 
-  reference = 'Kit,No Preservative')
+  reference = 'Kit,No Preservative;Temperature,Frozen')
 
+#from Dylan
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#results <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Illumina DNA Prep", "Nextera XT"))
+zymoresults <- filter(results, value=='Zymo')
+zymoresults <- mutate(zymoresults, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Zymo"))
+#results <- mutate(results, feature=gsub(" miscellaneous", "", gsub("\\.", " ", feature)))
 
+ggplot(zymoresults, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  #scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
 
+ggsave(here("outputs/figures/DNA_NFZymo_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_NFZymo_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+
+#Omnigene vs NF
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#results <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Illumina DNA Prep", "Nextera XT"))
+omniresults <- filter(results, value=='Omnigene')
+omniresults <- mutate(omniresults, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Omni"))
+#results <- mutate(results, feature=gsub(" miscellaneous", "", gsub("\\.", " ", feature)))
+
+ggplot(omniresults, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  #scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+
+ggsave(here("outputs/figures/DNA_NFOmni_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_NFOmni_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+
+#Temperature 
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#results <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Illumina DNA Prep", "Nextera XT"))
+hotresults <- filter(results, value=='Hot')
+hotresults <- mutate(hotresults, DirectionEnriched = ifelse(coef < 0, "Frozen", "Hot"))
+#results <- mutate(results, feature=gsub(" miscellaneous", "", gsub("\\.", " ", feature)))
+
+ggplot(hotresults, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  #scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+
+ggsave(here("outputs/figures/DNA_NFOmni_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_NFOmni_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
