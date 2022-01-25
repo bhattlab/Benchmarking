@@ -13,6 +13,13 @@ library(genefilter)
 library(cowplot)
 library(ggpubr)
 library(PairedData)
+library(forcats)
+
+# save a paletteer palette, and subset it to the first ten values
+flexxt_palette <- c("#6c7dff", "#ff8c6c")
+
+# add "names" to the colors in the palette, corresponding to the donor names
+names(flexxt_palette) <- c("Illumina DNA Prep", "Nextera XT")
 
 ##### SPECIES-LEVEL RELATIVE ABUNDANCE #####
 n_taxa <- 30
@@ -412,3 +419,51 @@ ggpaired(div_meta, x="Method", y="shannon_div", fill="Method", line.color="gray"
 
 ggsave(here("outputs/figures/XTvFlex_alphadiv.jpg"), dpi=300, w=5, h=5)
 ggsave(here("outputs/figures/XTvFlex_alphadiv.pdf"), dpi=300, w=5, h=5)
+##### MAASLIN2 #####
+if(!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(version = "3.12")
+BiocManager::install("Maaslin2", version = "3.12", force = TRUE)
+library(Maaslin2)
+
+inputdata <- t(read.table(here("XTvFlex/02_kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE))
+metadata <- read.table(here("XTvFlex/groups_and_conditions.tsv"), sep="\t", header=TRUE)
+metadata <- mutate(metadata, Sample=gsub('-', '.', Sample))
+rownames(metadata) <- metadata$Sample
+metadata <- filter(metadata, Replicate!="B")
+metadata <- filter(metadata, Replicate!="C")
+metadata <- mutate(metadata, Sample=gsub('NFlex', 'NF', Sample))
+
+
+"""
+Prevalence: set to 0.2 so 4/20 samples must have taxon
+"""
+fit_data <- Maaslin2(
+  inputdata, metadata, here('XTvFlex/04_maaslin2'), 
+  transform = "LOG",
+  analysis_method = "LM",
+  fixed_effects = c('Method'),
+  random_effects = c('Donor'),
+  normalization = 'TSS',
+  standardize = FALSE,
+  min_abundance = 0.05,
+  min_prevalence = 0.2,
+  plot_scatter = FALSE, 
+  plot_heatmap = FALSE)
+
+
+results <- fit_data$results %>% filter(qval < 0.05) %>% arrange(coef)
+results <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Illumina DNA Prep", "Nextera XT"))
+results <- mutate(results, feature=gsub(" miscellaneous", "", gsub("\\.", " ", feature)))
+
+ggplot(results, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+
+ggsave(here("outputs/figures/XTvFlex_genus_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/XTvFlex_genus_maaslin2.jpeg"), dpi=300, w=5, h=6)
+

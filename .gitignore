@@ -12,11 +12,17 @@ XTvFlex/01_processing/00_qc_reports/post_multiqc/multiqc_data/
 # exclude extraneous classification files
 XTvFlex/02_kraken2_classification/classification/
 XTvFlex/02_kraken2_classification/kraken2_processing_completed.txt
-
+# exclude large GC files
+XTvFlex/03_GC/03_windows/*pileup*
+XTvFlex/03_GC/01_subsampling/
+XTvFlex/03_GC/02_readalignment
+XTvFlex/03_GC/03_windows/*err
+XTvFlex/03_GC/03_windows/*out
 # ignore hidden files
 .*
 outputs/figures/._*
 # History files
+XTvFlex/03_GC/curatedMetagenomics_samples_metadata.tsv
 XTvFlex/Rplots.pdf
 XTvFlex/.cache/
 XTvFlex/.java/
