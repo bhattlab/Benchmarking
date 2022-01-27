@@ -464,6 +464,6 @@ ggplot(results, aes(x=reorder(feature, -coef), y=coef)) +
   scale_fill_manual(values = flexxt_palette) + 
   theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
 
-ggsave(here("outputs/figures/XTvFlex_genus_maaslin2.pdf"), dpi=300, w=5, h=6)
-ggsave(here("outputs/figures/XTvFlex_genus_maaslin2.jpeg"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/XTvFlex_genus_maaslin2.pdf"), dpi=300, w=6, h=6)
+ggsave(here("outputs/figures/XTvFlex_genus_maaslin2.jpeg"), dpi=300, w=6, h=6)
 

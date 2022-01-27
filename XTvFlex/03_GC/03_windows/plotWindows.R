@@ -3,6 +3,7 @@ library(tidyverse)
 library(here)
 library(data.table)
 library(paletteer) 
+library(gtools)
 
 # save a paletteer palette, and subset it to the first ten values
 flexxt <- c("#6c7dff", "#ff8c6c")
@@ -11,7 +12,9 @@ flexxt <- c("#6c7dff", "#ff8c6c")
 names(flexxt) <- c("flex", "xt")
 
 
-windows <- read.table(here("XTvFlex/03_GC/03_windows/concat_windowvals_100k.tsv"), header=FALSE, sep="\t")
+#windows <- read.table(here("XTvFlex/03_GC/03_windows/concat_windowvals_100k.tsv"), header=FALSE, sep="\t")
+windows <- fread(here("XTvFlex/03_GC/03_windows/concat_windowvals_500k.tsv"), header=FALSE, sep="\t")
+
 names(windows) <- c("Sample", "Contig", "Position", "Coverage", "GC")
 cov_vals <- windows %>% group_by(Sample) %>% summarise(mean = mean(Coverage))
 windows <- merge(windows, cov_vals)
@@ -20,10 +23,12 @@ windows <- mutate(windows, RelCoverage = ifelse(RelCoverage == 0, 0.001, RelCove
 windows <- mutate(windows, GCbin = round(GC, digits = 1))
 windows <- mutate(windows, GCbinWhole = round(GC, digits = 0))
 
+
 windows <- mutate(windows, donor=gsub(".*_", "", Sample))
 windows <- mutate(windows, kit=gsub("_.*", "", Sample))
 windows <- windows %>% select(Sample, donor, kit, RelCoverage, GCbin, GCbinWhole)
 windows <- windows %>% mutate(relcovlog2 = log2(RelCoverage))
+#test <- windows %>% group_by(GCbinWhole) %>% summarise(mean = mean(relcovlog2))
 
 #windows$GCbin <- as.factor(windows$GCbin)
 ggplot(windows %>% filter(GCbin > 20 & GCbin < 80), aes(x=GCbin, y=RelCoverage)) +
@@ -40,14 +45,31 @@ ggplot(windows %>% filter(GCbin > 20 & GCbin < 80), aes(x=GCbinWhole, y=RelCover
   geom_hline(yintercept=1, color="grey") +
   stat_summary(geom='ribbon', fun.data = mean_cl_normal, fun.args=list(conf.int=0.95), aes(group =kit, fill=kit), alpha = 0.3) +
   stat_summary(aes(group=kit, color=kit), fun.y=mean, geom="line") + 
-  xlim(25,75) + 
+  xlim(10,90) + 
   theme_bw() + 
   ylab("Relative Coverage") + 
   xlab("% GC") + 
   scale_color_manual(values=flexxt, labels=c("Illumina DNA Prep", "Nextera XT")) + 
-  scale_fill_manual(values= flexxt, labels=c("Illumina DNA Prep", "Nextera XT"))
+  scale_fill_manual(values= flexxt, labels=c("Illumina DNA Prep", "Nextera XT")) + 
+  theme(legend.title = element_blank())
 
 ggsave(here("outputs/figures/XTvFlex_GCrelcoverage.pdf"), width=8, h =5, dpi=300)
 ggsave(here("outputs/figures/XTvFlex_GCrelcoverage.jpg"), width=8, h =5, dpi=300)
 
-windows %>% filter(GCbinWhole==50) %>% nrow()
+#windows %>% filter(GCbinWhole==80) %>% nrow()
+
+head(windows %>% filter(Sample == "flex_D01") %>% filter(RelCoverage > 1 & RelCoverage < 1.1))
+
+
+# would be nice to add ribbon
+ggplot(windows %>% filter(GCbin > 20 & GCbin < 80), aes(x=GCbinWhole, y=relcovlog2)) +
+  geom_hline(yintercept=1, color="grey") +
+  stat_summary(geom='ribbon', fun.data = mean_cl_normal, fun.args=list(conf.int=0.95), aes(group =kit, fill=kit), alpha = 0.3) +
+  stat_summary(aes(group=kit, color=kit), fun.y=mean, geom="line") + 
+  xlim(10,90) + 
+  theme_bw() + 
+  ylab("Relative Coverage") + 
+  xlab("% GC") + 
+  scale_color_manual(values=flexxt, labels=c("Illumina DNA Prep", "Nextera XT")) + 
+  scale_fill_manual(values= flexxt, labels=c("Illumina DNA Prep", "Nextera XT")) + 
+  theme(legend.title = element_blank())
