@@ -18,6 +18,12 @@ XTvFlex/03_GC/01_subsampling/
 XTvFlex/03_GC/02_readalignment
 XTvFlex/03_GC/03_windows/*err
 XTvFlex/03_GC/03_windows/*out
+XTvFlex/03_GC/03_windows/concat_windowvals_500k.tsv
+
+# ignore test dirs
+test/
+demo_output/
+
 # ignore hidden files
 .*
 outputs/figures/._*
