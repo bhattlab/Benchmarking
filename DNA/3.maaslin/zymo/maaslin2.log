@@ -1,0 +1,371 @@
+2022-01-26 12:04:42 INFO::Writing function arguments to log file
+2022-01-26 12:04:42 DEBUG::Function arguments
+2022-01-26 12:04:42 DEBUG::Output folder: /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo
+2022-01-26 12:04:42 DEBUG::Min Abundance: 0.010000
+2022-01-26 12:04:43 DEBUG::Min Prevalence: 0.100000
+2022-01-26 12:04:43 DEBUG::Normalization: NONE
+2022-01-26 12:04:43 DEBUG::Transform: NONE
+2022-01-26 12:04:43 DEBUG::Analysis method: LM
+2022-01-26 12:04:43 DEBUG::Max significance: 0.250000
+2022-01-26 12:04:43 DEBUG::Random effects: Donor
+2022-01-26 12:04:43 DEBUG::Fixed effects: Temperature
+2022-01-26 12:04:43 DEBUG::Correction method: BH
+2022-01-26 12:04:43 DEBUG::Standardize: FALSE
+2022-01-26 12:04:43 DEBUG::Cores: 1
+2022-01-26 12:04:43 INFO::Verifying options selected are valid
+2022-01-26 12:04:43 INFO::Determining format of input files
+2022-01-26 12:04:43 INFO::Input format is data samples as rows and metadata samples as rows
+2022-01-26 12:04:43 DEBUG::The following samples were found to have features but no metadata. They will be removed. D10.NF.R1,NCO.B2.R1,D02.OF.R1,D02.OF.R3,D10.OH.R1,PCO.B1.R3,NCO.B3.R2,D04.OH.R1,D01.OR.R3,D09.OF.R2,D10.NF.R3,D07.NF.R1,D08.OH.R3,NCO.B4.R2,D02.NF.R3,D02.OH.R2,NCO.B3.R3,D03.NF.R3,D08.OH.R1,D05.OH.R1,D05.OF.R3,D08.NF.R1,D09.OF.R3,D02.OR.R2,NCO.B2.R2,PCO.B1.R2,D09.NF.R3,D04.NF.R3,D09.OR.R3,D02.OF.R2,D10.OH.R2,D03.OR.R2,D10.OF.R1,D03.OH.R3,D07.OR.R1,D01.OR.R2,PCO.B4.R1,PCO.B2.R3,D05.NF.R1,D07.OR.R3,D04.OF.R1,D05.NF.R2,D02.NF.R1,NCO.B4.R3,D09.OH.R3,D03.NF.R2,D03.OF.R2,D02.OR.R1,D06.OR.R1,D06.OH.R1,D07.NF.R2,D04.OR.R2,D07.OF.R2,D03.OF.R1,D08.OF.R2,PCO.B3.R2,NCO.B4.R1,D08.OH.R2,D10.OF.R2,D05.OH.R3,D03.OH.R2,PCO.B2.R2,D06.OH.R3,D03.NF.R1,D02.NF.R2,D05.OF.R2,D05.OR.R2,D06.OH.R2,D03.OR.R3,D08.OR.R2,D09.NF.R1,D09.OH.R1,D07.OR.R2,NCO.B2.R3,D01.OR.R1,D06.OF.R2,D10.OH.R3,D08.NF.R3,D04.OH.R3,D04.NF.R2,D01.NF.R3,D09.OR.R1,D08.OR.R1,D01.OF.R3,D01.NF.R1,D01.NF.R2,D07.NF.R3,D08.OR.R3,D09.OR.R2,D10.OR.R2,D10.OR.R3,D06.OR.R2,D08.NF.R2,D02.OH.R1,D01.OH.R3,NCO.B1.R1,D07.OH.R1,D05.OF.R1,D08.OF.R1,D05.NF.R3,D10.OR.R1,PCO.B4.R3,D10.NF.R2,PCO.B4.R2,D06.NF.R2,D01.OF.R2,D04.OF.R2,PCO.B1.R1,D06.NF.R3,D01.OH.R2,D07.OF.R1,D07.OH.R3,D07.OF.R3,D05.OH.R2,D06.OR.R3,NCO.B1.R3,D06.NF.R1,D02.OH.R3,PCO.B3.R3,D01.OH.R1,D04.OF.R3,D04.OR.R1,D05.OR.R1,D02.OR.R3,PCO.B3.R1,D03.OF.R3,D05.OR.R3,D03.OR.R1,D04.OH.R2,NCO.B3.R1,D09.OF.R1,D01.OF.R1,D03.OH.R1,NCO.B1.R2,PCO.B2.R1,D04.NF.R1,D06.OF.R3,D09.OH.R2,D08.OF.R3,D04.OR.R3,D10.OF.R3,D06.OF.R1,D07.OH.R2,D09.NF.R2
+2022-01-26 12:04:43 DEBUG::A total of 90 samples were found in both the data and metadata
+2022-01-26 12:04:43 DEBUG::Reordering data/metadata to use same sample ordering
+2022-01-26 12:04:43 INFO::Formula for random effects: expr ~ (1 | Donor)
+2022-01-26 12:04:43 INFO::Formula for fixed effects: expr ~  Temperature
+2022-01-26 12:04:43 INFO::Filter data based on min abundance and min prevalence
+2022-01-26 12:04:43 INFO::Total samples in data: 90
+2022-01-26 12:04:43 INFO::Min samples required with min abundance for a feature not to be filtered: 9.000000
+2022-01-26 12:04:43 INFO::Total filtered features: 392
+2022-01-26 12:04:43 INFO::Filtered feature names from abundance and prevalence filtering:
+2022-01-26 12:04:43 INFO::Total filtered features with variance filtering: 0
+2022-01-26 12:04:43 INFO::Filtered feature names from variance filtering:
+2022-01-26 12:04:43 INFO::Running selected normalization method: NONE
+2022-01-26 12:04:43 INFO::Bypass z-score application to metadata
+2022-01-26 12:04:43 INFO::Running selected transform method: NONE
+2022-01-26 12:04:43 INFO::Running selected analysis method: LM
+2022-01-26 12:04:43 INFO::Fitting model to feature number 1, Bacteroides
+2022-01-26 12:04:44 INFO::Fitting model to feature number 2, Faecalibacterium
+2022-01-26 12:04:45 INFO::Fitting model to feature number 3, Ruminococcus
+2022-01-26 12:04:45 INFO::Fitting model to feature number 4, Blautia
+2022-01-26 12:04:45 INFO::Fitting model to feature number 5, Alistipes
+2022-01-26 12:04:45 INFO::Fitting model to feature number 6, Clostridium
+2022-01-26 12:04:45 INFO::Fitting model to feature number 7, unclassified.Lachnospiraceae
+2022-01-26 12:04:45 INFO::Fitting model to feature number 8, Prevotella
+2022-01-26 12:04:45 INFO::Fitting model to feature number 9, Parabacteroides
+2022-01-26 12:04:45 INFO::Fitting model to feature number 10, Bifidobacterium
+2022-01-26 12:04:45 INFO::Fitting model to feature number 11, unclassified.Ruminococcaceae
+2022-01-26 12:04:45 INFO::Fitting model to feature number 12, Eubacterium
+2022-01-26 12:04:45 INFO::Fitting model to feature number 13, Roseburia
+2022-01-26 12:04:45 INFO::Fitting model to feature number 14, unclassified.Clostridiales..miscellaneous.
+2022-01-26 12:04:46 INFO::Fitting model to feature number 15, Coprococcus
+2022-01-26 12:04:46 INFO::Fitting model to feature number 16, Pseudomonas
+2022-01-26 12:04:46 INFO::Fitting model to feature number 17, Collinsella
+2022-01-26 12:04:46 INFO::Fitting model to feature number 18, Oscillibacter
+2022-01-26 12:04:46 INFO::Fitting model to feature number 19, Firmicutes..environmental.samples
+2022-01-26 12:04:46 INFO::Fitting model to feature number 20, Dorea
+2022-01-26 12:04:46 INFO::Fitting model to feature number 21, Escherichia
+2022-01-26 12:04:46 INFO::Fitting model to feature number 22, unclassified.Firmicutes.sensu.stricto..miscellaneous.
+2022-01-26 12:04:46 INFO::Fitting model to feature number 23, Anaerostipes
+2022-01-26 12:04:46 INFO::Fitting model to feature number 24, unclassified.Clostridiaceae
+2022-01-26 12:04:46 INFO::Fitting model to feature number 25, Megamonas
+2022-01-26 12:04:46 INFO::Fitting model to feature number 26, Subdoligranulum
+2022-01-26 12:04:47 INFO::Fitting model to feature number 27, Enterococcus
+2022-01-26 12:04:47 INFO::Fitting model to feature number 28, Staphylococcus
+2022-01-26 12:04:47 INFO::Fitting model to feature number 29, Gemmiger
+2022-01-26 12:04:47 INFO::Fitting model to feature number 30, Fusicatenibacter
+2022-01-26 12:04:47 INFO::Fitting model to feature number 31, Ruthenibacterium
+2022-01-26 12:04:47 INFO::Fitting model to feature number 32, Dialister
+2022-01-26 12:04:47 INFO::Fitting model to feature number 33, Butyricicoccus
+2022-01-26 12:04:47 INFO::Fitting model to feature number 34, Lachnoclostridium
+2022-01-26 12:04:47 INFO::Fitting model to feature number 35, Odoribacter
+2022-01-26 12:04:47 INFO::Fitting model to feature number 36, unclassified.Oscillospiraceae
+2022-01-26 12:04:47 INFO::Fitting model to feature number 37, Bacillus
+2022-01-26 12:04:47 INFO::Fitting model to feature number 38, Azospirillum
+2022-01-26 12:04:48 INFO::Fitting model to feature number 39, Sutterella
+2022-01-26 12:04:48 INFO::Fitting model to feature number 40, Streptococcus
+2022-01-26 12:04:48 INFO::Fitting model to feature number 41, Coprobacillus
+2022-01-26 12:04:48 INFO::Fitting model to feature number 42, Clostridiales..environmental.samples
+2022-01-26 12:04:48 INFO::Fitting model to feature number 43, unclassified.Bacteroidaceae
+2022-01-26 12:04:48 INFO::Fitting model to feature number 44, Anaerobutyricum
+2022-01-26 12:04:48 INFO::Fitting model to feature number 45, Flavonifractor
+2022-01-26 12:04:48 INFO::Fitting model to feature number 46, Phascolarctobacterium
+2022-01-26 12:04:48 INFO::Fitting model to feature number 47, Lachnospira
+2022-01-26 12:04:48 INFO::Fitting model to feature number 48, Barnesiella
+2022-01-26 12:04:48 INFO::Fitting model to feature number 49, unclassified.Erysipelotrichaceae
+2022-01-26 12:04:48 INFO::Fitting model to feature number 50, Lactobacillus
+2022-01-26 12:04:49 INFO::Fitting model to feature number 51, Mitsuokella
+2022-01-26 12:04:49 INFO::Fitting model to feature number 52, Akkermansia
+2022-01-26 12:04:49 INFO::Fitting model to feature number 53, Bilophila
+2022-01-26 12:04:49 INFO::Fitting model to feature number 54, Butyrivibrio
+2022-01-26 12:04:49 INFO::Fitting model to feature number 55, Clostridioides
+2022-01-26 12:04:49 INFO::Fitting model to feature number 56, Lachnospiraceae..environmental.samples
+2022-01-26 12:04:49 INFO::Fitting model to feature number 57, Eggerthella
+2022-01-26 12:04:49 INFO::Fitting model to feature number 58, unclassified.Coriobacteriaceae
+2022-01-26 12:04:49 INFO::Fitting model to feature number 59, crAss.like.viruses
+2022-01-26 12:04:49 INFO::Fitting model to feature number 60, Acinetobacter
+2022-01-26 12:04:49 INFO::Fitting model to feature number 61, Intestinimonas
+2022-01-26 12:04:49 INFO::Fitting model to feature number 62, Erysipelatoclostridium
+2022-01-26 12:04:50 INFO::Fitting model to feature number 63, Butyricimonas
+2022-01-26 12:04:50 INFO::Fitting model to feature number 64, unclassified.Clostridia
+2022-01-26 12:04:50 INFO::Fitting model to feature number 65, Megasphaera
+2022-01-26 12:04:50 INFO::Fitting model to feature number 66, unclassified.Rikenellaceae
+2022-01-26 12:04:50 INFO::Fitting model to feature number 67, Dysosmobacter
+2022-01-26 12:04:50 INFO::Fitting model to feature number 68, unclassified.Lentisphaeria
+2022-01-26 12:04:50 INFO::Fitting model to feature number 69, Prevotellaceae..environmental.samples
+2022-01-26 12:04:50 INFO::Fitting model to feature number 70, unclassified.Bacteroidales..miscellaneous.
+2022-01-26 12:04:50 INFO::Fitting model to feature number 71, Guerin_crAss_Delta
+2022-01-26 12:04:50 INFO::Fitting model to feature number 72, Eisenbergiella
+2022-01-26 12:04:50 INFO::Fitting model to feature number 73, Romboutsia
+2022-01-26 12:04:50 INFO::Fitting model to feature number 74, Proteobacteria..environmental.samples
+2022-01-26 12:04:50 INFO::Fitting model to feature number 75, Klebsiella
+2022-01-26 12:04:51 INFO::Fitting model to feature number 76, unclassified.Eubacteriaceae
+2022-01-26 12:04:51 INFO::Fitting model to feature number 77, Carnobacterium
+2022-01-26 12:04:51 INFO::Fitting model to feature number 78, Hungatella
+2022-01-26 12:04:51 INFO::Fitting model to feature number 79, Desulfotomaculum
+2022-01-26 12:04:51 INFO::Fitting model to feature number 80, Parasutterella
+2022-01-26 12:04:51 INFO::Fitting model to feature number 81, Pseudoflavonifractor
+2022-01-26 12:04:51 INFO::Fitting model to feature number 82, Guerin_crAss_Alpha
+2022-01-26 12:04:51 INFO::Fitting model to feature number 83, Tyzzerella
+2022-01-26 12:04:51 INFO::Fitting model to feature number 84, Anaerotruncus
+2022-01-26 12:04:51 INFO::Fitting model to feature number 85, Paraprevotella
+2022-01-26 12:04:51 INFO::Fitting model to feature number 86, Holdemania
+2022-01-26 12:04:51 INFO::Fitting model to feature number 87, Gordonibacter
+2022-01-26 12:04:51 INFO::Fitting model to feature number 88, Monoglobus
+2022-01-26 12:04:52 INFO::Fitting model to feature number 89, Desulfovibrio
+2022-01-26 12:04:52 INFO::Fitting model to feature number 90, Haemophilus
+2022-01-26 12:04:52 INFO::Fitting model to feature number 91, unclassified.Prevotellaceae
+2022-01-26 12:04:52 INFO::Fitting model to feature number 92, unclassified.Sutterellaceae
+2022-01-26 12:04:52 INFO::Fitting model to feature number 93, Olsenella
+2022-01-26 12:04:52 INFO::Fitting model to feature number 94, Streptomyces
+2022-01-26 12:04:52 INFO::Fitting model to feature number 95, Parolsenella
+2022-01-26 12:04:52 INFO::Fitting model to feature number 96, Sellimonas
+2022-01-26 12:04:52 INFO::Fitting model to feature number 97, Veillonella
+2022-01-26 12:04:52 INFO::Fitting model to feature number 98, Porphyromonas
+2022-01-26 12:04:52 INFO::Fitting model to feature number 99, Enterorhabdus
+2022-01-26 12:04:53 INFO::Fitting model to feature number 100, Faecalicatena
+2022-01-26 12:04:53 INFO::Fitting model to feature number 101, Lachnotalea
+2022-01-26 12:04:53 INFO::Fitting model to feature number 102, Turicibacter
+2022-01-26 12:04:53 INFO::Fitting model to feature number 103, Catenibacterium
+2022-01-26 12:04:53 INFO::Fitting model to feature number 104, unclassified.Eggerthellales
+2022-01-26 12:04:53 INFO::Fitting model to feature number 105, Neglecta
+2022-01-26 12:04:53 INFO::Fitting model to feature number 106, Agathobaculum
+2022-01-26 12:04:53 INFO::Fitting model to feature number 107, unclassified.Coriobacteriia
+2022-01-26 12:04:53 INFO::Fitting model to feature number 108, Candidatus.Borkfalkia
+2022-01-26 12:04:53 INFO::Fitting model to feature number 109, Actinomyces
+2022-01-26 12:04:53 INFO::Fitting model to feature number 110, Enterobacter
+2022-01-26 12:04:53 INFO::Fitting model to feature number 111, Bittarella
+2022-01-26 12:04:54 INFO::Fitting model to feature number 112, unclassified.Christensenellaceae
+2022-01-26 12:04:54 INFO::Fitting model to feature number 113, unclassified.Veillonellaceae
+2022-01-26 12:04:54 INFO::Fitting model to feature number 114, Coriobacteriaceae..environmental.samples
+2022-01-26 12:04:54 INFO::Fitting model to feature number 115, Intestinibacter
+2022-01-26 12:04:54 INFO::Fitting model to feature number 116, Anaeromassilibacillus
+2022-01-26 12:04:54 INFO::Fitting model to feature number 117, Mycoplasma
+2022-01-26 12:04:54 INFO::Fitting model to feature number 118, unclassified.Burkholderiales..miscellaneous.
+2022-01-26 12:04:54 INFO::Fitting model to feature number 119, Paenibacillus
+2022-01-26 12:04:54 INFO::Fitting model to feature number 120, Phocea
+2022-01-26 12:04:54 INFO::Fitting model to feature number 121, Bacteroidales..environmental.samples
+2022-01-26 12:04:54 INFO::Fitting model to feature number 122, Catabacter
+2022-01-26 12:04:54 INFO::Fitting model to feature number 123, Absiella
+2022-01-26 12:04:55 INFO::Fitting model to feature number 124, Lactococcus
+2022-01-26 12:04:55 INFO::Fitting model to feature number 125, Victivallis
+2022-01-26 12:04:55 INFO::Fitting model to feature number 126, Faecalitalea
+2022-01-26 12:04:55 INFO::Fitting model to feature number 127, Erysipelotrichaceae..environmental.samples
+2022-01-26 12:04:55 INFO::Fitting model to feature number 128, Mediterranea
+2022-01-26 12:04:55 INFO::Fitting model to feature number 129, unclassified.Porphyromonadaceae
+2022-01-26 12:04:55 INFO::Fitting model to feature number 130, Emergencia
+2022-01-26 12:04:55 INFO::Fitting model to feature number 131, Sarcina
+2022-01-26 12:04:55 INFO::Fitting model to feature number 132, unclassified.Muribaculaceae
+2022-01-26 12:04:55 INFO::Fitting model to feature number 133, Guerin_crAss_Gamma
+2022-01-26 12:04:55 INFO::Fitting model to feature number 134, Harryflintia
+2022-01-26 12:04:56 INFO::Fitting model to feature number 135, Christensenella
+2022-01-26 12:04:56 INFO::Fitting model to feature number 136, Selenomonas
+2022-01-26 12:04:56 INFO::Fitting model to feature number 137, Atopobium
+2022-01-26 12:04:56 INFO::Fitting model to feature number 138, unclassified.Peptococcaceae
+2022-01-26 12:04:56 INFO::Fitting model to feature number 139, Dielma
+2022-01-26 12:04:56 INFO::Fitting model to feature number 140, Acidaminococcus
+2022-01-26 12:04:56 INFO::Fitting model to feature number 141, unclassified.Desulfovibrionaceae
+2022-01-26 12:04:56 INFO::Fitting model to feature number 142, Lachnoanaerobaculum
+2022-01-26 12:04:56 INFO::Fitting model to feature number 143, unclassified.Verrucomicrobia
+2022-01-26 12:04:56 INFO::Counting total values for each feature
+2022-01-26 12:04:56 INFO::Writing residuals to file /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo/residuals.rds
+2022-01-26 12:04:56 INFO::Writing fitted values to file /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo/fitted.rds
+2022-01-26 12:04:56 INFO::Writing extracted random effects to file /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo/ranef.rds
+2022-01-26 12:04:57 INFO::Writing all results to file (ordered by increasing q-values): /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo/all_results.tsv
+2022-01-26 12:04:57 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.250000 ) to file (ordered by increasing q-values): /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo/significant_results.tsv
+2022-01-26 12:04:57 INFO::Writing heatmap of significant results to file: /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo/heatmap.pdf
+2022-01-26 12:04:57 INFO::Writing association plots (one for each significant association) to output folder: /Users/maidvorak/scg4/projects/benchmark/Benchmarking/DNA/3.maaslin/zymo
+2022-01-26 12:04:57 INFO::Plotting associations from most to least significant, grouped by metadata
+2022-01-26 12:04:57 INFO::Plotting data for metadata number 1, Temperature
+2022-01-26 12:04:57 INFO::Creating boxplot for categorical data, Temperature vs Anaerobutyricum
+2022-01-26 12:04:57 INFO::Creating boxplot for categorical data, Temperature vs Blautia
+2022-01-26 12:04:57 INFO::Creating boxplot for categorical data, Temperature vs Anaerostipes
+2022-01-26 12:04:58 INFO::Creating boxplot for categorical data, Temperature vs Lachnospira
+2022-01-26 12:04:58 INFO::Creating boxplot for categorical data, Temperature vs Holdemania
+2022-01-26 12:04:58 INFO::Creating boxplot for categorical data, Temperature vs Dorea
+2022-01-26 12:04:58 INFO::Creating boxplot for categorical data, Temperature vs Clostridioides
+2022-01-26 12:04:58 INFO::Creating boxplot for categorical data, Temperature vs Anaerobutyricum
+2022-01-26 12:04:59 INFO::Creating boxplot for categorical data, Temperature vs Faecalicatena
+2022-01-26 12:04:59 INFO::Creating boxplot for categorical data, Temperature vs Fusicatenibacter
+2022-01-26 12:04:59 INFO::Creating boxplot for categorical data, Temperature vs Ruminococcus
+2022-01-26 12:04:59 INFO::Creating boxplot for categorical data, Temperature vs Streptococcus
+2022-01-26 12:04:59 INFO::Creating boxplot for categorical data, Temperature vs Veillonella
+2022-01-26 12:05:00 INFO::Creating boxplot for categorical data, Temperature vs Streptococcus
+2022-01-26 12:05:00 INFO::Creating boxplot for categorical data, Temperature vs Faecalibacterium
+2022-01-26 12:05:00 INFO::Creating boxplot for categorical data, Temperature vs Faecalibacterium
+2022-01-26 12:05:00 INFO::Creating boxplot for categorical data, Temperature vs Agathobaculum
+2022-01-26 12:05:00 INFO::Creating boxplot for categorical data, Temperature vs crAss.like.viruses
+2022-01-26 12:05:01 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Clostridiales..miscellaneous.
+2022-01-26 12:05:01 INFO::Creating boxplot for categorical data, Temperature vs Bacteroides
+2022-01-26 12:05:01 INFO::Creating boxplot for categorical data, Temperature vs Anaerostipes
+2022-01-26 12:05:01 INFO::Creating boxplot for categorical data, Temperature vs Bifidobacterium
+2022-01-26 12:05:01 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Eubacteriaceae
+2022-01-26 12:05:01 INFO::Creating boxplot for categorical data, Temperature vs Blautia
+2022-01-26 12:05:02 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Lachnospiraceae
+2022-01-26 12:05:02 INFO::Creating boxplot for categorical data, Temperature vs Parabacteroides
+2022-01-26 12:05:02 INFO::Creating boxplot for categorical data, Temperature vs Odoribacter
+2022-01-26 12:05:02 INFO::Creating boxplot for categorical data, Temperature vs Porphyromonas
+2022-01-26 12:05:02 INFO::Creating boxplot for categorical data, Temperature vs Agathobaculum
+2022-01-26 12:05:02 INFO::Creating boxplot for categorical data, Temperature vs Dysosmobacter
+2022-01-26 12:05:03 INFO::Creating boxplot for categorical data, Temperature vs Butyricicoccus
+2022-01-26 12:05:03 INFO::Creating boxplot for categorical data, Temperature vs Eubacterium
+2022-01-26 12:05:03 INFO::Creating boxplot for categorical data, Temperature vs Lactococcus
+2022-01-26 12:05:03 INFO::Creating boxplot for categorical data, Temperature vs Flavonifractor
+2022-01-26 12:05:03 INFO::Creating boxplot for categorical data, Temperature vs Enterorhabdus
+2022-01-26 12:05:04 INFO::Creating boxplot for categorical data, Temperature vs Oscillibacter
+2022-01-26 12:05:04 INFO::Creating boxplot for categorical data, Temperature vs Butyricicoccus
+2022-01-26 12:05:04 INFO::Creating boxplot for categorical data, Temperature vs Guerin_crAss_Delta
+2022-01-26 12:05:04 INFO::Creating boxplot for categorical data, Temperature vs Lachnospira
+2022-01-26 12:05:04 INFO::Creating boxplot for categorical data, Temperature vs Phocea
+2022-01-26 12:05:04 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Muribaculaceae
+2022-01-26 12:05:05 INFO::Creating boxplot for categorical data, Temperature vs Bacteroides
+2022-01-26 12:05:05 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Oscillospiraceae
+2022-01-26 12:05:05 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Bacteroidales..miscellaneous.
+2022-01-26 12:05:05 INFO::Creating boxplot for categorical data, Temperature vs Romboutsia
+2022-01-26 12:05:05 INFO::Creating boxplot for categorical data, Temperature vs Anaerotruncus
+2022-01-26 12:05:05 INFO::Creating boxplot for categorical data, Temperature vs Holdemania
+2022-01-26 12:05:06 INFO::Creating boxplot for categorical data, Temperature vs Oscillibacter
+2022-01-26 12:05:06 INFO::Creating boxplot for categorical data, Temperature vs Sutterella
+2022-01-26 12:05:06 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Sutterellaceae
+2022-01-26 12:05:06 INFO::Creating boxplot for categorical data, Temperature vs Anaeromassilibacillus
+2022-01-26 12:05:06 INFO::Creating boxplot for categorical data, Temperature vs Alistipes
+2022-01-26 12:05:06 INFO::Creating boxplot for categorical data, Temperature vs Clostridioides
+2022-01-26 12:05:07 INFO::Creating boxplot for categorical data, Temperature vs Phascolarctobacterium
+2022-01-26 12:05:07 INFO::Creating boxplot for categorical data, Temperature vs Intestinibacter
+2022-01-26 12:05:07 INFO::Creating boxplot for categorical data, Temperature vs Lactobacillus
+2022-01-26 12:05:07 INFO::Creating boxplot for categorical data, Temperature vs Dorea
+2022-01-26 12:05:07 INFO::Creating boxplot for categorical data, Temperature vs Proteobacteria..environmental.samples
+2022-01-26 12:05:07 INFO::Creating boxplot for categorical data, Temperature vs Harryflintia
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs crAss.like.viruses
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs Mediterranea
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs Romboutsia
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs Erysipelotrichaceae..environmental.samples
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs Lactococcus
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs Mitsuokella
+2022-01-26 12:05:08 INFO::Creating boxplot for categorical data, Temperature vs Pseudoflavonifractor
+2022-01-26 12:05:09 INFO::Creating boxplot for categorical data, Temperature vs Gemmiger
+2022-01-26 12:05:09 INFO::Creating boxplot for categorical data, Temperature vs Intestinibacter
+2022-01-26 12:05:09 INFO::Creating boxplot for categorical data, Temperature vs Eubacterium
+2022-01-26 12:05:09 INFO::Creating boxplot for categorical data, Temperature vs Dysosmobacter
+2022-01-26 12:05:09 INFO::Creating boxplot for categorical data, Temperature vs Coprobacillus
+2022-01-26 12:05:09 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Bacteroidales..miscellaneous.
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Veillonellaceae
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs Guerin_crAss_Gamma
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Oscillospiraceae
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs Parasutterella
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs Collinsella
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs Fusicatenibacter
+2022-01-26 12:05:10 INFO::Creating boxplot for categorical data, Temperature vs Haemophilus
+2022-01-26 12:05:11 INFO::Creating boxplot for categorical data, Temperature vs Sellimonas
+2022-01-26 12:05:11 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Coriobacteriaceae
+2022-01-26 12:05:11 INFO::Creating boxplot for categorical data, Temperature vs Barnesiella
+2022-01-26 12:05:11 INFO::Creating boxplot for categorical data, Temperature vs Gordonibacter
+2022-01-26 12:05:11 INFO::Creating boxplot for categorical data, Temperature vs Mediterranea
+2022-01-26 12:05:11 INFO::Creating boxplot for categorical data, Temperature vs Lachnoclostridium
+2022-01-26 12:05:12 INFO::Creating boxplot for categorical data, Temperature vs Anaerotruncus
+2022-01-26 12:05:12 INFO::Creating boxplot for categorical data, Temperature vs Selenomonas
+2022-01-26 12:05:12 INFO::Creating boxplot for categorical data, Temperature vs Pseudoflavonifractor
+2022-01-26 12:05:12 INFO::Creating boxplot for categorical data, Temperature vs Dialister
+2022-01-26 12:05:13 INFO::Creating boxplot for categorical data, Temperature vs Phascolarctobacterium
+2022-01-26 12:05:13 INFO::Creating boxplot for categorical data, Temperature vs Phocea
+2022-01-26 12:05:13 INFO::Creating boxplot for categorical data, Temperature vs Intestinimonas
+2022-01-26 12:05:13 INFO::Creating boxplot for categorical data, Temperature vs Parasutterella
+2022-01-26 12:05:13 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Muribaculaceae
+2022-01-26 12:05:14 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Sutterellaceae
+2022-01-26 12:05:14 INFO::Creating boxplot for categorical data, Temperature vs Parabacteroides
+2022-01-26 12:05:14 INFO::Creating boxplot for categorical data, Temperature vs Ruminococcus
+2022-01-26 12:05:14 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Bacteroidaceae
+2022-01-26 12:05:14 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Lentisphaeria
+2022-01-26 12:05:14 INFO::Creating boxplot for categorical data, Temperature vs Sutterella
+2022-01-26 12:05:15 INFO::Creating boxplot for categorical data, Temperature vs Faecalicatena
+2022-01-26 12:05:15 INFO::Creating boxplot for categorical data, Temperature vs Enterococcus
+2022-01-26 12:05:15 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Clostridiaceae
+2022-01-26 12:05:15 INFO::Creating boxplot for categorical data, Temperature vs Lactobacillus
+2022-01-26 12:05:15 INFO::Creating boxplot for categorical data, Temperature vs Catabacter
+2022-01-26 12:05:15 INFO::Creating boxplot for categorical data, Temperature vs Emergencia
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs Butyrivibrio
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs Veillonella
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Burkholderiales..miscellaneous.
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Porphyromonadaceae
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs Dielma
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs Butyricimonas
+2022-01-26 12:05:16 INFO::Creating boxplot for categorical data, Temperature vs Clostridium
+2022-01-26 12:05:17 INFO::Creating boxplot for categorical data, Temperature vs Mycoplasma
+2022-01-26 12:05:17 INFO::Creating boxplot for categorical data, Temperature vs Absiella
+2022-01-26 12:05:17 INFO::Creating boxplot for categorical data, Temperature vs Paraprevotella
+2022-01-26 12:05:17 INFO::Creating boxplot for categorical data, Temperature vs Desulfovibrio
+2022-01-26 12:05:17 INFO::Creating boxplot for categorical data, Temperature vs Dielma
+2022-01-26 12:05:17 INFO::Creating boxplot for categorical data, Temperature vs Guerin_crAss_Alpha
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs Monoglobus
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs Acidaminococcus
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Burkholderiales..miscellaneous.
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs Christensenella
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs Porphyromonas
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs Flavonifractor
+2022-01-26 12:05:18 INFO::Creating boxplot for categorical data, Temperature vs Sarcina
+2022-01-26 12:05:19 INFO::Creating boxplot for categorical data, Temperature vs Clostridiales..environmental.samples
+2022-01-26 12:05:19 INFO::Creating boxplot for categorical data, Temperature vs Parolsenella
+2022-01-26 12:05:19 INFO::Creating boxplot for categorical data, Temperature vs Actinomyces
+2022-01-26 12:05:19 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Christensenellaceae
+2022-01-26 12:05:19 INFO::Creating boxplot for categorical data, Temperature vs Mycoplasma
+2022-01-26 12:05:19 INFO::Creating boxplot for categorical data, Temperature vs Erysipelatoclostridium
+2022-01-26 12:05:20 INFO::Creating boxplot for categorical data, Temperature vs Faecalitalea
+2022-01-26 12:05:20 INFO::Creating boxplot for categorical data, Temperature vs Megamonas
+2022-01-26 12:05:20 INFO::Creating boxplot for categorical data, Temperature vs Turicibacter
+2022-01-26 12:05:20 INFO::Creating boxplot for categorical data, Temperature vs Barnesiella
+2022-01-26 12:05:20 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Erysipelotrichaceae
+2022-01-26 12:05:20 INFO::Creating boxplot for categorical data, Temperature vs Butyrivibrio
+2022-01-26 12:05:21 INFO::Creating boxplot for categorical data, Temperature vs Lachnospiraceae..environmental.samples
+2022-01-26 12:05:21 INFO::Creating boxplot for categorical data, Temperature vs Clostridiales..environmental.samples
+2022-01-26 12:05:21 INFO::Creating boxplot for categorical data, Temperature vs Guerin_crAss_Delta
+2022-01-26 12:05:21 INFO::Creating boxplot for categorical data, Temperature vs Turicibacter
+2022-01-26 12:05:21 INFO::Creating boxplot for categorical data, Temperature vs Harryflintia
+2022-01-26 12:05:21 INFO::Creating boxplot for categorical data, Temperature vs Roseburia
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs Coriobacteriaceae..environmental.samples
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs Catabacter
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs Odoribacter
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs Desulfovibrio
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Erysipelotrichaceae
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs Acinetobacter
+2022-01-26 12:05:22 INFO::Creating boxplot for categorical data, Temperature vs Erysipelotrichaceae..environmental.samples
+2022-01-26 12:05:23 INFO::Creating boxplot for categorical data, Temperature vs Intestinimonas
+2022-01-26 12:05:23 INFO::Creating boxplot for categorical data, Temperature vs Bifidobacterium
+2022-01-26 12:05:23 INFO::Creating boxplot for categorical data, Temperature vs Coprococcus
+2022-01-26 12:05:23 INFO::Creating boxplot for categorical data, Temperature vs Escherichia
+2022-01-26 12:05:23 INFO::Creating boxplot for categorical data, Temperature vs Guerin_crAss_Alpha
+2022-01-26 12:05:23 INFO::Creating boxplot for categorical data, Temperature vs Faecalitalea
+2022-01-26 12:05:24 INFO::Creating boxplot for categorical data, Temperature vs Alistipes
+2022-01-26 12:05:24 INFO::Creating boxplot for categorical data, Temperature vs Pseudomonas
+2022-01-26 12:05:24 INFO::Creating boxplot for categorical data, Temperature vs Enterococcus
+2022-01-26 12:05:25 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Clostridiales..miscellaneous.
+2022-01-26 12:05:25 INFO::Creating boxplot for categorical data, Temperature vs Guerin_crAss_Gamma
+2022-01-26 12:05:25 INFO::Creating boxplot for categorical data, Temperature vs Azospirillum
+2022-01-26 12:05:25 INFO::Creating boxplot for categorical data, Temperature vs Butyricimonas
+2022-01-26 12:05:26 INFO::Creating boxplot for categorical data, Temperature vs Lachnoclostridium
+2022-01-26 12:05:26 INFO::Creating boxplot for categorical data, Temperature vs Actinomyces
+2022-01-26 12:05:26 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Lachnospiraceae
+2022-01-26 12:05:26 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Lentisphaeria
+2022-01-26 12:05:26 INFO::Creating boxplot for categorical data, Temperature vs Coprobacillus
+2022-01-26 12:05:26 INFO::Creating boxplot for categorical data, Temperature vs Carnobacterium
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Eggerthellales
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs Eggerthella
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs Dialister
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs Lachnoanaerobaculum
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs Megamonas
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Bacteroidaceae
+2022-01-26 12:05:27 INFO::Creating boxplot for categorical data, Temperature vs Proteobacteria..environmental.samples
+2022-01-26 12:05:28 INFO::Creating boxplot for categorical data, Temperature vs Paraprevotella
+2022-01-26 12:05:28 INFO::Creating boxplot for categorical data, Temperature vs Tyzzerella
+2022-01-26 12:05:28 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Peptococcaceae
+2022-01-26 12:05:28 INFO::Creating boxplot for categorical data, Temperature vs unclassified.Rikenellaceae
+2022-01-26 12:05:28 INFO::Creating boxplot for categorical data, Temperature vs Streptomyces
+2022-01-26 12:05:28 INFO::Creating boxplot for categorical data, Temperature vs Enterobacter
+2022-01-26 12:05:29 INFO::Creating boxplot for categorical data, Temperature vs Bacteroidales..environmental.samples
+2022-01-26 12:05:29 INFO::Creating boxplot for categorical data, Temperature vs Subdoligranulum
