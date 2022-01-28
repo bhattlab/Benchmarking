@@ -169,6 +169,7 @@ frozenresults <- mutate(frozenresults, index=paste(metadata,value))
 
 #Concatenate the dataframes
 results <- rbind(zymoresults, frozenresults, omniresults)
+write.table(results, here("DNA/3.maaslin/concat_results.tsv"), row.names = FALSE, sep="\t", quote=FALSE)
 
 #Generating the heatmap
 results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
@@ -209,8 +210,78 @@ ggplot(results, aes(x=index, y=feature, fill=coef2)) +
 ggsave(here("outputs/figures/DNA_heatmap.pdf"), dpi=300, w=12, h=12)
 ggsave(here("outputs/figures/DNA_heatmap.jpeg"), dpi=300, w=12, h=12)
 
-
 ggplot(results, aes(x=coef)) + 
   geom_histogram()+
   xlim(c(-1,1))
+
+#Generating the heatmap with gram stain and phyla
+results <- read.table(here("DNA/3.maaslin/concat_results.tsv"), sep="\t", header=TRUE)
+results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl(".environmental", feature))
+sigresults <- filter(results, abs(coef)>0.25)
+uniquetaxa <- unique(sigresults$feature)
+results <- filter(results, feature %in% uniquetaxa)
+results <- mutate(results, coef2=ifelse(coef>3, 3, ifelse(coef < -3, -3, coef)))
+limit <- max(abs(results$coef2)) * c(-1, 1)
+#Merge with gram stain and phyla dataframe
+phylagram <- read.csv(here("outputs/tables/Maaslin_heatmap_126.csv"), sep=",", header=TRUE)
+phylagram <- merge(results, phylagram, by='feature')
+
+#Plotting phyla heatmap
+ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(Phylum~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "white", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+
+ggsave(here("outputs/figures/DNA_heatmap_phyla.pdf"), dpi=300, w=12, h=14)
+ggsave(here("outputs/figures/DNA_heatmap_phyla.jpeg"), dpi=300, w=12, h=14)
+
+#Plotting gram stain heatmap
+ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(GramStatus~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "white", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+
+ggsave(here("outputs/figures/DNA_heatmap_gram.pdf"), dpi=300, w=12, h=14)
+ggsave(here("outputs/figures/DNA_heatmap_gram.jpeg"), dpi=300, w=12, h=12)
 
