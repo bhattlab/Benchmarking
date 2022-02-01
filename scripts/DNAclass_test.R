@@ -225,11 +225,13 @@ ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder), y=rel_abundance, fill=Ge
     panel.border = element_blank(),
     strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
     strip.text = element_text(color = "black", size = 12)) +
-  scale_y_continuous(limits = c(-3, 100.1), expand = c(0, 0))  + 
+  scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0))  + 
   facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
   theme(legend.position = "none") + 
   new_scale_fill() + 
   geom_tile(aes(x=Sample, y = -2, fill = Condition)) + 
+  geom_tile(aes(x=Sample, y = -3, fill = Condition)) + 
+  geom_tile(aes(x=Sample, y = -4, fill = Condition)) + 
   scale_fill_manual(values = condition_palette)
 
 ggsave(here("outputs/figures/DNA_facetedgenusabundance_nicelabels.jpg"), dpi=300, w = 12, h = 5)
