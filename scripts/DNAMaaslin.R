@@ -41,6 +41,8 @@ rownames(benchmark_groups) <- benchmark_groups$sample
 write.table(benchmark_groups, here("outputs/tables/DNA_metadata.tsv"), row.names = FALSE, sep="\t", quote=FALSE)  
 
 #Transpose the classification file
+kraken_genus_og <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
+
 kraken_genus <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE))
 
 
