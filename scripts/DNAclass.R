@@ -271,8 +271,10 @@ plot_grid(preserve_effect, temperature_effect, rel_widths = c(1,1.9))
 #ggsave(here("outputs/figures/DNA_richness_0.01abund.pdf"), dpi=300, w=8, h=4)
 ##### BETA DIVERSITY: BRAY CURTIS PCoA #####
 # Read in count data
+
 # FIXME Mai needs to push this folder to github!
-cts <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_species_reads.txt"), sep="\t", header = TRUE) 
+cts <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_genus_reads.txt"), sep="\t", header = TRUE) 
+
 cts <- cts %>% select(!starts_with("NCO") & !starts_with("PCO") & !matches("D03.ZH.R2"))
 
 mr <- newMRexperiment(cts)
@@ -315,7 +317,7 @@ ggplot(mds_var_per_df, aes(x = Axis, y = PercentVariation)) +
   ) +
   scale_y_continuous(limits = c(0, 100.1), expand = c(0, 0))
 
-ggsave(here("outputs/figures/DNA_MDS_Scree.pdf"), dpi=300, w=7, h=5)
+ggsave(here("outputs/figures/DNA_MDS_Scree_genus.pdf"), dpi=300, w=7, h=5)
 
 #Plot
 mds_data <- data.frame(Sample = gsub("\\.", "_", rownames(mds_values)),
@@ -324,8 +326,8 @@ mds_data <- data.frame(Sample = gsub("\\.", "_", rownames(mds_values)),
 
 # merge pheno data
 metadata <- filter(metadata, Donor!="NCO" & Donor!="PCO")
-mds_data <-rename (mds_data, Sample=SampleID)
-mds_meta <- merge(mds_data, metadata, by = "Sample")
+mds_data <-rename (mds_data, SampleID=Sample)
+mds_meta <- merge(mds_data, metadata, by = "SampleID")
 
 maicolors <- paletteer_d("ggthemes::Tableau_10")
 mds_plot <- ggplot(mds_meta, aes(x, y)) +
@@ -334,7 +336,7 @@ mds_plot <- ggplot(mds_meta, aes(x, y)) +
   scale_color_manual(values = maicolors) +
   labs(x = paste("MDS 1 (", mds_var_per[1], "%)",sep=""),
        y = paste("MDS 2 (", mds_var_per[2], "%)",sep=""),
-       title = "Species-Level Bray Curtis",
+       title = "Genus-Level Bray Curtis",
        color = "") +
   theme_classic() +
   coord_fixed() +
@@ -344,7 +346,8 @@ mds_plot <- ggplot(mds_meta, aes(x, y)) +
 
 mds_plot
 
-ggsave(here("outputs/figures/DNASpecies_Bray_Curtis.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNAGenus_Bray_Curtis.pdf"), dpi=300, w=5, h=4)
+ggsave(here("outputs/figures/DNAGenus_Bray_Curtis.jpeg"), dpi=300, w=5, h=4)
 
 #MDS colored by preservation method -NOT DONE
 condition_colors <- paletteer_d("nbapalettes::lakers_alt")
@@ -457,6 +460,7 @@ plot_grid(kit_effect, temperature_effect, rel_widths = c(1,2.35))
 #ggsave(here("outputs/figures/DNA_braycurtis_boxplot.jpg"), dpi=300, w = 8, h = 5)
 #ggsave(here("outputs/figures/DNA_braycurtis_boxplot.pdf"), dpi=300, w = 8, h = 5)
 
+<<<<<<< HEAD
 ##### BETA DIVERSITY: GENUS-LEVEL BRAY CURTIS BOXPLOT #####
 # Read in count data
 dist_matrix <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/braycurtis_matrices/braycurtis_distance_genus.txt"), sep="\t", header = TRUE)
@@ -473,6 +477,15 @@ dist_matrix <- dist_matrix %>% filter(!stringr::str_detect(names, 'NCO|PCO') & !
 # convert data to long format
 data_long <- melt(data = dist_matrix, id.vars = "names", variable.name="comparison", value.name = "bc")
 names(data_long) <- c("Sample1", "Sample2", "BrayCurtis")
+=======
+#####Maaslin2 for diff abundance#####
+#For installation of Maaslin2
+#if(!requireNamespace("BiocManager", quietly = TRUE))
+  #install.packages("BiocManager")
+
+#BiocManager::install(version = "3.12") 
+#BiocManager::install("Maaslin2", version="3.12")
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
 
 data_long <- data_long %>% separate(Sample1, c("Donor1", "Condition1", "Replicate1"), remove=FALSE)
 data_long <- data_long %>% separate(Sample2, c("Donor2", "Condition2", "Replicate2"), remove=FALSE)
@@ -561,27 +574,58 @@ plot_grid(kit_effect, temperature_effect, rel_widths = c(1,2.35))
 #install.packages("devtools")
 # library(devtools)
 #devtools::install_github("biobakery/maaslin2")
+<<<<<<< HEAD
 
+=======
+# to get help on usage of Maaslin2 ?
+
+library(Maaslin2)
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
 
 #Reading in metadata dataframe and creating metadata file for Maaslin2
-benchmark_groups <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+#benchmark_groups <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
 #Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
-benchmark_groups <- benchmark_groups %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
-benchmark_groups <- mutate(benchmark_groups, sample=gsub("_", ".", SampleID))
-benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
-benchmark_groups <- mutate(benchmark_groups, Kit=substr(Condition,1,1))
-benchmark_groups <- mutate(benchmark_groups, Temperature=substr(Condition,2,2))
-benchmark_groups <- mutate(benchmark_groups, Kit=ifelse(Kit=="N", "No Preservative", ifelse(Kit=="O", "Omnigene", "Zymo")))
-benchmark_groups <- mutate(benchmark_groups, Temperature=ifelse(Temperature=="F", "Frozen", ifelse(Temperature=="R", "Room Temp", "Hot")))
-rownames(benchmark_groups) <- benchmark_groups$sample
+#benchmark_groups <- benchmark_groups %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#benchmark_groups <- mutate(benchmark_groups, sample=gsub("_", ".", SampleID))
+#benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
+#benchmark_groups <- mutate(benchmark_groups, Kit=substr(Condition,1,1))
+#benchmark_groups <- mutate(benchmark_groups, Temperature=substr(Condition,2,2))
+#benchmark_groups <- mutate(benchmark_groups, Kit=ifelse(Kit=="N", "No Preservative", ifelse(Kit=="O", "Omnigene", "Zymo")))
+#benchmark_groups <- mutate(benchmark_groups, Temperature=ifelse(Temperature=="F", "Frozen", ifelse(Temperature=="R", "Room Temp", "Hot")))
+#rownames(benchmark_groups) <- benchmark_groups$sample
 
 #Exporting metdata
-write.table(benchmark_groups, here("outputs/tables/DNA_metadata.tsv"), row.names = FALSE, sep="\t", quote=FALSE)  
+#write.table(benchmark_groups, here("outputs/tables/DNA_metadata.tsv"), row.names = FALSE, sep="\t", quote=FALSE)  
 
 #Transpose the classification file
+<<<<<<< HEAD
 kraken_genus_og <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
 
 kraken_genus <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE))
+=======
+#kraken_genus <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE))
+
+#Running Maaslin2
+#fit_data <- Maaslin2(
+  #kraken_genus, benchmark_groups, here('DNA/3.maaslin'), transform = "NONE",
+  #fixed_effects = c('Kit', 'Temperature'),
+  #random_effects = c('Donor'),
+  #normalization = 'NONE',
+  #standardize = FALSE,
+  #min_abundance = 0.01,
+  #min_prevalence = 0.1, 
+  #reference = 'Kit,No Preservative;Temperature,Frozen')
+
+#Exporting Maaslin2 results
+#write.csv(fit_data, here("DNA/3.maaslin/DNA_maaslin.csv"), row.names = FALSE)
+
+
+##Maaslin analysis on only Zymo conditions
+#Filter metdata to only include Zymo to do Zymo only Maaslin analysis
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+benchmark_zymo <- filter(benchmark_groups, Kit=="Zymo")
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
 
 
 ##Maaslin2 analysis of ZF v ZH
@@ -592,7 +636,11 @@ zymoresults <- filter(benchmark_groups, Kit=="Zymo")
 
 #Running Maaslin2
 fit_data <- Maaslin2(
+<<<<<<< HEAD
   kraken_genus, zymoresults, here('DNA/3.maaslin'), transform = "NONE",
+=======
+  kraken_genus, benchmark_zymo, here('DNA/3.maaslin/zymo'), transform = "NONE",
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
   fixed_effects = c('Temperature'),
   random_effects = c('Donor'),
   normalization = 'NONE',
@@ -600,9 +648,19 @@ fit_data <- Maaslin2(
   min_abundance = 0.01,
   min_prevalence = 0.1, 
   reference = 'Temperature,Frozen')
+<<<<<<< HEAD
 
 #Filter for significant and large effect sizes
 results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+=======
+
+#Exporting Maaslin2 results
+write.csv(fit_data, here("DNA/3.maaslin/zymo/DNA_maaslin_zymo.csv"), row.names = FALSE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Comparison of ZR and ZF
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
 zymoresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Frozen", "Hot"))
 
 ggplot(zymoresults, aes(x=reorder(feature, -coef), y=coef)) +
@@ -615,6 +673,7 @@ ggplot(zymoresults, aes(x=reorder(feature, -coef), y=coef)) +
 
 ggsave(here("outputs/figures/DNA_ZFZH_maaslin2.pdf"), dpi=300, w=5, h=6)
 ggsave(here("outputs/figures/DNA_ZFZH_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+<<<<<<< HEAD
 
 ##Maaslin2 analysis of OF v OH
 #Filter metadata to only include Omni kit
@@ -625,6 +684,18 @@ omniresults <- filter(benchmark_groups, Kit=="Omnigene")
 #Running Maaslin2
 fit_data <- Maaslin2(
   kraken_genus, omniresults, here('DNA/3.maaslin'), transform = "NONE",
+=======
+
+##Maaslin analysis on only Omni conditions
+#Filter metdata to only include Omni to do Omni only Maaslin analysis
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+benchmark_omni <- filter(benchmark_groups, Kit=="Omnigene")
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_genus, benchmark_omni, here('DNA/3.maaslin/omni'), transform = "NONE",
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
   fixed_effects = c('Temperature'),
   random_effects = c('Donor'),
   normalization = 'NONE',
@@ -633,8 +704,17 @@ fit_data <- Maaslin2(
   min_prevalence = 0.1, 
   reference = 'Temperature,Frozen')
 
+<<<<<<< HEAD
 #Filter for significant and large effect sizes
 results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+=======
+#Exporting Maaslin2 results
+write.csv(fit_data, here("DNA/3.maaslin/omni/DNA_maaslin_omni.csv"), row.names = FALSE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Comparison of ZR and ZF
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
 omniresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Frozen", "Hot"))
 
 ggplot(omniresults, aes(x=reorder(feature, -coef), y=coef)) +
@@ -648,6 +728,7 @@ ggplot(omniresults, aes(x=reorder(feature, -coef), y=coef)) +
 ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf"), dpi=300, w=5, h=6)
 ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
 
+<<<<<<< HEAD
 
 ##Maaslin2 analysis of NF v ZF v OF
 #Filter metadata to only include frozen temperature
@@ -658,12 +739,24 @@ frozenresults <- filter(benchmark_groups, Temperature=="Frozen")
 #Running Maaslin2
 fit_data <- Maaslin2(
   kraken_genus, frozenresults, here('DNA/3.maaslin'), transform = "NONE",
+=======
+##Maaslin analysis on only frozen samples
+#Filter metdata to only include Frozen
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+benchmark_frozen <- filter(benchmark_groups, Temperature=="Frozen")
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_genus, benchmark_frozen, here('DNA/3.maaslin/frozen'), transform = "NONE",
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
   fixed_effects = c('Kit'),
   random_effects = c('Donor'),
   normalization = 'NONE',
   standardize = FALSE,
   min_abundance = 0.01,
   min_prevalence = 0.1, 
+<<<<<<< HEAD
   reference = 'Kit,No Preservative')
 
 #Filter for significant and large effect sizes only for NF v ZF
@@ -671,6 +764,19 @@ results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% 
 nfzfresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Zymo"))
 
 ggplot(nfzfresults, aes(x=reorder(feature, -coef), y=coef)) +
+=======
+  reference = 'Kit, No Preservative')
+
+#Exporting Maaslin2 results
+write.csv(fit_data, here("DNA/3.maaslin/frozen/DNA_maaslin_frozen.csv"), row.names = FALSE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Comparison of ZR and ZF
+frozenresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Zymo"))
+
+ggplot(frozenresults, aes(x=reorder(feature, -coef), y=coef)) +
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
   geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
   theme_bw() + 
   labs(y = "Effect Size", x = "Genus", fill = "") +
@@ -678,6 +784,7 @@ ggplot(nfzfresults, aes(x=reorder(feature, -coef), y=coef)) +
   #scale_fill_manual(values = flexxt_palette) + 
   theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
 
+<<<<<<< HEAD
 ggsave(here("outputs/figures/DNA_NFZF_maaslin2.pdf"), dpi=300, w=5, h=6)
 ggsave(here("outputs/figures/DNA_NFZF_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
 
@@ -723,16 +830,51 @@ limit <- max(abs(results$coef2)) * c(-1, 1)
 
 
 ggplot(results, aes(x=index, y=feature, fill=coef2)) + 
+=======
+ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+
+##Generating heatmap for Maaslin comparison of Kit and Temperature
+#Reading in dataframes and adding in column of comparison to each Maaslin analysis
+frozenresults <- read.table(here("DNA/3.maaslin/frozen/all_results.tsv"), sep="\t", header=TRUE)
+omniresults <- read.table(here("DNA/3.maaslin/omni/all_results.tsv"), sep="\t", header=TRUE)
+zymoresults <- read.table(here("DNA/3.maaslin/zymo/all_results.tsv"), sep="\t", header=TRUE)
+
+frozenresults <- mutate(frozenresults, index=paste(metadata,value))
+omniresults <- filter(omniresults, value=="Hot") %>% mutate(index=paste(metadata,"Omni"))
+zymoresults <- filter(zymoresults, value=="Hot") %>% mutate(index=paste(metadata,"Zymo"))
+
+#Concatenate the dataframes together
+results <- rbind(frozenresults,omniresults,zymoresults)
+
+#Making the heatmap
+results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+limit <- max(abs(results$coef)) * c(-1, 1)
+results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl("environmental.samples", feature))
+results <- mutate(results, coef2=ifelse(coef<3, coef, 4))
+
+
+ggplot(results, aes(x=index, y=feature, fill=coef)) + 
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
   geom_tile() + 
   theme_bw() +
   scale_x_discrete(position = "top") +
   facet_grid(~metadata, scales="free_x") + 
+<<<<<<< HEAD
   scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
   geom_point(aes(alpha=signif), color = "white", size = 5, show.legend = F) + 
   scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
   theme(panel.grid = element_blank(),
         panel.border = element_blank()) + 
   theme(axis.text.y = element_text(size = 15)) + 
+=======
+  #scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "white", size = 3, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 12)) + 
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
   theme(axis.text.x = element_text(size = 15)) + 
   theme(axis.title.y = element_blank()) + 
   theme(axis.title.x = element_blank()) + 
@@ -747,6 +889,7 @@ ggplot(results, aes(x=index, y=feature, fill=coef2)) +
     strip.placement = 'outside'
   ) 
 
+<<<<<<< HEAD
 ggsave(here("outputs/figures/DNA_heatmap.pdf"), dpi=300, w=12, h=12)
 ggsave(here("outputs/figures/DNA_heatmap.jpeg"), dpi=300, w=12, h=12)
 
@@ -824,3 +967,8 @@ ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) +
 
 ggsave(here("outputs/figures/DNA_heatmap_gram.pdf"), dpi=300, w=12, h=14)
 ggsave(here("outputs/figures/DNA_heatmap_gram.jpeg"), dpi=300, w=12, h=12)
+=======
+ggsave(here("outputs/figures/DNA_heatmap.pdf"), dpi=300, w=10, h=12)
+ggsave(here("outputs/figures/DNA_heatmap.jpeg"), dpi=300, w=12, h=16)
+
+>>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
