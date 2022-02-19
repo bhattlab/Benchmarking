@@ -68,6 +68,7 @@ bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
 samplabels <- bracken_pheno$Label
 names(samplabels) <- bracken_pheno$Sample
 
+
 condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
 names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
@@ -371,7 +372,7 @@ ggsave(here("outputs/figures/DNASpecies_Bray_Curtis_Preservation.pdf"), dpi=300,
 
 ##### BETA DIVERISTY: SPECIES-LEVEL BRAY CURTIS BOXPLOT #####
 # Read in count data
-dist_matrix <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/braycurtis_matrices/braycurtis_distance_species.txt"), sep="\t", header = TRUE)
+dist_matrix <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/braycurtis_matrices/braycurtis_distance_phylum.txt"), sep="\t", header = TRUE)
 
 # convert row names to a main column
 dist_matrix <- data.frame(names = row.names(dist_matrix), dist_matrix)
@@ -420,7 +421,7 @@ temperature_effect <- ggplot(distance_averages_within_donor %>% filter(condition
               alpha = 0.85,  color = "darkgray") +
   geom_boxplot(outlier.shape = NA, alpha = 0.7) +
   labs(x = "",
-       y = "Species-Level Bray Curtis Dissimilarity", 
+       y = "Phylum-Level Bray Curtis Dissimilarity", 
        fill = "", 
        title = "Temperature Effect") + 
   ylim(0, 0.5) + 
@@ -441,7 +442,7 @@ kit_effect <- ggplot(distance_averages_within_donor %>% filter(condition_codes %
               alpha = 0.85,  color = "darkgray") +
   geom_boxplot(outlier.shape = NA, alpha = 0.7) +
   labs(x = "",
-       y = "Species-Level Bray Curtis Dissimilarity", 
+       y = "Phylum-Level Bray Curtis Dissimilarity", 
        fill = "", 
        title = "Preservative Effect") + 
   ylim(0, 0.5) + 
@@ -457,8 +458,8 @@ kit_effect <- ggplot(distance_averages_within_donor %>% filter(condition_codes %
 kit_effect
 
 plot_grid(kit_effect, temperature_effect, rel_widths = c(1,2.35))
-#ggsave(here("outputs/figures/DNA_braycurtis_boxplot.jpg"), dpi=300, w = 8, h = 5)
-#ggsave(here("outputs/figures/DNA_braycurtis_boxplot.pdf"), dpi=300, w = 8, h = 5)
+#ggsave(here("outputs/figures/DNA_phylabraycurtis_boxplot.jpg"), dpi=300, w = 8, h = 5)
+#ggsave(here("outputs/figures/DNA_phylabraycurtis_boxplot.pdf"), dpi=300, w = 8, h = 5)
 
 <<<<<<< HEAD
 ##### BETA DIVERSITY: GENUS-LEVEL BRAY CURTIS BOXPLOT #####
@@ -972,3 +973,275 @@ ggsave(here("outputs/figures/DNA_heatmap.pdf"), dpi=300, w=10, h=12)
 ggsave(here("outputs/figures/DNA_heatmap.jpeg"), dpi=300, w=12, h=16)
 
 >>>>>>> a65eff74d755aac53c688779c954eb84c00b7638
+
+##### PHYLUM LEVEL TAXONOMIC RELATIVE ABUNDANCE STACKED BAR PLOT, FACET BY DONOR#####
+# read in metadata
+metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+#Separate the Condition column to create preservation method and temperature columns
+#Mai did and no work metadata <- metadata %>% separate(Condition, c("Preservation", "Temperature"), remove=FALSE)
+metadata <- mutate(metadata, Preservation=substr(Condition,1,1))
+metadata <- mutate(metadata, Temperature=substr(Condition,2,2))
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+
+phyla <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_phylum_percentage.txt"), sep="\t", header=TRUE)
+
+#Color pal
+n_taxa <- 20
+myCols <- colorRampPalette(brewer.pal(9, "Set1")) # WAS Set1
+barplot_pal <- myCols(n_taxa)
+barplot_pal <- sample(barplot_pal)
+barplot_pal[n_taxa + 1] <- "gray"
+
+abundance_threshold <- sort(rowSums(phyla), decreasing = T)[n_taxa]
+bracken_plot <- phyla[rowSums(phyla) >= abundance_threshold,]
+bracken_plot <- rbind(bracken_plot, t(data.frame("Other" =  100 - colSums(bracken_plot))))
+
+bracken_plot$Phyla <- row.names(bracken_plot)
+bracken_plot$Phyla <- gsub("\\(miscellaneous\\)", "", bracken_plot$Phyla)
+bracken_long <- melt(bracken_plot, id.vars = "Phyla", variable.name = "Sample", value.name = "rel_abundance")
+bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
+
+# Merge in the metadata
+colnames(metadata)[3]<-"Sample"
+
+bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
+#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
+
+# Correct the plotting order
+bracken_pheno$Phyla <- factor(bracken_pheno$Phyla, levels = bracken_plot$Phyla)
+
+samplabels <- bracken_pheno$Label
+names(samplabels) <- bracken_pheno$Sample
+
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
+#bracken_pheno$Condition <- factor(bracken_pheno$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
+bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1, 
+                                                        ifelse(Condition == "OF", 2, 
+                                                               ifelse(Condition == "OR", 3, 
+                                                                      ifelse(Condition == "OH", 4, 
+                                                                             ifelse(Condition == "ZF", 5,
+                                                                                    ifelse(Condition == "ZR", 6, 7)))))))
+
+bracken_pheno <- mutate(bracken_pheno, DonorLabel=ifelse(Donor == "D10", "Donor 10", paste("Donor", substr(Donor, 3,3))))
+bracken_pheno$DonorLabel <- factor(bracken_pheno$DonorLabel, levels = c("Donor 1", "Donor 2", "Donor 3", "Donor 4", "Donor 5", "Donor 6", "Donor 7", "Donor 8", "Donor 9", "Donor 10"))
+
+ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder), y=rel_abundance, fill=Phyla)) +
+  geom_bar(stat="identity") +
+  labs(
+    x = "",
+    y = "Relative Abundance (%)"
+  ) +
+  scale_fill_manual("Phylum", values = barplot_pal) +
+  guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
+  theme_bw() +
+  scale_x_discrete(labels = samplabels) + 
+  theme(
+    plot.title = element_text(face = "plain", size = 14),
+    legend.text = element_text(size = 10),
+    #axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.grid = element_blank(), 
+    panel.border = element_blank(),
+    strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
+    strip.text = element_text(color = "black", size = 12)) +
+  scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0))  + 
+  facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
+  #theme(legend.position = "none") + 
+  new_scale_fill() + 
+  geom_tile(aes(x=Sample, y = -2, fill = Condition)) + 
+  geom_tile(aes(x=Sample, y = -3, fill = Condition)) + 
+  geom_tile(aes(x=Sample, y = -4, fill = Condition)) + 
+  scale_fill_manual(values = condition_palette)
+
+#ggsave(here("outputs/figures/DNA_facetedphylaabundance_nicelabels.jpg"), dpi=300, w = 15, h = 6)
+#ggsave(here("outputs/figures/DNA_facetedphylaabundance_nicelabels.pdf"), dpi=300, w = 15, h = 6)
+
+##### PHYLUM ALPHA DIVERSITY: SHANNON #####
+benchmark_s <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_phylum_percentage.txt"), sep="\t")
+benchmark_groups <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+benchmark_groups <- benchmark_groups %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+benchmark_groups <- mutate(benchmark_groups, sample=gsub("_", ".", SampleID))
+benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
+benchmark_groups <- mutate(benchmark_groups, Preservation=substr(Condition,1,1))
+benchmark_groups <- mutate(benchmark_groups, Temperature=substr(Condition,2,2))
+
+shannon_div_s <- diversity(t(benchmark_s), index = "shannon")
+div <- data.frame("shannon_div" = shannon_div_s, "sample" = names(shannon_div_s))
+div_meta <- merge(div, benchmark_groups, by = "sample")
+div_meta <- filter(div_meta, sample != "D03.ZH.R2")
+
+names(div_meta)
+div_grouped_replicates <- div_meta %>% dplyr::select(sample, shannon_div, SampleID, Donor, Condition, Replicate, Preservation, Temperature) %>%
+  group_by(Donor, Condition) %>%
+  summarise_at(vars(shannon_div), list(shannon_div = mean))
+
+div_grouped_replicates <- mutate(div_grouped_replicates, Preservation=substr(Condition,1,1))
+div_grouped_replicates <- mutate(div_grouped_replicates, Temperature=substr(Condition,2,2))
+
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+div_meta <- div_meta %>% mutate(Condition = fct_relevel(Condition, "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+div_grouped_replicates <- div_grouped_replicates %>% mutate(Condition = fct_relevel(Condition, "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+
+preserve_effect <- ggplot(div_grouped_replicates %>% filter(Condition %in% c("NF", "OF", "ZF")), aes(Condition, shannon_div)) + 
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.8),
+              alpha = 0.85, aes(fill=Condition), color = "darkgray") +
+  geom_boxplot(outlier.shape = NA, aes(fill = Condition), alpha = 0.7) + 
+  labs(x = "",
+       y = "Shannon Diversity", 
+       fill = "", 
+       title = "Preservative Effect") + 
+  ylim(0.7,1.25) +
+  scale_color_manual(values = condition_palette) + 
+  scale_fill_manual(values = condition_palette) +
+  theme_cowplot(12) +
+  theme(axis.text.x = element_text(size = 12),
+        legend.position = "none",
+        title = element_text(size = 13),
+        plot.margin = unit(c(0.2, 0.5, 0, 0.2), unit = "cm")) +
+  stat_compare_means(method = "wilcox.test", paired=TRUE, comparisons=list(c("NF", "OF"), c("OF", "ZF"), c("NF", "ZF")), 
+                     tip.length = 0, label = "p.signif")
+preserve_effect
+
+temperature_effect <- ggplot(div_grouped_replicates , aes(Condition, shannon_div)) + 
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.8),
+              alpha = 0.85, aes(fill=Condition), color = "darkgray") +
+  geom_boxplot(outlier.shape = NA, aes(fill = Condition), alpha = 0.7) + 
+  labs(x = "",
+       y = "Shannon Diversity", 
+       fill = "", 
+       title = "Temperature Effect") + 
+  ylim(0.7,1.25) +
+  scale_color_manual(values = condition_palette) + 
+  scale_fill_manual(values = condition_palette) +
+  theme_cowplot(12) +
+  theme(axis.text.x = element_text(size = 12),
+        legend.position = "none",
+        title = element_text(size = 13),
+        plot.margin = unit(c(0.2, 0.5, 0, 0.2), unit = "cm")) +
+  stat_compare_means(method = "wilcox.test", paired=TRUE, comparisons=list(c("OF", "OR"), c("OF", "OH"), c("ZF", "ZR"), c("ZF", "ZH")), 
+                     tip.length = 0, label="p.signif")
+temperature_effect
+
+plot_grid(preserve_effect, temperature_effect, rel_widths = c(1,1.9))
+
+#ggsave(here("outputs/figures/DNA_alphadiv_phyla.jpg"), dpi=300, w = 7, h = 4)
+#ggsave(here("outputs/figures/DNA_alphadiv_phyla.pdf"), dpi=300, w = 7, h = 4)
+
+
+
+
+##### BETA DIVERSITY:PHYLYM-LEVEL BRAY CURTIS BOXPLOT#####
+# Read in count data
+dist_matrix <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/braycurtis_matrices/braycurtis_distance_species.txt"), sep="\t", header = TRUE)
+
+# convert row names to a main column
+dist_matrix <- data.frame(names = row.names(dist_matrix), dist_matrix)
+rownames(dist_matrix) <- NULL
+
+# filter rows and columns to exclude controls and contaminated sample
+dist_matrix <- dist_matrix %>% select(!starts_with("NCO") & !starts_with("PCO") & !matches("D03.ZH.R2")) # filter columns
+dist_matrix <- mutate(dist_matrix, names = gsub('-', '.', names))
+dist_matrix <- dist_matrix %>% filter(!stringr::str_detect(names, 'NCO|PCO') & !stringr::str_detect(names, 'D03.ZH.R2'))
+
+# convert data to long format
+data_long <- melt(data = dist_matrix, id.vars = "names", variable.name="comparison", value.name = "bc")
+names(data_long) <- c("Sample1", "Sample2", "BrayCurtis")
+
+data_long <- data_long %>% separate(Sample1, c("Donor1", "Condition1", "Replicate1"), remove=FALSE)
+data_long <- data_long %>% separate(Sample2, c("Donor2", "Condition2", "Replicate2"), remove=FALSE)
+
+# create a unique identifier for the sample comparisons and filter out redundant comparisons (since this is an all by all, the table is symmetric and has duplicates)
+data_long <- mutate(data_long, comparisonID = ifelse(as.character(Sample1) > as.character(Sample2), paste(Sample1, Sample2), paste(Sample2, Sample1)))
+data_long_filtered <- distinct(data_long, comparisonID, .keep_all = TRUE)
+
+# filter out self-comparisons
+data_long_filtered <- data_long_filtered %>% filter(BrayCurtis > 0)
+
+# taking means across all comparisons done with each tech rep
+data_long_filtered <- mutate(data_long_filtered, nonrepID=gsub("\\.R[123]", "", comparisonID)) # create uniq id not including rep
+data_long_meta <- data_long_filtered %>% select(Donor1, Condition1, Donor2, Condition2, nonrepID) %>% distinct(nonrepID, .keep_all = TRUE)
+distance_averages <- data_long_filtered %>%
+  group_by(nonrepID) %>%
+  summarise_at(vars(BrayCurtis), list(BrayCurtis = mean))
+
+distance_averages <- merge(distance_averages, data_long_meta)
+
+# make dataframe that only includes within-donor comparisons, but not same condition comparisons
+distance_averages_within_donor <- distance_averages %>% filter(Donor1 == Donor2) %>% filter(Condition1 != Condition2) 
+distance_averages_within_donor <- mutate(distance_averages_within_donor, condition_codes = ifelse(as.character(Condition1) > as.character(Condition2), paste(Condition2, "vs", Condition1), paste(Condition1, "vs", Condition2)))
+
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("NF vs OH", "NF vs OR", "NF vs OF", "NF", "NF vs ZF", "NF vs ZR", "NF vs ZH")
+
+distance_averages_within_donor <- distance_averages_within_donor %>% mutate(condition_codes = fct_relevel(condition_codes, "NF vs OF", "NF vs OR", "NF vs OH", "NF vs ZF", "NF vs ZR", "NF vs ZH"))
+
+
+temperature_effect <- ggplot(distance_averages_within_donor %>% filter(condition_codes %in% c("NF vs OF", "NF vs OR", "NF vs OH", "NF vs ZF", "NF vs ZR", "NF vs ZH")), aes(x=condition_codes, y=BrayCurtis, fill = condition_codes)) + 
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.8),
+              alpha = 0.85,  color = "darkgray") +
+  geom_boxplot(outlier.shape = NA, alpha = 0.7) +
+  labs(x = "",
+       y = "Species-Level Bray Curtis Dissimilarity", 
+       fill = "", 
+       title = "Temperature Effect") + 
+  ylim(0, 0.5) + 
+  scale_fill_manual(values = condition_palette) + 
+  theme_cowplot(12) +
+  theme(legend.position = "none",
+        title = element_text(size = 13),
+        plot.margin = unit(c(0.2, 0.5, 0, 0.2), unit = "cm"), 
+        axis.text.x = element_text(size = 12, angle = 45, vjust = 1, hjust=1)) +
+  stat_compare_means(method = "wilcox.test", paired=TRUE, comparisons=list(c("NF vs OF", "NF vs OR"), c("NF vs OR", "NF vs OH"), c("NF vs OF", "NF vs OH"), c("NF vs ZF", "NF vs ZR"), c("NF vs ZR", "NF vs ZH"), c("NF vs ZF", "NF vs ZH")), 
+                     tip.length = 0, label = "p.signif", group.by = "Donor1")
+
+temperature_effect
+
+
+kit_effect <- ggplot(distance_averages_within_donor %>% filter(condition_codes %in% c("NF vs OF", "NF vs ZF")), aes(x=condition_codes, y=BrayCurtis, fill = condition_codes)) + 
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.8),
+              alpha = 0.85,  color = "darkgray") +
+  geom_boxplot(outlier.shape = NA, alpha = 0.7) +
+  labs(x = "",
+       y = "Species-Level Bray Curtis Dissimilarity", 
+       fill = "", 
+       title = "Preservative Effect") + 
+  ylim(0, 0.5) + 
+  scale_fill_manual(values = condition_palette) + 
+  theme_cowplot(12) +
+  theme(axis.text.x = element_text(size = 12, angle = 45, vjust = 1, hjust=1),
+        legend.position = "none",
+        title = element_text(size = 13),
+        plot.margin = unit(c(0.2, 0.5, 0, 0.2), unit = "cm")) +
+  stat_compare_means(method = "wilcox.test", paired=TRUE, comparisons=list(c("NF vs OF", "NF vs ZF")), 
+                     tip.length = 0, label = "p.signif", group.by = "Donor1")
+
+kit_effect
+
+plot_grid(kit_effect, temperature_effect, rel_widths = c(1,2.35))
+#ggsave(here("outputs/figures/DNA_braycurtis_boxplot.jpg"), dpi=300, w = 8, h = 5)
+#ggsave(here("outputs/figures/DNA_braycurtis_boxplot.pdf"), dpi=300, w = 8, h = 5)
