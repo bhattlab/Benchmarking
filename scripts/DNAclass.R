@@ -477,13 +477,6 @@ dist_matrix <- dist_matrix %>% filter(!stringr::str_detect(names, 'NCO|PCO') & !
 # convert data to long format
 data_long <- melt(data = dist_matrix, id.vars = "names", variable.name="comparison", value.name = "bc")
 names(data_long) <- c("Sample1", "Sample2", "BrayCurtis")
-#####Maaslin2 for diff abundance#####
-#For installation of Maaslin2
-#if(!requireNamespace("BiocManager", quietly = TRUE))
-  #install.packages("BiocManager")
-
-#BiocManager::install(version = "3.12") 
-#BiocManager::install("Maaslin2", version="3.12")
 
 data_long <- data_long %>% separate(Sample1, c("Donor1", "Condition1", "Replicate1"), remove=FALSE)
 data_long <- data_long %>% separate(Sample2, c("Donor2", "Condition2", "Replicate2"), remove=FALSE)
@@ -560,7 +553,7 @@ plot_grid(kit_effect, temperature_effect, rel_widths = c(1,2.35))
 #ggsave(here("outputs/figures/DNA_braycurtis_boxplot.pdf"), dpi=300, w = 8, h = 5)
 
 
-##### DIFFERENTIAL ABUNDANCE: MAASLIN2 MODEL #####
+##### GENUS LEVEL DIFFERENTIAL ABUNDANCE: MAASLIN2 MODEL #####
 #Installation of Maaslin2
 #if(!requireNamespace("BiocManager", quietly = TRUE))
 #install.packages("BiocManager")
@@ -934,6 +927,125 @@ ggsave(here("outputs/figures/DNA_heatmap_gram.pdf"), dpi=300, w=12, h=14)
 ggsave(here("outputs/figures/DNA_heatmap_gram.jpeg"), dpi=300, w=12, h=12)
 
 
+#Grouped Maaslin analysis genus-level
+#Read in genus-level Kraken data and metadata
+kraken_genus <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE))
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_genus, benchmark_groups, here('DNA/3.maaslin/genuscomplete'), transform = "NONE",
+  fixed_effects = c('Condition'),
+  random_effects = c('Donor'),
+  normalization = 'NONE',
+  standardize = FALSE,
+  min_abundance = 0.01,
+  min_prevalence = 0.1, 
+  reference = c(('Condition,NF')))
+
+#Reading in Maaslin results
+genusresults <- read.table(here("DNA/3.maaslin/genuscomplete/all_results.tsv"), sep="\t", header=TRUE)
+
+#Filter Maaslin results to include significant effect sizes
+genusresults <- mutate(genusresults, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+#limit <- max(abs(genusresults$coef)) * c(-1, 1)
+genusresults <- filter(genusresults, !grepl("unclassified", feature)) %>% filter(!grepl("environmental.samples", feature))
+genusresults <- mutate(genusresults, coef2=ifelse(coef<3, coef, 4))
+genusresults <- mutate(genusresults, index=paste(metadata,value))
+#Filter out low effect size differences
+genusresults <- genusresults %>% filter(abs(coef2)>0.5)
+limit <- max(abs(genusresults$coef2))* c(-1,1)
+
+ggplot(genusresults, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "dark grey", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+
+ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coef.pdf"), dpi=300, w=10, h=12)
+ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coef.jpeg"), dpi=300, w=10, h=12)
+
+###Genus-level heatmap faceted by phyla or gram status
+#Read in data on phyla and gram status
+phylagram <- read.csv(here("outputs/tables/Maaslin_heatmap_32.csv"), sep=",", header=TRUE)
+phylagram <- merge(genusresults, phylagram, by='feature')
+
+#Plotting gram stain heatmap
+ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(GramStatus~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "dark grey", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coefgram.pdf"), dpi=300, w=10, h=12)
+ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coefgram.jpeg"), dpi=300, w=10, h=12)
+
+#Plotting by phylum heatmap
+ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(Phylum~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "dark grey", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coefphyla.pdf"), dpi=300, w=10, h=12)
+ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coefphyla.jpeg"), dpi=300, w=10, h=12)
+
 ##### PHYLUM LEVEL TAXONOMIC RELATIVE ABUNDANCE STACKED BAR PLOT, FACET BY DONOR#####
 # read in metadata
 metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
@@ -1205,3 +1317,391 @@ kit_effect
 plot_grid(kit_effect, temperature_effect, rel_widths = c(1,2.35))
 #ggsave(here("outputs/figures/DNA_braycurtis_boxplot.jpg"), dpi=300, w = 8, h = 5)
 #ggsave(here("outputs/figures/DNA_braycurtis_boxplot.pdf"), dpi=300, w = 8, h = 5)
+##### PHYLUM DIFFERENTIAL ABUNDANCE: MAASLIN2
+
+library(Maaslin2)
+
+#Transpose the classification file
+kraken_phyla_og <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_phylum_percentage.txt"), sep="\t", header=TRUE)
+
+kraken_phyla <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_phylum_percentage.txt"), sep="\t", header=TRUE))
+
+
+##Maaslin analysis on only Zymo conditions
+#Filter metdata to only include Zymo to do Zymo only Maaslin analysis
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+benchmark_zymo <- filter(benchmark_groups, Kit=="Zymo")
+
+
+##Maaslin2 analysis of ZF v ZH
+#Filter metadata to only include Zymo kit
+#benchmark_groups <- read.table(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+#rownames(benchmark_groups) <- benchmark_groups$sample
+#zymoresults <- filter(benchmark_groups, Kit=="Zymo")
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  #kraken_genus, zymoresults, here('DNA/3.maaslin'), transform = "NONE",
+  kraken_genus, benchmark_zymo, here('DNA/3.maaslin/zymo'), transform = "NONE",
+  fixed_effects = c('Temperature'),
+  random_effects = c('Donor'),
+  normalization = 'NONE',
+  standardize = FALSE,
+  min_abundance = 0.01,
+  min_prevalence = 0.1, 
+  reference = 'Temperature,Frozen')
+
+#Filter for significant and large effect sizes
+#results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+
+#Exporting Maaslin2 results
+write.csv(fit_data, here("DNA/3.maaslin/zymo/DNA_maaslin_zymo.csv"), row.names = FALSE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Comparison of ZR and ZF
+zymoresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Frozen", "Hot"))
+
+ggplot(zymoresults, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  #scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+
+ggsave(here("outputs/figures/DNA_ZFZH_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_ZFZH_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+
+##Maaslin2 analysis of OF v OH
+#Filter metadata to only include Omni kit
+#benchmark_groups <- read.table(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+#rownames(benchmark_groups) <- benchmark_groups$sample
+#omniresults <- filter(benchmark_groups, Kit=="Omnigene")
+
+#Running Maaslin2
+#fit_data <- Maaslin2(
+# kraken_genus, omniresults, here('DNA/3.maaslin'), transform = "NONE",
+
+##Maaslin analysis on only Omni conditions
+#Filter metdata to only include Omni to do Omni only Maaslin analysis
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+benchmark_omni <- filter(benchmark_groups, Kit=="Omnigene")
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_genus, benchmark_omni, here('DNA/3.maaslin/omni'), transform = "NONE",
+  fixed_effects = c('Temperature'),
+  random_effects = c('Donor'),
+  normalization = 'NONE',
+  standardize = FALSE,
+  min_abundance = 0.01,
+  min_prevalence = 0.1, 
+  reference = 'Temperature,Frozen')
+
+#Filter for significant and large effect sizes
+#results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Exporting Maaslin2 results
+write.csv(fit_data, here("DNA/3.maaslin/omni/DNA_maaslin_omni.csv"), row.names = FALSE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Comparison of ZR and ZF
+omniresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "Frozen", "Hot"))
+
+ggplot(omniresults, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  #scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+
+ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+
+
+##Maaslin2 analysis of NF v ZF v OF
+#Filter metadata to only include frozen temperature
+#benchmark_groups <- read.table(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+#rownames(benchmark_groups) <- benchmark_groups$sample
+#frozenresults <- filter(benchmark_groups, Temperature=="Frozen")
+
+#Running Maaslin2
+#fit_data <- Maaslin2(
+#kraken_genus, frozenresults, here('DNA/3.maaslin'), transform = "NONE",
+##Maaslin analysis on only frozen samples
+#Filter metdata to only include Frozen
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+benchmark_frozen <- filter(benchmark_groups, Temperature=="Frozen")
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_genus, benchmark_frozen, here('DNA/3.maaslin/frozen'), transform = "NONE",
+  fixed_effects = c('Kit'),
+  random_effects = c('Donor'),
+  normalization = 'NONE',
+  standardize = FALSE,
+  min_abundance = 0.01,
+  min_prevalence = 0.1, 
+  reference = 'Kit,No Preservative')
+
+# #Filter for significant and large effect sizes only for NF v ZF
+# results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+# nfzfresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Zymo"))
+# 
+# ggplot(nfzfresults, aes(x=reorder(feature, -coef), y=coef)) +
+
+#Exporting Maaslin2 results
+write.csv(fit_data, here("DNA/3.maaslin/frozen/DNA_maaslin_frozen.csv"), row.names = FALSE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+#Comparison of ZR and ZF
+frozenresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Zymo"))
+
+ggplot(frozenresults, aes(x=reorder(feature, -coef), y=coef)) +
+  geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+  theme_bw() + 
+  labs(y = "Effect Size", x = "Genus", fill = "") +
+  coord_flip() + 
+  #scale_fill_manual(values = flexxt_palette) + 
+  theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+
+# ggsave(here("outputs/figures/DNA_NFZF_maaslin2.pdf"), dpi=300, w=5, h=6)
+# ggsave(here("outputs/figures/DNA_NFZF_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+# 
+# #Filter for significant and large effect sizes only for NF v OF
+# results <- fit_data$results %>% filter(qval < 0.05) %>% filter(abs(coef)>1) %>% arrange(coef)
+# nfofresults <- mutate(results, DirectionEnriched = ifelse(coef < 0, "No Preservative", "Omnigene"))
+# 
+# ggplot(nfofresults, aes(x=reorder(feature, -coef), y=coef)) +
+#   geom_col(aes(fill=DirectionEnriched), alpha = 0.8) + 
+#   theme_bw() + 
+#   labs(y = "Effect Size", x = "Genus", fill = "") +
+#   coord_flip() + 
+#   #scale_fill_manual(values = flexxt_palette) + 
+#   theme(axis.title.y = element_blank(), legend.position = "top", legend.justification = "center")
+# 
+# ggsave(here("outputs/figures/DNA_NFOF_maaslin2.pdf"), dpi=300, w=5, h=6)
+# ggsave(here("outputs/figures/DNA_NFOF_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+# 
+# 
+# ##Generating heatmap for Kit and Temp comparison
+# #Read in dataframes
+# zymoresults <- read.table(here("DNA/3.maaslin/zymo/all_results.tsv"), sep="\t", header=TRUE)
+# omniresults <- read.table(here("DNA/3.maaslin/omni/all_results.tsv"), sep="\t", header=TRUE)
+# frozenresults <- read.table(here("DNA/3.maaslin/frozen/all_results.tsv"), sep="\t", header=TRUE)
+# 
+# zymoresults <- filter(zymoresults, value=="Hot") %>% mutate(index=paste(metadata, "Zymo"))
+# omniresults <- filter(omniresults, value=="Hot") %>% mutate(index=paste(metadata, "Omni"))
+# frozenresults <- mutate(frozenresults, index=paste(metadata,value))
+# 
+# #Concatenate the dataframes
+# results <- rbind(zymoresults, frozenresults, omniresults)
+# write.table(results, here("DNA/3.maaslin/concat_results.tsv"), row.names = FALSE, sep="\t", quote=FALSE)
+# 
+# #Generating the heatmap
+# results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+# results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl(".environmental", feature))
+# sigresults <- filter(results, abs(coef)>0.25)
+# uniquetaxa <- unique(sigresults$feature)
+# results <- filter(results, feature %in% uniquetaxa)
+# results <- mutate(results, coef2=ifelse(coef>3, 3, ifelse(coef < -3, -3, coef)))
+# limit <- max(abs(results$coef2)) * c(-1, 1)
+# 
+# 
+# 
+# ggplot(results, aes(x=index, y=feature, fill=coef2)) + 
+ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf"), dpi=300, w=5, h=6)
+ggsave(here("outputs/figures/DNA_OFOH_maaslin2.pdf.jpeg"), dpi=300, w=5, h=6)
+
+##Generating heatmap for Maaslin comparison of Kit and Temperature
+#Reading in dataframes and adding in column of comparison to each Maaslin analysis
+frozenresults <- read.table(here("DNA/3.maaslin/frozen/all_results.tsv"), sep="\t", header=TRUE)
+omniresults <- read.table(here("DNA/3.maaslin/omni/all_results.tsv"), sep="\t", header=TRUE)
+zymoresults <- read.table(here("DNA/3.maaslin/zymo/all_results.tsv"), sep="\t", header=TRUE)
+
+frozenresults <- mutate(frozenresults, index=paste(metadata,value))
+omniresults <- filter(omniresults, value=="Hot") %>% mutate(index=paste(metadata,"Omni"))
+zymoresults <- filter(zymoresults, value=="Hot") %>% mutate(index=paste(metadata,"Zymo"))
+
+#Concatenate the dataframes together
+results <- rbind(frozenresults,omniresults,zymoresults)
+
+#Making the heatmap
+results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+limit <- max(abs(results$coef)) * c(-1, 1)
+results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl("environmental.samples", feature))
+results <- mutate(results, coef2=ifelse(coef<3, coef, 4))
+
+
+ggplot(results, aes(x=index, y=feature, fill=coef)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(~metadata, scales="free_x") + 
+  # scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  # geom_point(aes(alpha=signif), color = "white", size = 5, show.legend = F) + 
+  # scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  # theme(panel.grid = element_blank(),
+  #       panel.border = element_blank()) + 
+  # theme(axis.text.y = element_text(size = 15)) + 
+  #scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "white", size = 3, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 12)) + 
+  theme(axis.text.x = element_text(size = 15)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+
+ggsave(here("outputs/figures/DNA_heatmap.pdf"), dpi=300, w=12, h=12)
+ggsave(here("outputs/figures/DNA_heatmap.jpeg"), dpi=300, w=12, h=12)
+
+ggplot(results, aes(x=coef)) + 
+  geom_histogram()+
+  xlim(c(-1,1))
+
+#Generating the heatmap with gram stain and phyla
+results <- read.table(here("DNA/3.maaslin/concat_results.tsv"), sep="\t", header=TRUE)
+results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl(".environmental", feature))
+sigresults <- filter(results, abs(coef)>0.25)
+uniquetaxa <- unique(sigresults$feature)
+results <- filter(results, feature %in% uniquetaxa)
+results <- mutate(results, coef2=ifelse(coef>3, 3, ifelse(coef < -3, -3, coef)))
+limit <- max(abs(results$coef2)) * c(-1, 1)
+#Merge with gram stain and phyla dataframe
+phylagram <- read.csv(here("outputs/tables/Maaslin_heatmap_126.csv"), sep=",", header=TRUE)
+phylagram <- merge(results, phylagram, by='feature')
+
+#Plotting phyla heatmap
+ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(Phylum~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "white", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+
+ggsave(here("outputs/figures/DNA_heatmap_phyla.pdf"), dpi=300, w=12, h=14)
+ggsave(here("outputs/figures/DNA_heatmap_phyla.jpeg"), dpi=300, w=12, h=14)
+
+#Plotting gram stain heatmap
+ggplot(phylagram, aes(x=index, y=feature, fill=coef2)) + 
+  geom_tile() + 
+  theme_bw() +
+  scale_x_discrete(position = "top") +
+  facet_grid(GramStatus~metadata, scales="free", space="free_y") + 
+  scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+  geom_point(aes(alpha=signif), color = "white", size = 5, show.legend = F) + 
+  scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank()) + 
+  theme(axis.text.y = element_text(size = 13)) + 
+  theme(axis.text.x = element_text(size = 13)) + 
+  theme(axis.title.y = element_blank()) + 
+  theme(axis.title.x = element_blank()) + 
+  theme(axis.ticks.x = element_blank()) + 
+  theme(
+    strip.text.x = element_text(
+      size = 18, color = "black", face = "bold"
+    ),
+    strip.background = element_rect(
+      color="white", fill="white", size=1.5, linetype="solid"
+    ),
+    strip.placement = 'outside'
+  ) 
+
+ggsave(here("outputs/figures/DNA_heatmap_gram.pdf"), dpi=300, w=12, h=14)
+ggsave(here("outputs/figures/DNA_heatmap_gram.jpeg"), dpi=300, w=12, h=12)
+##### PHYLUM LEVEL DIFFERENTIAL ABUNDANCE: MAASLIN2 MODEL #####
+library(Maaslin2)
+
+#Grouped analysis: Phylum-level
+#Read in classification and metadata files
+kraken_phylum <- t(read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_phylum_percentage.txt"), sep="\t", header=TRUE))
+
+benchmark_groups <- read.csv(here("outputs/tables/DNA_metadata.tsv"), sep="\t", header=TRUE)
+rownames(benchmark_groups) <- benchmark_groups$sample
+
+#Running Maaslin2
+fit_data <- Maaslin2(
+  kraken_phylum, benchmark_groups, here('DNA/3.maaslin/complete'), transform = "NONE",
+  fixed_effects = c('Condition'),
+  random_effects = c('Donor'),
+  normalization = 'NONE',
+  standardize = FALSE,
+  min_abundance = 0.01,
+  min_prevalence = 0.1, 
+  reference = c(('Condition,NF')))
+
+#Read in Maaslin results
+results <- read.table(here("DNA/3.maaslin/complete/all_results.tsv"), sep="\t", header=TRUE)
+
+#Filter Maaslin results to include significant effect sizes
+results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
+limit <- max(abs(results$coef)) * c(-1, 1)
+results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl("environmental.samples", feature))
+results <- mutate(results, coef2=ifelse(coef<3, coef, 4))
+allresults <- mutate(results, index=paste(metadata,value))
+
+ ggplot(allresults, aes(x=index, y=feature, fill=coef2)) + 
+   geom_tile() + 
+   theme_bw() +
+   scale_x_discrete(position = "top") +
+   facet_grid(~metadata, scales="free", space="free_y") + 
+   scale_fill_distiller(type="div", palette="RdBu", limit=limit) +
+   geom_point(aes(alpha=signif), color = "dark grey", size = 5, show.legend = F) + 
+   scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = 0)) + 
+   theme(panel.grid = element_blank(),
+         panel.border = element_blank()) + 
+   theme(axis.text.y = element_text(size = 13)) + 
+   theme(axis.text.x = element_text(size = 13)) + 
+   theme(axis.title.y = element_blank()) + 
+   theme(axis.title.x = element_blank()) + 
+   theme(axis.ticks.x = element_blank()) + 
+   theme(
+     strip.text.x = element_text(
+       size = 18, color = "black", face = "bold"
+     ),
+     strip.background = element_rect(
+       color="white", fill="white", size=1.5, linetype="solid"
+     ),
+     strip.placement = 'outside'
+   ) 
+
+ggsave(here("outputs/figures/DNA_groupedheatmap_phylum.pdf"), dpi=300, w=10, h=8)
+ggsave(here("outputs/figures/DNA_groupedheatmap_phylum.jpeg"), dpi=300, w=10, h=8)
