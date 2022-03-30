@@ -1,0 +1,17 @@
+# specify directories
+raw_reads_directory: /labs/asbhatt/data/bhatt_lab_sequencing/21-10-25_BenchmarkingIllumina/RNAtemp
+output_directory: .
+read_specification: ['R1_001', 'R2_001'] #['1', '2'] # or ['R1', 'R2']
+extension: .fastq.gz # or .fastq.gz (should be gzipped regardless) - must include the period!
+deduplicate: "potato"
+# specify parameters for TrimGalore -- automatically chcecks the adaptor type
+trim_galore:
+  quality:  30
+  min_read_length: 60
+  start_trim: 0
+  end_trim: 0
+
+rm_host_reads:
+  host_genome: /labs/asbhatt/data/host_reference_genomes/hg19/hg19.fa
+  # Mice: /labs/asbhatt/data/host_reference_genomes/mm10/mm10.fa
+  # Humans: /labs/asbhatt/data/host_reference_genomes/hg19/hg19.fa

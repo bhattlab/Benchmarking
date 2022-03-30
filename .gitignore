@@ -1,5 +1,22 @@
 .DS_Store
 ._.DS_Store
+# exclude extraneous RNA preprocessing and classification files
+RNA/01_processing/01*
+RNA/01_processing/02*
+RNA/01_processing/04*
+RNA/01_processing/05*
+RNA/01_processing/00_qc_reports/pre*
+RNA/01_processing/00_qc_reports/post_fastqc/
+RNA/01_processing/00_qc_reports/post_multiqc/multiqc_data/
+RNA/01_processing_dedup/*
+RNA/01_rrna/*
+RNA/02_kraken2_classification/classification/
+RNA/02_kraken2_classification/kraken2_processing_completed.txt
+RNA/scripts/
+RNA/taxonomy_array.tsv
+RNA/Rplots.pdf
+RNA/cleaned
+
 # exclude extraneous preprocessing files
 XTvFlex/01_processing/01*
 XTvFlex/01_processing/02*
