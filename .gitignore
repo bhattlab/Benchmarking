@@ -16,7 +16,9 @@ RNA/scripts/
 RNA/taxonomy_array.tsv
 RNA/Rplots.pdf
 RNA/cleaned
-
+RNA/02_kraken2_classification_orig/*
+RNA/02_kraken2_classification/processed_results/plots/*
+RNA/02_kraken2_classification/processed_results_krakenonly/plots/*
 # exclude extraneous preprocessing files
 XTvFlex/01_processing/01*
 XTvFlex/01_processing/02*

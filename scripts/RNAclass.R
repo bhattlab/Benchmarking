@@ -12,6 +12,68 @@ library(ggpubr)
 library(ggnewscale)
 library(Maaslin2)
 
+##### READ COUNT PLOTS #####
+preprocess_reads <- read.table(here("RNA/01_processing/readcounts.tsv"), sep="\t", header = TRUE)
+preprocess_reads <- mutate(preprocess_reads, Sample=gsub("_.*", "", Sample))
+preprocess_reads <- preprocess_reads %>% separate(Sample, c("Donor", "Condition", "Replicate", "Lib"), remove=FALSE)
+preprocess_reads <- preprocess_reads %>% mutate(SampleID=paste(Donor, Condition, Replicate))
+
+preprocess_grouped <- preprocess_reads %>% 
+  group_by(SampleID) %>% 
+  summarise_at(vars(raw_reads, dedup_reads, trimmed_reads, host_removed_reads, orphan_reads, dedup_frac, trimmed_frac, host_removed_frac, orphan_frac), sum)
+
+rrna_reads <- read.table(here("RNA/01_rrna/aggregate/readcounts.tsv"), sep="\t", header=FALSE)
+names(rrna_reads) <- c("Sample", "After_RRNA")
+rrna_reads <- rrna_reads %>% separate(Sample, c("Donor", "Condition", "Replicate", "Dir"), remove=FALSE) %>% 
+  filter(Dir == "1") %>% 
+  mutate(SampleID=paste(Donor, Condition, Replicate)) %>% select(SampleID, After_RRNA)
+
+readcounts <- merge(preprocess_grouped, rrna_reads, by="SampleID")
+
+readcounts.melt.count <- melt(readcounts[,c('SampleID', 'raw_reads', 
+                                            'dedup_reads', 'trimmed_reads', 
+                                            'host_removed_reads', 'After_RRNA')], id.vars = 'SampleID') 
+
+readcounts <- readcounts %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+g.count <- ggplot(readcounts.melt.count, aes(x=SampleID, y=value, fill=variable)) + 
+  geom_bar(stat='identity' , position='dodge') + 
+  theme_bw() + 
+  scale_fill_brewer(palette = 'Set2') +
+  labs(title='Readcounts at each processing step', 
+       y = 'Read count') + 
+  guides(fill=guide_legend(title="Processing level")) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  scale_y_continuous(labels=scales::comma)
+g.count
+
+
+nsamp <- nrow(readcounts)
+plot.width <- 2 + (nsamp/2)
+plot.height <- 6
+
+pdf(here("outputs/figures/RNA_readcounts.pdf"), height = plot.height, width=plot.width)
+print(g.count)
+dev.off()
+
+write.table(readcounts, here("RNA/01_rrna/readcounts.tsv"), sep="\t", row.names = FALSE)
+
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+ggplot(readcounts, aes(x=raw_reads, y=After_RRNA, color=Condition)) + 
+  geom_point() + 
+  theme_bw() + 
+  scale_x_continuous(labels=scales::comma) + 
+  scale_y_continuous(labels=scales::comma) +
+  scale_color_manual(values=condition_palette)
+
+ggplot(readcounts, aes(x=Condition, y=raw_reads, fill=Condition)) + 
+  geom_jitter(color="grey", width=0.2) + 
+  geom_boxplot(alpha = 0.8, outlier.shape=None) + 
+  theme_bw() + 
+  scale_y_continuous(labels=scales::comma) +
+  scale_fill_manual(values=condition_palette) + 
+  stat_compare_means(method="wilcox.test", comparisons=list(c("OF", "NF")))
 
 ##### GENUS LEVEL TAXONOMIC RELATIVE ABUNDANCE STACKED BAR PLOT, FACET BY DONOR #####
 
@@ -39,7 +101,6 @@ metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", 
 metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
 metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
 metadata <- mutate(metadata, SampleCode=SampleID)
-metadata <- rbind(metadata %>% mutate(SampleID=paste(SampleID, "_A", sep="")), metadata %>% mutate(SampleID=paste(SampleID, "_B", sep="")))
 
 genus <- read.csv(here("RNA/02_kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
 
@@ -151,7 +212,6 @@ metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", 
 metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
 metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
 metadata <- mutate(metadata, SampleCode=SampleID)
-metadata <- rbind(metadata %>% mutate(SampleID=paste(SampleID, "_A", sep="")), metadata %>% mutate(SampleID=paste(SampleID, "_B", sep="")))
 
 genus <- read.csv(here("RNA/02_kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_phylum_percentage.txt"), sep="\t", header=TRUE)
 
@@ -245,8 +305,6 @@ benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
 benchmark_groups <- mutate(benchmark_groups, Preservation=substr(Condition,1,1))
 benchmark_groups <- mutate(benchmark_groups, Temperature=substr(Condition,2,2))
 benchmark_groups <- mutate(benchmark_groups, sample=SampleID)
-benchmark_groups <- rbind(benchmark_groups %>% mutate(sample=paste(sample, "_A", sep="")), benchmark_groups %>% mutate(sample=paste(sample, "_B", sep="")))
-
 
 shannon_div_s <- diversity(t(benchmark_s), index = "shannon")
 div <- data.frame("shannon_div" = shannon_div_s, "sample" = names(shannon_div_s))
@@ -334,7 +392,6 @@ benchmark_groups <- filter(benchmark_groups, Donor!="NCO" & Donor!="PCO")
 benchmark_groups <- mutate(benchmark_groups, Preservation=substr(Condition,1,1))
 benchmark_groups <- mutate(benchmark_groups, Temperature=substr(Condition,2,2))
 benchmark_groups <- mutate(benchmark_groups, sample=SampleID)
-benchmark_groups <- rbind(benchmark_groups %>% mutate(sample=paste(sample, "_A", sep="")), benchmark_groups %>% mutate(sample=paste(sample, "_B", sep="")))
 
 # filter out all genera <0.01 abundance
 benchmark_s <- mutate_all(benchmark_s, funs(ifelse(. < 0.01, 0, .)))
@@ -405,7 +462,7 @@ temperature_effect <- ggplot(div_grouped_replicates %>% filter(Donor != "D05" &&
         legend.position = "none",
         title = element_text(size = 13),
         plot.margin = unit(c(0.2, 0.5, 0, 0.2), unit = "cm")) +
-  stat_compare_means(method = "wilcox.test", paired=TRUE, comparisons=list(c("OF", "OR"), c("ZF", "ZR"), c("ZF", "ZH")), 
+  stat_compare_means(method = "wilcox.test", paired=TRUE, comparisons=list(c("OF", "OR"),  c("ZF", "ZR"), c("ZF", "ZH")), # list(c("OF", "OR"), c("ZF", "ZR"), c("ZF", "ZH"))
                      tip.length = 0, label="p.signif")
 temperature_effect
 
@@ -438,7 +495,6 @@ metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", 
 metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
 metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
 metadata <- mutate(metadata, SampleCode=SampleID)
-metadata <- rbind(metadata %>% mutate(SampleID=paste(SampleID, "_A", sep="")), metadata %>% mutate(SampleID=paste(SampleID, "_B", sep="")))
 
 # Read in count data
 cts <- read.csv(here("RNA/02_kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_genus_reads.txt"), sep="\t", header = TRUE) 
