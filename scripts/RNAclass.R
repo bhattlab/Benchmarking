@@ -75,6 +75,125 @@ ggplot(readcounts, aes(x=Condition, y=raw_reads, fill=Condition)) +
   scale_fill_manual(values=condition_palette) + 
   stat_compare_means(method="wilcox.test", comparisons=list(c("OF", "NF")))
 
+##### CLASSIFIED READS #####
+# read in metadata
+metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+#Separate the Condition column to create preservation method and temperature columns
+#Mai did and no work metadata <- metadata %>% separate(Condition, c("Preservation", "Temperature"), remove=FALSE)
+metadata <- mutate(metadata, Preservation=substr(Condition,1,1))
+metadata <- mutate(metadata, Temperature=substr(Condition,2,2))
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata <- mutate(metadata, SampleCode=SampleID)
+
+genus_kraken <- read.csv(here("RNA/02_kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_genus_percentage.txt"), sep="\t", header=TRUE)
+genus_kraken <- t(genus_kraken %>% filter(row.names(genus_kraken) %in% c("unclassified")))
+genus_kraken <- data.frame(genus_kraken)
+names <- rownames(genus_kraken)
+rownames(genus_kraken) <- NULL
+genus_kraken <- cbind(names, genus_kraken)
+names(genus_kraken) <- c("Sample", "Unclassified")
+genus_kraken <- mutate(genus_kraken, Sample=gsub("\\.", "_", Sample))
+
+# Merge in the metadata
+colnames(metadata)[3]<-"Sample"
+genus_kraken <- merge(genus_kraken, metadata, by = "Sample")
+
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+ggplot(genus_kraken, aes(x=Condition, y=Unclassified, fill = Condition)) + 
+  geom_jitter(width = 0.2) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.6) + 
+  scale_fill_manual(values=condition_palette) + 
+  ylim(0,100) +
+  ylab("Unclassified Reads at Genus Level (%)") +
+  theme_bw()
+
+ggsave(here("outputs/figures/RNA_percentunclassified.jpg"), dpi=300, w = 10, h = 5.3)
+ggsave(here("outputs/figures/RNA_percentunclassified.pdf"), dpi=300, w = 10, h = 5.3)
+
+# read in DNA for comparison
+genus_kraken_dna <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices/kraken_genus_percentage.txt"), sep="\t", header=TRUE)
+genus_kraken_dna <- t(genus_kraken_dna %>% filter(row.names(genus_kraken_dna) %in% c("unclassified")))
+genus_kraken_dna <- data.frame(genus_kraken_dna)
+names <- rownames(genus_kraken_dna)
+rownames(genus_kraken_dna) <- NULL
+genus_kraken_dna <- cbind(names, genus_kraken_dna)
+names(genus_kraken_dna) <- c("Sample", "Unclassified_DNA")
+genus_kraken_dna <- mutate(genus_kraken_dna, Sample=gsub("\\.", "_", Sample))
+
+genus_kraken_all <- merge(genus_kraken, genus_kraken_dna, by= "Sample")
+
+ggplot(genus_kraken_all, aes(x=Unclassified_DNA, y=Unclassified)) + 
+  geom_abline(intercept = 0, slope = 1, color = "grey") + 
+  geom_point(aes(color=Condition)) + 
+  theme_bw() + 
+  scale_color_manual(values = condition_palette) + 
+  xlab("Unclassified Reads (DNA %)") + 
+  ylab("Unclassified Reads (RNA %)") + 
+  ylim(0,60) + 
+  xlim(0,60)
+
+ggsave(here("outputs/figures/DNA_RNA_percentunclassified.jpg"), dpi=300, w = 8, h = 6)
+ggsave(here("outputs/figures/DNA_RNA_percentunclassified.pdf"), dpi=300, w = 8, h = 6)
+
+
+# compare to readcounts
+preprocess_reads <- read.table(here("RNA/01_processing/readcounts.tsv"), sep="\t", header = TRUE)
+preprocess_reads <- mutate(preprocess_reads, Sample=gsub("_.*", "", Sample))
+preprocess_reads <- preprocess_reads %>% separate(Sample, c("Donor", "Condition", "Replicate", "Lib"), remove=FALSE)
+preprocess_reads <- preprocess_reads %>% mutate(SampleID=paste(Donor, Condition, Replicate))
+
+preprocess_grouped <- preprocess_reads %>% 
+  group_by(SampleID) %>% 
+  summarise_at(vars(raw_reads, dedup_reads, trimmed_reads, host_removed_reads, orphan_reads, dedup_frac, trimmed_frac, host_removed_frac, orphan_frac), sum)
+
+rrna_reads <- read.table(here("RNA/01_rrna/aggregate/readcounts.tsv"), sep="\t", header=FALSE)
+names(rrna_reads) <- c("Sample", "After_RRNA")
+rrna_reads <- rrna_reads %>% separate(Sample, c("Donor", "Condition", "Replicate", "Dir"), remove=FALSE) %>% 
+  filter(Dir == "1") %>% 
+  mutate(SampleID=paste(Donor, Condition, Replicate)) %>% select(SampleID, After_RRNA)
+
+readcounts <- merge(preprocess_grouped, rrna_reads, by="SampleID")
+
+readcounts.melt.count <- melt(readcounts[,c('SampleID', 'raw_reads', 
+                                            'dedup_reads', 'trimmed_reads', 
+                                            'host_removed_reads', 'After_RRNA')], id.vars = 'SampleID') 
+
+readcounts <- readcounts %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+readcounts <- mutate(readcounts, SampleID=gsub(" ", "_", SampleID)) %>% select(SampleID, After_RRNA)
+names(readcounts) <- c("Sample", "After_RRNA")
+
+
+count_by_classification <- merge(readcounts, genus_kraken_all, by="Sample")
+
+
+ggplot(count_by_classification, aes(x=After_RRNA, y=Unclassified)) + 
+  geom_point(aes(color=Condition)) + 
+  scale_color_manual(values=condition_palette) + 
+  theme_bw() + 
+  xlab("Number of Reads") + 
+  ylab("Unclassified RNA reads (%)") + 
+  scale_x_continuous(labels=scales::comma)
+
+ggsave(here("outputs/figures/DNA_RNA_reads_vs_classification.jpg"), dpi=300, w = 8, h = 6)
+ggsave(here("outputs/figures/DNA_RNA_reads_vs_classification.pdf"), dpi=300, w = 8, h = 6)
 ##### GENUS LEVEL TAXONOMIC RELATIVE ABUNDANCE STACKED BAR PLOT, FACET BY DONOR #####
 
 # read in metadata

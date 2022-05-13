@@ -108,7 +108,6 @@ ggplot(bracken_pheno_grouped_donors, aes(x=reorder(Genus, FoldChange, FUN = medi
   theme(axis.text.x = element_text(angle = 90))
 
 
-#ggsave(here("outputs/figures/DNA_RNA_FoldChange_Boxplot.pdf"), dpi=300, w = 10, h=5)
 
 ggplot(bracken_pheno_grouped_reps, aes(x=reorder(Genus, FoldChange, FUN = median), y=FoldChange)) + 
   geom_boxplot(outlier.shape = NA) + 
@@ -117,3 +116,8 @@ ggplot(bracken_pheno_grouped_reps, aes(x=reorder(Genus, FoldChange, FUN = median
   ylab("Log2 Fold Change (RNA/DNA)") + 
   theme(axis.text.x = element_text(angle = 90)) +
   ylim(-10, 10) 
+
+ggsave(here("outputs/figures/DNA_RNA_FoldChange_Boxplot.pdf"), dpi=300, w = 10, h=5)
+
+
+#write.table(bracken_pheno, here("outputs/tables/DNA_RNA_abundance_phyla.tsv"), sep="\t", row.names=FALSE, quote=FALSE)
