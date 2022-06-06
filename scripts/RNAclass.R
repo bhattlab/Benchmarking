@@ -2069,3 +2069,55 @@ ggsave(here("outputs/figures/DNA_groupedheatmap_genus_coefphyla.jpeg"), dpi=300,
 # 
 # ggsave(here("outputs/figures/DNA_groupedheatmap_phylum.pdf"), dpi=300, w=10, h=8)
 # ggsave(here("outputs/figures/DNA_groupedheatmap_phylum.jpeg"), dpi=300, w=10, h=8)
+
+##### READ KMER DIVERSITY ####
+k51 <- read.table(here("RNA/04_sourmash/04_sourmash_compare/compare_k51.csv"), sep=",", header=TRUE)
+colnames(k51) <- gsub(".*D", "D", colnames(k51))
+colnames(k51) <- gsub("_con.*", "", colnames(k51))
+rownames(k51) <- names(k51)
+k51 <- cbind(Sample = rownames(k51), k51)
+rownames(k51) <- NULL
+
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+data_long <- melt(k51, id.vars=c("Sample")) # reshape to long format
+names(data_long) <- c("Sample1", "Sample2", "Identity")
+
+data_long <- data_long %>% separate(Sample1, c("Donor1", "Condition1", "Replicate1"), remove=FALSE)
+data_long <- data_long %>% separate(Sample2, c("Donor2", "Condition2", "Replicate2"), remove=FALSE)
+
+# make a table for within-sample comparisons
+precision_table <- data_long %>% filter(Donor1 == Donor2) %>%
+                                 filter(Condition1 == Condition2) %>% 
+                                 filter(Replicate1 != Replicate2)
+
+# filter table to remove double measures
+precision_table <- mutate(precision_table, uniqueID=ifelse(as.character(Sample1) > as.character(Sample2), paste(Sample1, Sample2), paste(Sample2, Sample1)))
+precision_table <- precision_table %>% group_by(uniqueID) %>% filter(row_number() == 1)
+
+# new table calculating averages within donor/condition combo
+precision_values <- precision_table %>% group_by(Donor1, Condition1) %>% 
+  summarise_at("Identity", list(Identity= mean))
+
+precision_values <- mutate(precision_values, PlotOrder=ifelse(Condition1 == "NF", 1, 
+                                                        ifelse(Condition1 == "OF", 2, 
+                                                               ifelse(Condition1 == "OR", 3, 
+                                                                      ifelse(Condition1 == "OH", 4, 
+                                                                             ifelse(Condition1 == "ZF", 5,
+                                                                                    ifelse(Condition1 == "ZR", 6, 7)))))))
+
+ggplot(precision_values, aes(x=reorder(Condition1, PlotOrder), y=Identity)) + 
+  geom_jitter(width=0.1) +
+  geom_boxplot(alpha=0.5, outlier.shape=NA, aes(fill=Condition1)) + 
+  theme_bw() + 
+  scale_fill_manual(values=condition_palette) + 
+  xlab("Condition") + 
+  ylab("Similarity") + 
+  ggtitle("Within-Condition Similarity (k = 51)") + 
+  stat_compare_means(method = "t.test", comparisons=list(c("OF", "OR"), c("ZF", "ZR"), c("ZF", "ZH"), c("NF", "OF"), c("NF", "ZF")), 
+                     tip.length = 0, label="p.signif") + 
+  theme(legend.position = "none")
+
+ggsave(here("outputs/figures/RNA_kmerdistance.pdf"), dpi=300, w=10, h=6)
+ggsave(here("outputs/figures/RNA_kmerdistance.jpeg"), dpi=300, w=10, h=6)

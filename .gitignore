@@ -21,6 +21,8 @@ RNA/02_kraken2_classification/processed_results/plots/*
 RNA/02_kraken2_classification/processed_results_krakenonly/plots/*
 RNA/03_coassembly/*
 RNA/02_kraken2_classification/unmapped_reads/*
+RNA/04_sourmash/03_sourmash_signatures/*
+
 # exclude extraneous preprocessing files
 XTvFlex/01_processing/01*
 XTvFlex/01_processing/02*
