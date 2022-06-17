@@ -13,8 +13,8 @@ library(scales)
 
 #####Plate 1: Standard Curve#####
 #Create and edit unified sample datafile
-qPCR_samplewellp1 <- read.csv(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plate1_Layout.csv"), sep=",", header=TRUE)
-qPCR_datap1 <- read.csv(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/HotPooqPCR_Plate1.csv"), sep=",", header=TRUE)
+qPCR_samplewellp1 <- read.csv(here("qPCR/Plate_1/Plate1_Layout.csv"), sep=",", header=TRUE)
+qPCR_datap1 <- read.csv(here("qPCR/Plate_1/HotPooqPCR_Plate1.csv"), sep=",", header=TRUE)
 
 colnames(qPCR_samplewellp1)[colnames(qPCR_samplewellp1) == "Well384"] <- "Well"
 qPCRplate1 <- merge(qPCR_samplewellp1,qPCR_datap1, by="Well")
@@ -82,10 +82,10 @@ ggplot(data = qPCRplate1, aes(x = logCopyNumber, y = Cq)) +
                eq.x.rhs    = "~italic(x)",
                aes(label   = paste(..eq.label..)), 
                parse = TRUE) +         
-  geom_point() +
+  geom_point(aes(color=Standard)) +
   theme_bw()
 
-ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plots/qPCRplate1_stdcurve.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_stdcurve.jpg"), dpi=300, w = 6, h = 5)
 #To introduce custom colors in the plot
 
 #To introduce custom colors in the plot
@@ -95,7 +95,7 @@ ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plots/qPCRplate1_stdcurve
 
 #####Plate 1: Absolute Abundance Calculation#####
 #Edit dataframe
-qPCRplate1 <- read.csv(here("Plate_1/qPCRplate1.csv"), sep=",", header=TRUE)
+qPCRplate1 <- read.csv(here("qPCR/Plate_1/qPCRplate1.csv"), sep=",", header=TRUE)
 qPCRplate1 <- qPCRplate1 %>% filter(!grepl("standard", SampleName))
 qPCRplate1 <- filter(qPCRplate1, PCR_Replicate!="Rep4")
 qPCRplate1 <- mutate(qPCRplate1, Cq=as.numeric(Cq))
@@ -122,7 +122,7 @@ irregularqPCR <- qPCR_weird$SampleNameFull
 qPCRplate1 <- qPCRplate1 %>% filter(!(SampleNameFull %in% irregularqPCR))
 
 #Export datafile removing irregular samples
-#write.table(qPCRplate1, here("Plate_1/qPCR_plate1.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+#write.table(qPCRplate1, here("qPCR/Plate_1/qPCR_plate1.csv"), row.names = FALSE, sep=",", quote=FALSE)  
 
 #Plotting copies/uL by condition
 ggplot(qPCRplate1 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=CopyNumber, color=Condition)) +
@@ -139,12 +139,12 @@ ggplot(qPCRplate1 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none")
 
-ggsave(here("Plate_1/Plots/qPCRplate1_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
 
 ######Plate 2: Standard Curve and Absolute Count#####
 #Create and edit unified sample datafile
-qPCR_samplewellp2 <- read.csv(here("Documents/Bhatt/Benchmarking/qPCR/Plate_2/qPCR_plate2_layout.csv"), sep=",", header=TRUE)
-qPCR_datap2 <- read.csv(here("Documents/Bhatt/Benchmarking/qPCR/Plate_2/HotPooqPCR_Plate2.csv"), sep=",", header=TRUE)
+qPCR_samplewellp2 <- read.csv(here("qPCR/Plate_2/qPCR_plate2_layout.csv"), sep=",", header=TRUE)
+qPCR_datap2 <- read.csv(here("qPCR/Plate_2/HotPooqPCR_Plate2.csv"), sep=",", header=TRUE)
 
 colnames(qPCR_samplewellp2)[colnames(qPCR_samplewellp2) == "Well384"] <- "Well"
 qPCRplate2 <- merge(qPCR_samplewellp2,qPCR_datap2, by="Well")
@@ -180,7 +180,7 @@ ggplot(data = qPCRplate2, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_2/Plots/qPCRplate2_stdcurve_bv2.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_bv2.jpg"), dpi=300, w = 5, h = 5)
 
 #Filter for F prausnitizii and calculate log10
 qPCRplate2 <- qPCRplate2 %>% filter(Standard=="F prausnitzii")
@@ -198,7 +198,7 @@ ggplot(data = qPCRplate2, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_2/Plots/qPCRplate2_stdcurve_fp2.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_fp2.jpg"), dpi=300, w = 5, h = 5)
 
 #Standard curve using both B vulgatus and F prausnitizii data
 qPCRplate2 <- qPCRplate2 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
@@ -211,12 +211,13 @@ ggplot(data = qPCRplate2, aes(x = logCopyNumber, y = Cq)) +
                eq.x.rhs    = "~italic(x)",
                aes(label   = paste(..eq.label..)), 
                parse = TRUE) +         
-  geom_point() +
+  geom_point(aes(color=Standard)) +
   theme_bw()
-ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_2/Plots/qPCRplate2_stdcurve_all.jpg"), dpi=300, w = 5, h = 5)
+
+ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_all.jpg"), dpi=300, w = 6, h = 5)
 
 #Edit dataframe for absolute abundance calculations
-qPCRplate2 <- read.csv(here("Plate_2/qPCRplate2.csv"), sep=",", header = TRUE)
+qPCRplate2 <- read.csv(here("qPCR/Plate_2/qPCRplate2.csv"), sep=",", header = TRUE)
 qPCRplate2 <- qPCRplate2 %>% filter(!grepl("standard", SampleName))
 qPCRplate2 <- filter(qPCRplate2, PCR_Replicate!="Rep4")
 qPCRplate2 <- mutate(qPCRplate2, Cq=as.numeric(Cq))
@@ -260,18 +261,18 @@ ggplot(qPCRplate2 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
   stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
                      tip.length = 0, label="p.signif")
 
-ggsave(here("Plate_2/Plots/qPCRplate2_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
 
 ##### Plate 3: Standard Curve and Absolute Count #####
 #Create and edit unified sample datafile
-qPCR_samplewellp3 <- read.csv(here("Plate_3/qPCR_plate3_layout.csv"), sep=",", header=TRUE)
-qPCR_datap3 <- read.csv(here("Plate_3/HotPooqPCR_Plate3.csv"), sep=",", header=TRUE)
+qPCR_samplewellp3 <- read.csv(here("qPCR/Plate_3/qPCR_plate3_layout.csv"), sep=",", header=TRUE)
+qPCR_datap3 <- read.csv(here("qPCR/Plate_3/HotPooqPCR_Plate3.csv"), sep=",", header=TRUE)
 
 colnames(qPCR_samplewellp3)[colnames(qPCR_samplewellp3) == "Well384"] <- "Well"
 qPCRplate3 <- merge(qPCR_samplewellp3,qPCR_datap3, by="Well")
 
 #Export file
-#write.table(qPCRplate3, here("Plate_3/qPCRplate3.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+#write.table(qPCRplate3, here("qPCR/Plate_3/qPCRplate3.csv"), row.names = FALSE, sep=",", quote=FALSE)  
 
 #Make standard curve for plate 3
 qPCRplate3 <- qPCRplate3 %>% filter(grepl("standard", SampleName))
@@ -301,7 +302,7 @@ ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("Plate_3/Plots/qPCRplate3_stdcurve_bv.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_stdcurve_bv.jpg"), dpi=300, w = 5, h = 5)
 
 #Filter for F prausnitizii and calculate log10
 qPCRplate3 <- qPCRplate3 %>% filter(Standard=="F prausnitzii")
@@ -319,7 +320,7 @@ ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("Plate_3/Plots/qPCRplate3_stdcurve_fp3.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_stdcurve_fp3.jpg"), dpi=300, w = 5, h = 5)
 
 #Standard curve using both B vulgatus and F prausnitizii data
 qPCRplate3 <- qPCRplate3 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
@@ -332,12 +333,13 @@ ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
                eq.x.rhs    = "~italic(x)",
                aes(label   = paste(..eq.label..)), 
                parse = TRUE) +         
-  geom_point() +
+  geom_point(aes(color=Standard)) +
   theme_bw()
-ggsave(here("Plate_3/Plots/qPCRplate3_stdcurve_all.jpg"), dpi=300, w = 5, h = 5)
+
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_stdcurve_all.jpg"), dpi=300, w = 6, h = 5)
 
 #Edit dataframe for absolute abundance calculations
-qPCRplate3 <- read.csv(here("Plate_3/qPCRplate3.csv"), sep=",", header = TRUE)
+qPCRplate3 <- read.csv(here("qPCR/Plate_3/qPCRplate3.csv"), sep=",", header = TRUE)
 qPCRplate3 <- qPCRplate3 %>% filter(!grepl("standard", SampleName))
 qPCRplate3 <- filter(qPCRplate3, PCR_Replicate!="Rep4")
 qPCRplate3 <- mutate(qPCRplate3, Cq=as.numeric(Cq))
@@ -381,7 +383,41 @@ ggplot(qPCRplate3 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
 
-ggsave(here("Plate_3/Plots/qPCRplate3_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+
+#####Scatterplots for qPCR Consistency#####
+qPCR2 <- spread(qPCRplate2 %>% select(SampleName, Cq, PCR_Replicate), key=PCR_Replicate, value=Cq)
+
+ggplot(qPCR2, aes(x=Rep1, y=Rep2)) +
+  geom_point() +
+  theme_bw() +
+  geom_abline(slope=1, intercept=0) +
+  labs(
+    x = "Replicate 1 Cq",
+    y = "Replicate 2 Cq"
+  ) 
+
+ggsave(here("qPCR/Plots/RepCompare_12.jpg"), dpi=300, w = 5, h = 5)
+
+ggplot(qPCR2, aes(x=Rep1, y=Rep3)) +
+  geom_point() +
+  theme_bw() +
+  geom_abline(slope=1, intercept=0) +
+  labs(
+    x = "Replicate 1 Cq",
+    y = "Replicate 3 Cq"
+  ) 
+ggsave(here("qPCR/Plots/RepCompare_13.jpg"), dpi=300, w = 5, h = 5)
+
+ggplot(qPCR2, aes(x=Rep2, y=Rep3)) +
+  geom_point() +
+  theme_bw() +
+  geom_abline(slope=1, intercept=0) +
+  labs(
+    x = "Replicate 2 Cq",
+    y = "Replicate 3 Cq"
+  ) 
+ggsave(here("qPCR/Plots/RepCompare_23.jpg"), dpi=300, w = 5, h = 5)
 
 #####Irregular curve analysis#####
 #Merge dataframes with irregular curves, plate layout, and DNA concentration
