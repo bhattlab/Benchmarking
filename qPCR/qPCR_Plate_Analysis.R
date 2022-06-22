@@ -139,7 +139,37 @@ ggplot(qPCRplate1 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none")
 
-ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+#ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+
+#Copies/g Absolute Count
+massnf <- (50/0.062)
+massomni <- (50/0.037)
+masszymo <- (50/0.08)
+
+qPCRplate1 <- mutate(qPCRplate1, Preservative=substr(Condition,1,1))
+qPCRplate1 <- mutate(qPCRplate1, Copiesgram=ifelse(Preservative =="Z",CopyNumber*masszymo,
+                                                   ifelse(Preservative=="O", CopyNumber*massomni,
+                                                          ifelse(Preservative=="N", CopyNumber*massnf, NA)
+                                                          )))
+
+ggplot(qPCRplate1 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=Copiesgram, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "Copies/g"
+  ) +
+  theme_bw() +
+  scale_y_log10(limits=c(1e+5, 1e+18), n.breaks=1e1, minor_breaks=NULL) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none")
+ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_copiesgramcondition.jpg"), dpi=300, w = 5, h = 5)
+
+#Export final plate 1 datafile
+#write.table(qPCRplate1, here("qPCR/Plate_1/qPCR_plate1_final.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+
 
 ######Plate 2: Standard Curve and Absolute Count#####
 #Create and edit unified sample datafile
@@ -180,7 +210,7 @@ ggplot(data = qPCRplate2, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_bv2.jpg"), dpi=300, w = 5, h = 5)
+#ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_bv2.jpg"), dpi=300, w = 5, h = 5)
 
 #Filter for F prausnitizii and calculate log10
 qPCRplate2 <- qPCRplate2 %>% filter(Standard=="F prausnitzii")
@@ -198,7 +228,7 @@ ggplot(data = qPCRplate2, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_fp2.jpg"), dpi=300, w = 5, h = 5)
+#ggsave(here("qPCR/Plate_2/Plots/qPCRplate2_stdcurve_fp2.jpg"), dpi=300, w = 5, h = 5)
 
 #Standard curve using both B vulgatus and F prausnitizii data
 qPCRplate2 <- qPCRplate2 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
@@ -244,7 +274,7 @@ irregularqPCR <- qPCR_weird$SampleNameFull
 qPCRplate2 <- qPCRplate2 %>% filter(!(SampleNameFull %in% irregularqPCR))
 
 #Export datafile removing irregular samples
-#write.table(qPCRplate2, here("Plate_2/qPCR_plate2.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+#write.table(qPCRplate2, here("qPCR/Plate_2/qPCR_plate2.csv"), row.names = FALSE, sep=",", quote=FALSE)  
 
 #Plotting copies/uL by condition
 ggplot(qPCRplate2 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=CopyNumber, color=Condition)) +
@@ -366,7 +396,7 @@ irregularqPCR <- qPCR_weird$SampleNameFull
 qPCRplate3 <- qPCRplate3 %>% filter(!(SampleNameFull %in% irregularqPCR))
 
 #Export datafile removing irregular samples
-#write.table(qPCRplate3, here("Plate_3/qPCR_plate3.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+write.table(qPCRplate3, here("qPCR/Plate_3/qPCR_plate3.csv"), row.names = FALSE, sep=",", quote=FALSE)  
 
 #Plotting copies/uL by condition
 ggplot(qPCRplate3 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=CopyNumber, color=Condition)) +
@@ -419,12 +449,109 @@ ggplot(qPCR2, aes(x=Rep2, y=Rep3)) +
   ) 
 ggsave(here("qPCR/Plots/RepCompare_23.jpg"), dpi=300, w = 5, h = 5)
 
+#Irregular curves: samples with 1/3 failed replicates
+qPCR_w <- spread(qPCR_weird %>% select(SampleName, Cq, PCR_Replicate), key=PCR_Replicate, value=Cq)
+
+##### Absolute Counts at Phylumn Level#####
+#Create a unified dataframe containing all Plate data
+plate1 <- read.csv(here("qPCR/Plate_1/qPCR_plate1.csv"), sep=",", header=TRUE)
+plate2 <- read.csv(here("qPCR/Plate_2/qPCR_plate2.csv"), sep=",", header=TRUE)
+plate3 <- read.csv(here("qPCR/Plate_3/qPCR_plate3.csv"), sep=",", header=TRUE)
+
+allplate <- rbind(plate1 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate2 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate3 %>% select(SampleName,CopyNumber, SampleNameFull, Condition))
+#Calculate copies/gram for each sample
+massnf <- (50/0.062)
+massomni <- (50/0.037)
+masszymo <- (50/0.08)
+
+allplate <- mutate(allplate, Preservative=substr(Condition,1,1))
+allplate <- mutate(allplate, Copiesgram=ifelse(Preservative =="Z",CopyNumber*masszymo,
+                                                   ifelse(Preservative=="O", CopyNumber*massomni,
+                                                          ifelse(Preservative=="N", CopyNumber*massnf, NA)
+                                                   )))
+
+
+#Read in kraken outputs and rrnDB copy number data
+krakenphyla <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices_classified_only/kraken_phylum_percentage.txt"), sep="\t", header=TRUE)
+copyndb <- read.csv(here("qPCR/taxonomic_copy_number.tsv"), sep="\t", header=TRUE)
+
+krakenphyla$Phylum <- row.names(krakenphyla)
+row.names(krakenphyla) <- NULL
+kraken_long <- melt(krakenphyla, id.vars = "Phylum", variable.name = "Sample", value.name = "rel_abundance")
+kraken_long <- mutate(kraken_long, Sample=gsub("\\.", "_", Sample))
+colnames(copyndb)[colnames(copyndb) == "name"] <- "Phylum"
+kraken_long <- merge(kraken_long, copyndb, by="Phylum", all.x=TRUE)
+
+#Assignment of NA 16S taxa to 0 and averaging total bacteria per sample
+#FIXME
+kraken_long <- replace(kraken_long,is.na(kraken_long),0)
+kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S)
+donor_total <- kraken_long %>%
+  group_by(Sample) %>%
+  summarise_at(vars(tempabundance), list(totaltempabundance=sum))
+colnames(allplate)[colnames(allplate) == "SampleName"] <- "Sample"
+donor_total <- merge(donor_total, allplate %>% select(Sample, Copiesgram, Condition), by="Sample")
+donor_total <- mutate(donor_total, TotalBacteria=Copiesgram/totaltempabundance)
+donor_total <- donor_total %>%
+  group_by(Sample) %>%
+  summarise_at(vars(TotalBacteria), list(TotalBacteria=mean))
+donor_total <- donor_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
+
+#Ordering conditions
+donor_total <- mutate(donor_total, PlotOrder=ifelse(Condition == "NF", 1, 
+                                                  ifelse(Condition == "OF", 2, 
+                                                         ifelse(Condition == "OR", 3, 
+                                                                ifelse(Condition == "OH", 4, 
+                                                                       ifelse(Condition == "ZF", 5,
+                                                                              ifelse(Condition == "ZR", 6, 7)))))))
+#Color palette for conditions
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+#Plotting total bacteria/g of sample (not per taxa)
+ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=TotalBacteria, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "Total Bacteria/g"
+  ) +
+  theme_bw() +
+  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none") 
+
+ggsave(here("qPCR/Plots/qPCRtotalbacteria.jpg"), dpi=300, w = 5, h = 5)
+
+#Calculate bacteria/taxa
+mega_total <- merge(donor_total,kraken_long, by="Sample")
+mega_total <- mutate(mega_total, Countgram=((rel_abundance*TotalBacteria)/100))
+mega_total <- mega_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
+
+ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Actinobacteria"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "Total Bacteria/g"
+  ) +
+  theme_bw() +
+  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none") 
+
+ggsave(here("qPCR/Plots/qPCRBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
+
 #####Irregular curve analysis#####
 #Merge dataframes with irregular curves, plate layout, and DNA concentration
-qPCR_weird <- read.csv(here("Irregular qPCR Signal.csv"), sep=",", header=TRUE)
-qPCR_layout <-read.csv(here("qPCR384layout.csv"), sep=",", header=TRUE)
+qPCR_weird <- read.csv(here("qPCR/Irregular qPCR Signal.csv"), sep=",", header=TRUE)
+qPCR_layout <-read.csv(here("qPCR/qPCR384layout.csv"), sep=",", header=TRUE)
 qPCR_weird <- merge(qPCR_weird, qPCR_layout, c("Well384","Plate"))
-DNA_conc <- read.csv(here("BenchmarkingDNAConcentration.csv"), sep=",", header=TRUE)
+DNA_conc <- read.csv(here("qPCR/BenchmarkingDNAConcentration.csv"), sep=",", header=TRUE)
 qPCR_weird <- merge(qPCR_weird, DNA_conc, by="SampleName")
 
 #Count the number of times a sample fails
