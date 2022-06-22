@@ -43,6 +43,22 @@ XTvFlex/03_GC/03_windows/*err
 XTvFlex/03_GC/03_windows/*out
 XTvFlex/03_GC/03_windows/concat_windowvals_500k.tsv
 
+#exclude qPCR extraneous files
+qPCR/Plate_1/Plate1 Layout.xlsx
+qPCR/Plate_1/5522_HotPooPlate1.eds 
+qPCR/Plate_1/2022-05-05 141038.eds
+qPCR/Plate_1/qPCRplate1.csv
+qPCR/Plate_1/qPCR_plate1_final.csv
+qPCR/Plate_1/050522_BhattHotPooPlate1_Template.edt
+qPCR/Plate_1/PlateSetup_HotPoo_Plate1.csv
+qPCR/Plate_2/051222_BhattHotPooPlate2_Template.edt
+qPCR/Plate_2/2022-05-12 104353.eds
+qPCR/Plate_2/qPCRplate2.csv
+qPCR/Plate_3/2022-05-13 111832.eds
+qPCR/Plate_3/51322_HotPooPlate2.eds
+qPCR/Plate_3/051322_BhattHotPooPlate3_Template.edt
+qPCR/Plate_3/qPCRplate3.csv
+
 # ignore test dirs
 test/
 demo_output/

@@ -1673,12 +1673,13 @@ results <- read.table(here("DNA/3.maaslin/complete/all_results.tsv"), sep="\t", 
 
 #Filter Maaslin results to include significant effect sizes
 results <- mutate(results, signif=ifelse(qval < 0.05, "TRUE", "FALSE"))
-limit <- max(abs(results$coef)) * c(-1, 1)
+#limit <- max(abs(results$coef)) * c(-1, 1)
 results <- filter(results, !grepl("unclassified", feature)) %>% filter(!grepl("environmental.samples", feature))
 results <- mutate(results, coef2=ifelse(coef<3, coef, 4))
-allresults <- mutate(results, index=paste(metadata,value))
+results <- mutate(results, index=paste(metadata,value))
+limit <- max(abs(results$coef2))* c(-1,1)
 
- ggplot(allresults, aes(x=index, y=feature, fill=coef2)) + 
+ ggplot(results, aes(x=index, y=feature, fill=coef2)) + 
    geom_tile() + 
    theme_bw() +
    scale_x_discrete(position = "top") +
