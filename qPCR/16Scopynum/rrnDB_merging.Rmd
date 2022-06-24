@@ -1,0 +1,132 @@
+---
+title: "rrnDB_merging"
+author: "Dylan Maghini"
+date: "6/22/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Merging 16S copy number data with kraken taxonomy
+
+### Phylum Level Example
+First, identify the NCBI taxonomy IDs with the Kraken2 phylum abundance results. Pull phylum data from GitHub, and use our lab's Genbank taxonomy array to get the NCBI taxonomic IDs. For the sake of keeping it simple, reduce the kraken output to just a dataframe of all the phyla, and merge that with the taxonomy array based on the name assignment.  
+
+```{r message=FALSE, warning=FALSE}
+library(here)
+library(tidyverse)
+library(reshape2)
+
+# read in the two tables
+kraken_phylum <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices_classified_only/kraken_phylum_percentage.txt"), sep="\t", header=TRUE)
+tax_array <- read.csv(here("qPCR/16Scopynum/genbank_taxonomy_array.tsv"), header=FALSE, sep="\t")
+
+# assign names to the taxonomy array and then select the two relevant columns and rename accordingly
+# this is kinda roundabout and pointless whoops
+names(tax_array) <- c("Name", "taxid", "root", "kingdom", "phylum", "order", "class", "family", "Genus", "species", "strain")
+tax_array <- tax_array %>% select("Name", "taxid")
+names(tax_array) <- c("Phylum", "taxid")
+
+# make the kraken table rownames into an actual column
+kraken_phylum$Phylum <- row.names(kraken_phylum)
+row.names(kraken_phylum) <- NULL
+# get a unique list of phyla from the kraken table
+kraken_phylum <- kraken_phylum %>% select(Phylum) %>% unique()
+
+# merge the phylum list with the NCBI taxonomic IDs table
+comparison <- merge(kraken_phylum, tax_array, by="Phylum", all.x=TRUE)
+```
+
+By filtering the comparison table for entries without a taxonomy number, we get the following:
+```{r}
+comparison %>% filter(is.na(taxid))
+```
+
+Even with some digging, I'm unsure why these four taxa have the parentheses in their names. But, the ID in parentheses is the NCBI ID for that phylum, so we can go ahead and pull that number. 
+
+```{r}
+# if there is no taxonomic ID, set it equal to whatever is between parentheses for the Phylum name, and edit the Phylum name
+comparison <- comparison %>% mutate(taxid=ifelse(is.na(taxid), gsub(".*\\(", "", gsub("\\)", "", Phylum)), taxid))
+comparison <- comparison %>% mutate(Phylum=gsub("\\(.*\\)", "", Phylum))
+# remove duplicate Phylum listings (not an issue here but could be in the future)
+comparison <- comparison %>% group_by(Phylum) %>% filter(row_number() == 1)
+```
+
+Now every phylum that we observe in our data has an associated taxonomic ID. 
+
+Next, group the phylum taxonomic IDs with the rrnDB counts. I'm pulling from our table of the mean rrnDB values for each assignment in rrnDB (this was created in the copyNum.R script). We can just merge based on the taxid column, and see what didn't get assigned. 
+
+```{r}
+# read in the rrnDB table and edit the column names
+copyndb <- read.csv(here("qPCR/taxonomic_copy_number.tsv"), sep="\t", header=TRUE)
+colnames(copyndb)<- c("taxid", "Taxon", "mean16S") # rename columns
+
+# merge with a left join, and grab the relevant columns
+test <- merge(comparison, copyndb, by="taxid", all.x=TRUE) %>% select("taxid", "Phylum", "mean16S") 
+
+# make a dataframe of the phyla that did NOT have a corresponding entry in rrnDB
+uniq <- test %>% filter(is.na(mean16S)) %>% select(Phylum) %>% unique()
+uniq
+```
+
+And we see that a number of phyla didn't get assignments. BUT, those are all entries that make sense for not being present in the rrnDB database. Six entries aren't bacteria (Microsporidia, and anything with 'mycota' in the name) and four are likely candidate bacteria that do not have isolates and wouldn't therefore have a 16S entry in this database (the Candidatus Rokubacteria, Melainabacteria, Aminicenantes, and the Lentisphaerae). 
+
+So, this seems resolved? 
+
+### Genus Level Example
+
+We can do basically the same thing with genus data, so I'm pasting it all below. 
+
+```{r}
+
+# read in input tables
+kraken_genus <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices_classified_only/kraken_genus_percentage.txt"), sep="\t", header=TRUE)
+tax_array <- read.csv(here("qPCR/16Scopynum/genbank_taxonomy_array.tsv"), header=FALSE, sep="\t")
+
+# format the taxonomy array that tracks all the NCBI taxonomy, grab relevant columns
+names(tax_array) <- c("Name", "taxid", "root", "kingdom", "phylum", "order", "class", "family", "Genus", "species", "strain")
+tax_array <- tax_array %>% select("Name", "taxid")
+names(tax_array) <- c("Genus", "taxid")
+
+# get the unique list of genera from our kraken classification
+kraken_genus$Genus <- row.names(kraken_genus)
+row.names(kraken_genus) <- NULL
+kraken_genus <- kraken_genus %>% select(Genus) %>% unique()
+
+# merge the genus list and the taxonomy table using a left join
+comparison <- merge(kraken_genus, tax_array, by="Genus", all.x=TRUE)
+# take a peek at which ones aren't in the taxonomy table
+comparison %>% filter(is.na(taxid))
+```
+Again, we see only a few examples of genera not having a corresponding taxonomic ID, and it's listed in the name so we can just pull out that info. 
+```{r}
+comparison <- comparison %>% mutate(taxid=ifelse(is.na(taxid), gsub(".*\\(", "", gsub("\\)", "", Genus)), taxid))
+comparison <- comparison %>% mutate(Genus=gsub("\\(.*\\)", "", Genus))
+comparison <- comparison %>% group_by(Genus) %>% filter(row_number() == 1) # removing duplicate rows in case that's ever a problem
+```
+
+Now, we can merge our genus/taxonomic ID data with our 16S copy number table
+
+```{r paged.print=TRUE}
+# read in the table, format the column names
+copyndb <- read.csv(here("qPCR/taxonomic_copy_number.tsv"), sep="\t", header=TRUE)
+colnames(copyndb)<- c("taxid", "Taxon", "mean16S")
+
+# left join the genera and IDs with the 16S table by taxonomic ID
+test <- merge(comparison, copyndb, by="taxid", all.x=TRUE) %>% select("taxid", "Genus", "mean16S")
+
+# pull out a dataframe of genera that didn't have a 16S assignment
+uniq <- test %>% filter(is.na(mean16S))%>% select(taxid, Genus)
+uniq
+```
+
+This one is a bit more complicated. Lots of viruses and other non-bacterial microbes are in here, but also lots of bacteria. But, I've double checked the taxonomic IDs for a number of entries, they're listed on NCBI (so they're correct), and they just aren't present in rrnDB. 
+So, a few options here. 
+1) I can manually sort them into bacteria vs other, and we can assign everything bacterial some 'mean' 16S number. 
+2) We can try to automate it by pulling the ranked taxonomy (how all the tax IDs relate) and bubbling up the taxonomic IDs to something that's in rrnDB. 
+3) We can ignore all of them (set them to a 16S number of 0) or include all of them (set them to a 16S of 1). 
+
+I don't think manually sorting would take long for us to do, as there are only ~300. 
