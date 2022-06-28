@@ -473,7 +473,7 @@ allplate <- mutate(allplate, Copiesgram=ifelse(Preservative =="Z",CopyNumber*mas
 
 #Read in kraken outputs and rrnDB copy number data
 krakenphyla <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices_classified_only/kraken_phylum_percentage.txt"), sep="\t", header=TRUE)
-copyndb <- read.csv(here("qPCR/taxonomic_copy_number.tsv"), sep="\t", header=TRUE)
+copyndb <- read.csv(here("qPCR/phylum_copynumber_table.tsv"), sep="\t", header=TRUE)
 
 krakenphyla$Phylum <- row.names(krakenphyla)
 row.names(krakenphyla) <- NULL
@@ -482,9 +482,9 @@ kraken_long <- mutate(kraken_long, Sample=gsub("\\.", "_", Sample))
 colnames(copyndb)[colnames(copyndb) == "name"] <- "Phylum"
 kraken_long <- merge(kraken_long, copyndb, by="Phylum", all.x=TRUE)
 
-#Assignment of NA 16S taxa to 0 and averaging total bacteria per sample
+#Calculating total bacteria per sample (median and corrected rrnDB)
 #FIXME
-kraken_long <- replace(kraken_long,is.na(kraken_long),0)
+kraken_long <- replace(kraken_long,is.na(kraken_long),1.94)
 kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S)
 donor_total <- kraken_long %>%
   group_by(Sample) %>%
@@ -494,7 +494,7 @@ donor_total <- merge(donor_total, allplate %>% select(Sample, Copiesgram, Condit
 donor_total <- mutate(donor_total, TotalBacteria=Copiesgram/totaltempabundance)
 donor_total <- donor_total %>%
   group_by(Sample) %>%
-  summarise_at(vars(TotalBacteria), list(TotalBacteria=mean))
+  summarise_at(vars(TotalBacteria), list(TotalBacteria=median))
 donor_total <- donor_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
 
 #Ordering conditions
@@ -508,7 +508,7 @@ donor_total <- mutate(donor_total, PlotOrder=ifelse(Condition == "NF", 1,
 condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
 names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
-#Plotting total bacteria/g of sample (not per taxa)
+#Plotting total bacteria/g of sample (not per taxon)
 ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=TotalBacteria, color=Condition)) +
   geom_jitter(width=0.1) + 
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
@@ -523,9 +523,9 @@ ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
 
-ggsave(here("qPCR/Plots/qPCRtotalbacteria.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plots/qPCRtotalbacteriamedian.jpg"), dpi=300, w = 5, h = 5)
 
-#Calculate bacteria/taxa
+#Calculate bacteria/taxon
 mega_total <- merge(donor_total,kraken_long, by="Sample")
 mega_total <- mutate(mega_total, Countgram=((rel_abundance*TotalBacteria)/100))
 mega_total <- mega_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
@@ -546,6 +546,100 @@ ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
 
 ggsave(here("qPCR/Plots/qPCRBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
 
+##### Absolute Counts at Genus Level#####
+#Create a unified dataframe containing all Plate data
+plate1 <- read.csv(here("qPCR/Plate_1/qPCR_plate1.csv"), sep=",", header=TRUE)
+plate2 <- read.csv(here("qPCR/Plate_2/qPCR_plate2.csv"), sep=",", header=TRUE)
+plate3 <- read.csv(here("qPCR/Plate_3/qPCR_plate3.csv"), sep=",", header=TRUE)
+
+allplate <- rbind(plate1 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate2 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate3 %>% select(SampleName,CopyNumber, SampleNameFull, Condition))
+#Calculate copies/gram for each sample
+massnf <- (50/0.062)
+massomni <- (50/0.037)
+masszymo <- (50/0.08)
+
+allplate <- mutate(allplate, Preservative=substr(Condition,1,1))
+allplate <- mutate(allplate, Copiesgram=ifelse(Preservative =="Z",CopyNumber*masszymo,
+                                               ifelse(Preservative=="O", CopyNumber*massomni,
+                                                      ifelse(Preservative=="N", CopyNumber*massnf, NA)
+                                               )))
+
+
+#Read in kraken outputs and rrnDB copy number data
+krakengenus <- read.table(here("DNA/2.kraken/kraken2_classification/processed_results_krakenonly/taxonomy_matrices_classified_only/kraken_genus_percentage.txt"), sep="\t", header=TRUE)
+copyndb <- read.csv(here("qPCR/genus_copynumber_table.tsv"), sep="\t", header=TRUE)
+
+krakengenus$Genera <- row.names(krakengenus)
+row.names(krakengenus) <- NULL
+kraken_long <- melt(krakengenus, id.vars = "Genera", variable.name = "Sample", value.name = "rel_abundance")
+kraken_long <- mutate(kraken_long, Sample=gsub("\\.", "_", Sample))
+colnames(kraken_long)[colnames(kraken_long) == "Genera"] <- "Genus"
+colnames(copyndb)[colnames(copyndb) == "name"] <- "Genus"
+kraken_long <- merge(kraken_long, copyndb, by="Genus", all.x=TRUE)
+
+#Calculating total bacteria per sample (median and corrected rrnDB)
+#FIXME
+#kraken_long <- replace(kraken_long,is.na(kraken_long),1.94)
+kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S)
+donor_total <- kraken_long %>%
+  group_by(Sample) %>%
+  summarise_at(vars(tempabundance), list(totaltempabundance=sum))
+colnames(allplate)[colnames(allplate) == "SampleName"] <- "Sample"
+donor_total <- merge(donor_total, allplate %>% select(Sample, Copiesgram, Condition), by="Sample")
+donor_total <- mutate(donor_total, TotalBacteria=Copiesgram/totaltempabundance)
+donor_total <- donor_total %>%
+  group_by(Sample) %>%
+  summarise_at(vars(TotalBacteria), list(TotalBacteria=median))
+donor_total <- donor_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
+
+#Ordering conditions
+donor_total <- mutate(donor_total, PlotOrder=ifelse(Condition == "NF", 1, 
+                                                    ifelse(Condition == "OF", 2, 
+                                                           ifelse(Condition == "OR", 3, 
+                                                                  ifelse(Condition == "OH", 4, 
+                                                                         ifelse(Condition == "ZF", 5,
+                                                                                ifelse(Condition == "ZR", 6, 7)))))))
+#Color palette for conditions
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+#Plotting total bacteria/g of sample (not per taxon)
+ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=TotalBacteria, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "Total Bacteria/g"
+  ) +
+  theme_bw() +
+  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none") 
+
+ggsave(here("qPCR/Plots/qPCRtotalbacteriamedian.jpg"), dpi=300, w = 5, h = 5)
+
+#Calculate bacteria/taxon
+mega_total <- merge(donor_total,kraken_long, by="Sample")
+mega_total <- mutate(mega_total, Countgram=((rel_abundance*TotalBacteria)/100))
+mega_total <- mega_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
+
+ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Actinobacteria"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "Total Bacteria/g"
+  ) +
+  theme_bw() +
+  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none") 
+
+ggsave(here("qPCR/Plots/qPCRBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
 #####Irregular curve analysis#####
 #Merge dataframes with irregular curves, plate layout, and DNA concentration
 qPCR_weird <- read.csv(here("qPCR/Irregular qPCR Signal.csv"), sep=",", header=TRUE)
@@ -575,3 +669,31 @@ ggplot(qPCR_weird, aes(x=Plate, y=DNAConcentration, color=n)) +
 
 ggsave(here("Plots/qPCRweird_byDNAconc2.jpg"), dpi=300, w = 5, h = 5)
 
+
+#####Outlier Analaysis#####
+plate3 <- plate3 %>% filter(SampleName %in% c("D10_NF_R3","D03_OF_R3"))
+plate2 <- plate2 %>% filter(SampleName %in% c("D02_OH_R2","D03_OR_R2","D09_OF_R2"))
+
+outliers <- rbind(plate3 %>% select(SampleName, SampleNameFull, Cq, CopyNumber, PCR_Replicate), plate2 %>% select(SampleName, SampleNameFull, Cq, CopyNumber, PCR_Replicate))
+
+ggplot(outliers, aes(x=SampleName, y=Cq, color=PCR_Replicate)) +
+  geom_point(width=0.1) + 
+  labs(
+    x = "Sample",
+    y = "Cq"
+  ) +
+  theme_bw() 
+
+ggsave(here("qPCR/Plots/qPCRoutliers.jpg"), dpi=300, w = 7, h = 5)
+
+#Merge with DNA concentration table
+outliers <- merge(DNA_conc, outliers, by="SampleName")
+ggplot(outliers, aes(x=SampleName, y=DNAConcentration)) +
+  geom_point(width=0.1) + 
+  labs(
+    x = "Sample",
+    y = "DNA Concentration"
+  ) +
+  theme_bw() 
+
+ggsave(here("qPCR/Plots/qPCRoutliersconc.jpg"), dpi=300, w = 5, h = 5)
