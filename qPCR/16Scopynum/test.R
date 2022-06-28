@@ -20,7 +20,7 @@ comparison <- merge(kraken_genus, tax_array, by="Genus", all.x=TRUE)
 comparison %>% filter(is.na(taxid))
 
 comparison <- comparison %>% mutate(taxid=ifelse(is.na(taxid), gsub(".*\\(", "", gsub("\\)", "", Genus)), taxid))
-comparison <- comparison %>% mutate(Genus=gsub("\\(.*\\)", "", Genus))
+#comparison <- comparison %>% mutate(Genus=gsub("\\(.*\\)", "", Genus)) # probably this is where you messed up
 comparison <- comparison %>% group_by(Genus) %>% filter(row_number() == 1)
 
 copyndb <- read.csv(here("qPCR/taxonomic_copy_number.tsv"), sep="\t", header=TRUE)

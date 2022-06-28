@@ -29,9 +29,9 @@ taxid	Genus	mean16S	kingdom
 121036	unclassified Acidimicrobiia	1.94	Bacteria
 1213720	Stomatobaculum	1.94	Bacteria
 122277	Pectobacterium	7	Bacteria
-122706	unclassified Deltaproteobacteria 	1.94	Bacteria
+122706	unclassified Deltaproteobacteria (miscellaneous)	1.94	Bacteria
 123375	Solobacterium	1.94	Bacteria
-1234	Nitrospira 	1	Bacteria
+1234	Nitrospira (1234)	1	Bacteria
 1243	Leuconostoc	3.95	Bacteria
 125287	Ornithinimicrobium	2	Bacteria
 1257	Peptostreptococcus	1.94	Bacteria
@@ -94,7 +94,7 @@ taxid	Genus	mean16S	kingdom
 1507525	unclassified Sutterellaceae	1.94	Bacteria
 1508657	Ruminiclostridium	6.5	Bacteria
 1510979	unclassified Syntrophaceae	1.94	Bacteria
-1535326	Candida 	0	Fungi
+1535326	Candida (1535326)	0	Fungi
 155415	Monosporascus	0	Fungi
 1562	Desulfotomaculum	7.5	Bacteria
 156454	Anaeroglobus	1.94	Bacteria
@@ -166,13 +166,13 @@ taxid	Genus	mean16S	kingdom
 1849822	Paraclostridium	1.94	Bacteria
 1849828	Paeniclostridium	17	Bacteria
 1851	Saccharomonospora	3	Bacteria
-185291	unclassified Bacteroidales 	1.94	Bacteria
+185291	unclassified Bacteroidales (miscellaneous)	1.94	Bacteria
 1852932	unclassified Ignavibacteriae	1.94	Bacteria
 1854	Frankia	2.33	Bacteria
 1860	Geodermatophilus	3	Bacteria
 186188	Xylanimonas	3	Bacteria
 1865	Actinoplanes	5.29	Bacteria
-186616	Viruses: environmental samples 	0	Viruses
+186616	Viruses: environmental samples (186616)	0	Viruses
 1866885	Mycolicibacterium	2	Bacteria
 186825	unclassified Bacillales	1.94	Bacteria
 186928	unclassified Lachnospiraceae	1.94	Bacteria
@@ -356,9 +356,9 @@ taxid	Genus	mean16S	kingdom
 33170	Eremothecium	0	Fungi
 33196	Botrytis	0	Fungi
 338	Xanthomonas	2	Bacteria
-33807	unclassified Alphaproteobacteria 	1.94	Bacteria
-33809	unclassified Betaproteobacteria 	1.94	Bacteria
-33811	unclassified Gammaproteobacteria 	1.94	Bacteria
+33807	unclassified Alphaproteobacteria (miscellaneous)	1.94	Bacteria
+33809	unclassified Betaproteobacteria (miscellaneous)	1.94	Bacteria
+33811	unclassified Gammaproteobacteria (miscellaneous)	1.94	Bacteria
 33870	Coriobacterium	2	Bacteria
 33882	Microbacterium	1.93	Bacteria
 33886	Rathayibacter	2	Bacteria
@@ -382,7 +382,7 @@ taxid	Genus	mean16S	kingdom
 365348	Pelosinus	12	Bacteria
 366614	Haematobacter	3	Bacteria
 36853	Desulfitobacterium	6.38	Bacteria
-36866	unclassified Enterobacteriaceae 	1.94	Bacteria
+36866	unclassified Enterobacteriaceae (miscellaneous)	1.94	Bacteria
 36917	Ambrosiozyma	0	Fungi
 36922	Diaporthe	0	Fungi
 374	Bradyrhizobium	1.11	Bacteria
@@ -394,7 +394,7 @@ taxid	Genus	mean16S	kingdom
 38442	Myriosclerotinia	0	Fungi
 38447	Monilinia	0	Fungi
 38501	Blastococcus	3	Bacteria
-39779	unclassified Clostridiales 	1.94	Bacteria
+39779	unclassified Clostridiales (miscellaneous)	1.94	Bacteria
 397864	Barnesiella	5	Bacteria
 39845	Actinokineospora	1.94	Bacteria
 399320	Sphaerochaeta	3.67	Bacteria
@@ -407,12 +407,12 @@ taxid	Genus	mean16S	kingdom
 4000400	Guerin_crAss_Delta	0	Viruses
 400634	Lysinibacillus	11.11	Bacteria
 40323	Stenotrophomonas	3.42	Bacteria
-403978	unclassified Flavobacteriales 	1.94	Bacteria
+403978	unclassified Flavobacteriales (miscellaneous)	1.94	Bacteria
 40544	Sutterella	7	Bacteria
 407	Methylobacterium	5.67	Bacteria
 40840	Succiniclasticum	1.94	Bacteria
 41275	Brevundimonas	1.93	Bacteria
-41292	unclassified Rhizobiales 	1.94	Bacteria
+41292	unclassified Rhizobiales (miscellaneous)	1.94	Bacteria
 413496	Cronobacter	7	Bacteria
 414051	Caenispirillum	1.94	Bacteria
 416916	Aggregatibacter	6	Bacteria
@@ -461,7 +461,7 @@ taxid	Genus	mean16S	kingdom
 4888	Smittium	0	Fungi
 490731	Kwoniella	0	Fungi
 4930	Saccharomyces	0	Fungi
-49928	unclassified Bacteria 	1.94	Bacteria
+49928	unclassified Bacteria (miscellaneous)	1.94	Bacteria
 503183	unclassified Opitutae	1.94	Bacteria
 5052	Aspergillus	0	Fungi
 50559	Clostridiales: environmental samples	1.94	Bacteria
@@ -538,11 +538,11 @@ taxid	Genus	mean16S	kingdom
 75	Caulobacter	2.12	Bacteria
 758827	unclassified Succinivibrionaceae	1.94	Bacteria
 76890	Asticcacaulis	3	Bacteria
-78537	unclassified Actinobacteria 	1.94	Bacteria
+78537	unclassified Actinobacteria (class) (miscellaneous)	1.94	Bacteria
 79206	Desulfosporosinus	9.33	Bacteria
 79328	Chitinophaga	4.54	Bacteria
 79603	Denitrobacterium	3	Bacteria
-80841	unclassified Burkholderiales 	1.94	Bacteria
+80841	unclassified Burkholderiales (miscellaneous)	1.94	Bacteria
 80865	Delftia	5	Bacteria
 810	Chlamydia	1.23	Bacteria
 81440	unclassified Caulobacteraceae	1.94	Bacteria
@@ -558,7 +558,7 @@ taxid	Genus	mean16S	kingdom
 83681	Nonomuraea	5	Bacteria
 83770	Succinivibrio	7	Bacteria
 838	Prevotella	4.1	Bacteria
-84086	unclassified Firmicutes sensu stricto 	1.94	Bacteria
+84086	unclassified Firmicutes sensu stricto (miscellaneous)	1.94	Bacteria
 841	Roseburia	5	Bacteria
 84108	Slackia	2	Bacteria
 84111	Eggerthella	2.67	Bacteria
@@ -581,9 +581,9 @@ taxid	Genus	mean16S	kingdom
 906	Megasphaera	6.5	Bacteria
 909928	Negativicoccus	1.94	Bacteria
 910038	unclassified Aminicenantes	1.94	Bacteria
-941843	unclassified Rhodospirillales 	1.94	Bacteria
+941843	unclassified Rhodospirillales (miscellaneous)	1.94	Bacteria
 946234	Flavonifractor	2.5	Bacteria
 963	Herbaspirillum	3	Bacteria
 970	Selenomonas	4.6	Bacteria
 990721	Christensenella	2.5	Bacteria
-99482	unclassified Micrococcales 	1.94	Bacteria
+99482	unclassified Micrococcales (miscellaneous)	1.94	Bacteria
