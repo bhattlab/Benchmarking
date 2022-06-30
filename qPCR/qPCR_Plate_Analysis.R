@@ -452,7 +452,7 @@ ggsave(here("qPCR/Plots/RepCompare_23.jpg"), dpi=300, w = 5, h = 5)
 #Irregular curves: samples with 1/3 failed replicates
 qPCR_w <- spread(qPCR_weird %>% select(SampleName, Cq, PCR_Replicate), key=PCR_Replicate, value=Cq)
 
-##### Absolute Counts at Phylumn Level#####
+##### Absolute Counts at Phylum Level#####
 #Create a unified dataframe containing all Plate data
 plate1 <- read.csv(here("qPCR/Plate_1/qPCR_plate1.csv"), sep=",", header=TRUE)
 plate2 <- read.csv(here("qPCR/Plate_2/qPCR_plate2.csv"), sep=",", header=TRUE)
@@ -546,6 +546,36 @@ ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
 
 ggsave(here("qPCR/Plots/qPCRBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
 
+#Calculating Firmicute/Bacteroidetes Ratio by Condition
+fb <- mega_total %>% filter(Phylum %in% c("Firmicutes","Bacteroidetes"))
+fb <- fb %>% select(Sample, Phylum, Countgram)
+fb <- spread(fb, key="Phylum", value="Countgram") #change df format to have F and B as columns
+fbratio <- mutate(fb, FBRatio=Firmicutes/Bacteroidetes)
+fbratio <- fbratio %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
+
+fbratio <- mutate(fbratio, PlotOrder=ifelse(Condition == "NF", 1, 
+                                        ifelse(Condition == "OF", 2, 
+                                               ifelse(Condition == "OR", 3, 
+                                                      ifelse(Condition == "OH", 4, 
+                                                             ifelse(Condition == "ZF", 5,
+                                                                    ifelse(Condition == "ZR", 6, 7)))))))
+
+ggplot(fbratio %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=FBRatio, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "# of Firmicutes/# of Bacteroidetes"
+  ) +
+  theme_bw() +
+  ylim(0,20) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none") 
+
+ggsave(here("qPCR/Plots/qPCRFBRatio.jpg"), dpi=300, w=5, h=5)
+
 ##### Absolute Counts at Genus Level#####
 #Create a unified dataframe containing all Plate data
 plate1 <- read.csv(here("qPCR/Plate_1/qPCR_plate1.csv"), sep=",", header=TRUE)
@@ -618,14 +648,15 @@ ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
 
-ggsave(here("qPCR/Plots/qPCRtotalbacteriamedian.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plots/qPCRtotalmediangenus.jpg"), dpi=300, w = 5, h = 5)
 
 #Calculate bacteria/taxon
 mega_total <- merge(donor_total,kraken_long, by="Sample")
 mega_total <- mutate(mega_total, Countgram=((rel_abundance*TotalBacteria)/100))
 mega_total <- mega_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
+mega_total <- mutate(mega_total, Countgram=ifelse(Countgram==0, 1, Countgram))
 
-ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Actinobacteria"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
+ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Genus=="Treponema"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
   geom_jitter(width=0.1) + 
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
@@ -635,11 +666,11 @@ ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
     y = "Total Bacteria/g"
   ) +
   theme_bw() +
-  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_y_log10(limits=c(1, 1e+14), n.breaks=1e1, minor_breaks=NULL) +
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
 
-ggsave(here("qPCR/Plots/qPCRBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
+ggsave(here("qPCR/Plots/qPCRTreponema.jpg"), dpi=300, w = 5, h = 5)
 #####Irregular curve analysis#####
 #Merge dataframes with irregular curves, plate layout, and DNA concentration
 qPCR_weird <- read.csv(here("qPCR/Irregular qPCR Signal.csv"), sep=",", header=TRUE)
