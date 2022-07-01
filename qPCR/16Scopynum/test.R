@@ -67,7 +67,7 @@ comparison <- merge(kraken_phylum, tax_array, by="Phylum", all.x=TRUE)
 comparison %>% filter(is.na(taxid))
 
 comparison <- comparison %>% mutate(taxid=ifelse(is.na(taxid), gsub(".*\\(", "", gsub("\\)", "", Phylum)), taxid))
-comparison <- comparison %>% mutate(Phylum=gsub("\\(.*\\)", "", Phylum))
+#comparison <- comparison %>% mutate(Phylum=gsub("\\(.*\\)", "", Phylum))
 comparison <- comparison %>% group_by(Phylum) %>% filter(row_number() == 1)
 
 

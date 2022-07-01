@@ -50,7 +50,7 @@ ggplot(data = qPCRplate1, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plots/qPCRplate1_stdcurve_bv1.jpg"), dpi=300, w = 5, h = 5)
+#ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plots/qPCRplate1_stdcurve_bv1.jpg"), dpi=300, w = 5, h = 5)
 
 #Filter for F prausnitizii and calculate log10
 qPCRplate1 <- qPCRplate1 %>% filter(Standard=="F prausnitzii")
@@ -68,7 +68,7 @@ ggplot(data = qPCRplate1, aes(x = logCopyNumber, y = Cq)) +
   geom_point() +
   theme_bw()
 
-ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plots/qPCRplate1_stdcurve_fp1.jpg"), dpi=300, w = 5, h = 5)
+#ggsave(here("Documents/Bhatt/Benchmarking/qPCR/Plate_1/Plots/qPCRplate1_stdcurve_fp1.jpg"), dpi=300, w = 5, h = 5)
 qPCRplate1 <- qPCRplate1 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
 
 #Standard curve using both B vulgatus and F prausnitizii data
@@ -85,7 +85,7 @@ ggplot(data = qPCRplate1, aes(x = logCopyNumber, y = Cq)) +
   geom_point(aes(color=Standard)) +
   theme_bw()
 
-ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_stdcurve.jpg"), dpi=300, w = 6, h = 5)
+#ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_stdcurve.jpg"), dpi=300, w = 6, h = 5)
 #To introduce custom colors in the plot
 
 #To introduce custom colors in the plot
@@ -95,7 +95,7 @@ ggsave(here("qPCR/Plate_1/Plots/qPCRplate1_stdcurve.jpg"), dpi=300, w = 6, h = 5
 
 #####Plate 1: Absolute Abundance Calculation#####
 #Edit dataframe
-qPCRplate1 <- read.csv(here("qPCR/Plate_1/qPCRplate1.csv"), sep=",", header=TRUE)
+qPCRplate1 <- read.csv(here("qPCR/Plate_1/qPCR_plate1.csv"), sep=",", header=TRUE)
 qPCRplate1 <- qPCRplate1 %>% filter(!grepl("standard", SampleName))
 qPCRplate1 <- filter(qPCRplate1, PCR_Replicate!="Rep4")
 qPCRplate1 <- mutate(qPCRplate1, Cq=as.numeric(Cq))
@@ -485,7 +485,7 @@ kraken_long <- merge(kraken_long, copyndb, by="Phylum", all.x=TRUE)
 #Calculating total bacteria per sample (median and corrected rrnDB)
 #FIXME
 kraken_long <- replace(kraken_long,is.na(kraken_long),1.94)
-kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S)
+kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S/100)
 donor_total <- kraken_long %>%
   group_by(Sample) %>%
   summarise_at(vars(tempabundance), list(totaltempabundance=sum))
@@ -530,7 +530,7 @@ mega_total <- merge(donor_total,kraken_long, by="Sample")
 mega_total <- mutate(mega_total, Countgram=((rel_abundance*TotalBacteria)/100))
 mega_total <- mega_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
 
-ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Actinobacteria"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
+ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Bacteroidetes"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
   geom_jitter(width=0.1) + 
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
@@ -610,7 +610,7 @@ kraken_long <- merge(kraken_long, copyndb, by="Genus", all.x=TRUE)
 #Calculating total bacteria per sample (median and corrected rrnDB)
 #FIXME
 #kraken_long <- replace(kraken_long,is.na(kraken_long),1.94)
-kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S)
+kraken_long <- mutate(kraken_long, tempabundance=rel_abundance*mean16S/100)
 donor_total <- kraken_long %>%
   group_by(Sample) %>%
   summarise_at(vars(tempabundance), list(totaltempabundance=sum))
