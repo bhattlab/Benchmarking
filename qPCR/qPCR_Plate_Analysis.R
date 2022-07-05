@@ -415,6 +415,128 @@ ggplot(qPCRplate3 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH"
 
 ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
 
+##### Plate 4: Standard Curve and Absolute Count#####
+#Create and edit unified sample datafile
+qPCR_samplewellp4 <- read.csv(here("qPCR/Plate_4/qPCR_plate4_layout.csv"), sep=",", header=TRUE)
+qPCR_datap4 <- read.csv(here("qPCR/Plate_4/HotPooqPCR_Plate4.csv"), sep=",", header=TRUE)
+
+colnames(qPCR_samplewellp4)[colnames(qPCR_samplewellp4) == "Well384"] <- "Well"
+qPCRplate4 <- merge(qPCR_samplewellp4,qPCR_datap4, by="Well")
+
+#Export file
+#write.table(qPCRplate3, here("qPCR/Plate_3/qPCRplate3.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+
+#Make standard curve for plate 3
+qPCRplate3 <- qPCRplate3 %>% filter(grepl("standard", SampleName))
+qPCRplate3 <- filter(qPCRplate3, PCR_Replicate!="Rep4")
+qPCRplate3 <- qPCRplate3 %>% separate(SampleName, c("Standard", "DilutionFactor"), remove=FALSE, sep='_')
+qPCRplate3 <- mutate(qPCRplate3, DilutionFactor=as.numeric(gsub(",","",DilutionFactor)))
+qPCRplate3 <- mutate(qPCRplate3, Cq=as.numeric(Cq))
+qPCRplate3 <- mutate(qPCRplate3, Standard=gsub("standardB","B vulgatus",gsub("standardF","F prausnitzii", Standard)))
+
+#Include copy number for the standards
+copyf <- 2.456*10^11
+copyb <- 2.171*10^11
+qPCRplate3 <- mutate(qPCRplate3, CopyNumber=ifelse(Standard=="B vulgatus", copyb/DilutionFactor, copyf/DilutionFactor))
+
+#Filter for B vulgatus and calculate log10
+qPCRplate3 <- qPCRplate3 %>% filter(Standard=="B vulgatus")
+qPCRplate3 <- qPCRplate3 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
+
+library(ggpmisc)
+ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x) + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE) +         
+  geom_point() +
+  theme_bw()
+
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_stdcurve_bv.jpg"), dpi=300, w = 5, h = 5)
+
+#Filter for F prausnitizii and calculate log10
+qPCRplate3 <- qPCRplate3 %>% filter(Standard=="F prausnitzii")
+qPCRplate3 <- qPCRplate3 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
+
+
+library(ggpmisc)
+ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x) + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE) +         
+  geom_point() +
+  theme_bw()
+
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_stdcurve_fp3.jpg"), dpi=300, w = 5, h = 5)
+
+#Standard curve using both B vulgatus and F prausnitizii data
+qPCRplate3 <- qPCRplate3 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
+
+library(ggpmisc)
+ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x) + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE) +         
+  geom_point(aes(color=Standard)) +
+  theme_bw()
+
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_stdcurve_all.jpg"), dpi=300, w = 6, h = 5)
+
+#Edit dataframe for absolute abundance calculations
+qPCRplate3 <- read.csv(here("qPCR/Plate_3/qPCRplate3.csv"), sep=",", header = TRUE)
+qPCRplate3 <- qPCRplate3 %>% filter(!grepl("standard", SampleName))
+qPCRplate3 <- filter(qPCRplate3, PCR_Replicate!="Rep4")
+qPCRplate3 <- mutate(qPCRplate3, Cq=as.numeric(Cq))
+
+#Calculation using combined standard curve model
+#Standard curve is: y=35.5-3.13x
+qPCRplate3 <- qPCRplate3 %>% mutate(logCopyNumber=(Cq-35.5)/-3.13)
+qPCRplate3 <- qPCRplate3 %>% mutate(CopyNumber=((10^(logCopyNumber))*1000)/6) #copies/uL
+qPCRplate3 <- qPCRplate3 %>% separate(SampleName, c("Donor", "Condition", "Replicate"), remove=FALSE, sep='_')
+
+#Ordering conditions
+qPCRplate3 <- mutate(qPCRplate3, PlotOrder=ifelse(Condition == "NF", 1, 
+                                                  ifelse(Condition == "OF", 2, 
+                                                         ifelse(Condition == "OR", 3, 
+                                                                ifelse(Condition == "OH", 4, 
+                                                                       ifelse(Condition == "ZF", 5,
+                                                                              ifelse(Condition == "ZR", 6, 7)))))))
+#Color palette for conditions
+condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+#Filter out irregular signal samples
+irregularqPCR <- qPCR_weird$SampleNameFull
+qPCRplate3 <- qPCRplate3 %>% filter(!(SampleNameFull %in% irregularqPCR))
+
+#Export datafile removing irregular samples
+write.table(qPCRplate3, here("qPCR/Plate_3/qPCR_plate3.csv"), row.names = FALSE, sep=",", quote=FALSE)  
+
+#Plotting copies/uL by condition
+ggplot(qPCRplate3 %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=CopyNumber, color=Condition)) +
+  geom_jitter(width=0.1) + 
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     tip.length = 0, label="p.signif") +
+  labs(
+    x = "Condition",
+    y = "Copies/uL"
+  ) +
+  theme_bw() +
+  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_color_manual(values=condition_palette) +
+  theme(legend.position = "none") 
+
+ggsave(here("qPCR/Plate_3/Plots/qPCRplate3_copiespercondition.jpg"), dpi=300, w = 5, h = 5)
+
 #####Scatterplots for qPCR Consistency#####
 qPCR2 <- spread(qPCRplate2 %>% select(SampleName, Cq, PCR_Replicate), key=PCR_Replicate, value=Cq)
 
