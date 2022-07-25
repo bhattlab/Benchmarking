@@ -686,6 +686,9 @@ donor_total <- mutate(donor_total, PlotOrder=ifelse(Condition == "NF", 1,
 condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
 names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
+#Export total bacteria/g of sample file
+#write.table(donor_total, here("qPCR/totalbacteria_pergram.tsv"), row.names = FALSE, sep="\t", quote=FALSE)  
+
 #Plotting total bacteria/g of sample (not per taxon)
 ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=TotalBacteria, color=Condition)) +
   geom_jitter(width=0.1) + 
@@ -907,3 +910,27 @@ ggplot(outliers, aes(x=SampleName, y=DNAConcentration)) +
   theme_bw() 
 
 ggsave(here("qPCR/Plots/qPCRoutliersconc.jpg"), dpi=300, w = 5, h = 5)
+
+#####DNA Concentration v Absolute Count#####
+#Absolute count data
+abscount <- read.csv(here("qPCR/totalbacteria_pergram.tsv"), sep="\t", header=TRUE)
+colnames(abscount)[colnames(abscount) == "Sample"] <- "SampleName"
+
+
+#DNA Concentration data
+dnacon <- read.csv(here("qPCR/BenchmarkingDNAConcentration.csv"), sep=",", header=TRUE)
+
+absdna <- merge(abscount, dnacon, by="SampleName")
+
+ggplot(absdna, aes(x=DNAConcentration, y=TotalBacteria)) +
+  geom_point() +
+  theme_bw() +
+  #geom_abline(slope=1, intercept=0) +
+  labs(
+    x = "DNA Concentration ng/uL",
+    y = "Total Bacteria/g Dry Stool"
+  ) +
+  geom_smooth(method=lm, se=FALSE) +
+  scale_y_log10()
+  
+
