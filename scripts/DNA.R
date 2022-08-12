@@ -5,6 +5,10 @@ library(dplyr)
 library(forcats)
 library(gtable)
 library(cowplot)
+library(tidyr)
+library(RColorBrewer)
+library(reshape2)
+library(ggnewscale)
 
 # build a named color palette for each condition
 condition_palette <- c("#762983","#9a6faa","#c3a5d0","#acaaaf","#7ebd42","#4d9222","#26641a") 
@@ -124,3 +128,151 @@ ggsave(here("QSU_Data/Figure2.png"), w=12, h=4, dpi=300)
 
 
 ##### FIGURE 3 #####
+#Relative abundance analysis
+
+#A: Stacked bar plot for Donor 1
+# read in metadata
+metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+#Separate the Condition column to create preservation method and temperature columns
+metadata <- mutate(metadata, Preservation=substr(Condition,1,1))
+metadata <- mutate(metadata, Temperature=substr(Condition,2,2))
+metadata <- metadata %>% mutate(TemperatureLong = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
+metadata <- mutate(metadata, TemperatureLong=ifelse(Replicate == "R2", TemperatureLong, ""))
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+
+genus <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
+
+#Color palette
+n_taxa <- 20
+myCols <- colorRampPalette(brewer.pal(9, "Set1")) # WAS Set1
+barplot_pal <- myCols(n_taxa)
+barplot_pal <- sample(barplot_pal)
+barplot_pal[n_taxa + 1] <- "gray"
+
+abundance_threshold <- sort(rowSums(genus), decreasing = T)[n_taxa]
+bracken_plot <- genus[rowSums(genus) >= abundance_threshold,]
+bracken_plot <- rbind(bracken_plot, t(data.frame("Other" =  100 - colSums(bracken_plot))))
+
+bracken_plot$Genus <- row.names(bracken_plot)
+bracken_plot$Genus <- gsub("\\(miscellaneous\\)", "", bracken_plot$Genus)
+bracken_long <- melt(bracken_plot, id.vars = "Genus", variable.name = "Sample", value.name = "rel_abundance")
+bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
+
+# Merge in the metadata
+colnames(metadata)[3]<-"Sample"
+bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
+#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
+
+# Correct the plotting order
+bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
+
+samplabels <- bracken_pheno$TemperatureLong
+names(samplabels) <- bracken_pheno$Sample
+
+bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1, 
+                                                        ifelse(Condition == "OF", 2, 
+                                                               ifelse(Condition == "OR", 3, 
+                                                                      ifelse(Condition == "OH", 4, 
+                                                                             ifelse(Condition == "ZF", 5,
+                                                                                    ifelse(Condition == "ZR", 6, 7)))))))
+
+#Filter out controls and other donors
+bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
+bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
+bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
+
+r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder), y=rel_abundance, fill=Genus)) +
+  geom_bar(stat="identity") +
+  labs(
+    x = "",
+    y = "Relative Abundance (%)"
+  ) +
+  scale_fill_manual("Genus", values = barplot_pal) +
+  guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
+  theme_bw() +
+  scale_x_discrete(labels = samplabels) +
+  theme(
+    plot.title = element_text(face = "plain", size = 14),
+    legend.text = element_text(size = 10),
+    #axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.grid = element_blank(), 
+    panel.border = element_blank(),
+    strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
+    strip.text = element_text(color = "black", size = 12)) + 
+  scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
+  new_scale_fill() +
+  geom_tile(aes(x=Sample, y = -2, fill = Condition), show.legend = F) + 
+  geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
+  geom_tile(aes(x=Sample, y = -4, fill = Condition), show.legend = F) +
+  scale_fill_manual(values = condition_palette) +
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+r
+
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+  ylim(-0.1, 0.1) +
+  theme_void() + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+b
+
+stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.03), align="v", axis='lr')
+stackedbargenus
+
+ggsave(here("QSU_Data/Figure3A.pdf"), dpi=300, h=4, w=6)
+
+#B: Shannon entropy across conditions
+#Change column name
+colnames(raw)[colnames(raw) == "Shannon.Entropy"] <- "Shannon"
+
+#Shannon entropy
+se <- ggplot(raw , aes(Sample_Type, Shannon)) + 
+  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
+  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
+  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=2) + 
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_errorbar(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
+  ylim(1,4.5) +
+  stat_pvalue_manual(sig %>% filter(Feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.3, 4.1, 3.9,3.7), 
+                     tip.length=0, label = "p.signif") +
+  theme_bw() + 
+  ylab("Shannon entropy") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+se
+
+#Legend formatting
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  ylim(-0.1, 0.1) +
+  theme_void() +
+  theme(plot.margin = unit(c(0.3, 0, 0.3, 0), "cm"))
+b
+shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
+shannon
+
+
+#Cowplot 3A and 3B!
+ab<-plot_grid(stackedbargenus, shannon, nrow=1, ncol=2, scale=0.9, rel_widths=c(1, 0.7 ), labels=c("A","B"))
+ab
+ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=4, w=12)
+
