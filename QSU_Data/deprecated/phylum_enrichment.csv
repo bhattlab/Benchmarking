@@ -1,0 +1,43 @@
+﻿Taxon,Comparison,Interval,p
+Relative Abundance: Firmicutes,NF vs. OF,"-21.0% [-26.9%, -14.6%] ***",<0.001
+Relative Abundance: Bacteroidetes,NF vs. OF,"55.9% [40.1%, 73.4%] ***",<0.001
+Relative Abundance: Actinobacteria,NF vs. OF,"-29.5% [-38.1%, -19.7%] ***",<0.001
+Relative Abundance: Other Bacteria,NF vs. OF,"3.1% [-18.9%, 31.0%]",0.804
+Relative Abundance: Viruses,NF vs. OF,"-32.6% [-45.4%, -16.8%] ***",<0.001
+Relative Abundance: Fungi,NF vs. OF,"-6.4% [-14.8%, 2.8%]",0.167
+Relative Abundance: Unclassified,NF vs. OF,"-12.3% [-20.4%, -3.5%] **",0.007
+Relative Abundance: Firmicutes,NF vs ZF,"-8.7% [-12.6%, -4.7%] ***",<0.001
+Relative Abundance: Bacteroidetes,NF vs ZF,"33.0% [15.6%, 52.9%] ***",<0.001
+Relative Abundance: Actinobacteria,NF vs ZF,"-26.9% [-40.9%, -9.6%] **",0.004
+Relative Abundance: Other Bacteria,NF vs ZF,"0.8% [-20.6%, 28.1%]",0.945
+Relative Abundance: Viruses,NF vs ZF,"3.6% [-15.7%, 27.4%]",0.736
+Relative Abundance: Fungi,NF vs ZF,"-7.3% [-13.5%, -0.6%] *",0.033
+Relative Abundance: Unclassified,NF vs ZF,"-6.5% [-12.7%, 0.1%]",0.053
+Relative Abundance: Firmicutes,OF vs OR,"-1.4% [-6.3%, 3.8%]",0.599
+Relative Abundance: Bacteroidetes,OF vs OR,"1.3% [-4.3%, 7.3%]",0.648
+Relative Abundance: Actinobacteria,OF vs OR,"-15.5% [-23.6%, -6.6%] ***",0.001
+Relative Abundance: Other Bacteria,OF vs OR,"7.2% [-0.6%, 15.7%]",0.073
+Relative Abundance: Viruses,OF vs OR,"27.2% [6.7%, 51.5%] **",0.007
+Relative Abundance: Fungi,OF vs OR,"2.5% [-1.6%, 6.8%]",0.238
+Relative Abundance: Unclassified,OF vs OR,"3.0% [-0.6%, 6.8%]",0.105
+Relative Abundance: Firmicutes,OF vs OH,"4.6% [-4.4%, 14.4%]",0.329
+Relative Abundance: Bacteroidetes,OF vs OH,"-3.1% [-11.6%, 6.2%]",0.499
+Relative Abundance: Actinobacteria,OF vs OH,"-27.4% [-40.5%, -11.5%] **",0.002
+Relative Abundance: Other Bacteria,OF vs OH,"5.2% [-3.3%, 14.5%]",0.236
+Relative Abundance: Viruses,OF vs OH,"55.5% [30.6%, 85.0%] ***",<0.001
+Relative Abundance: Fungi,OF vs OH,"4.1% [-4.6%, 13.5%]",0.371
+Relative Abundance: Unclassified,OF vs OH,"9.4% [3.0%, 16.3%] **",0.004
+Relative Abundance: Firmicutes,ZF vs ZR,"-12.2% [-17.9%, -6.2%] ***",<0.001
+Relative Abundance: Bacteroidetes,ZF vs ZR,"16.1% [7.8%, 25.0%] ***",<0.001
+Relative Abundance: Actinobacteria,ZF vs ZR,"-12.2% [-23.5%, 0.7%]",0.063
+Relative Abundance: Other Bacteria,ZF vs ZR,"10.4% [2.1%, 19.4%] *",0.013
+Relative Abundance: Viruses,ZF vs ZR,"42.5% [23.0%, 65.2%] ***",<0.001
+Relative Abundance: Fungi,ZF vs ZR,"-0.0% [-6.7%, 7.1%]",1
+Relative Abundance: Unclassified,ZF vs ZR,"3.6% [-0.7%, 8.0%]",0.104
+Relative Abundance: Firmicutes,ZF vs ZH,"-17.1% [-22.7%, -11.0%] ***",<0.001
+Relative Abundance: Bacteroidetes,ZF vs ZH,"26.2% [18.0%, 34.8%] ***",<0.001
+Relative Abundance: Actinobacteria,ZF vs ZH,"-36.4% [-48.6%, -21.2%] ***",<0.001
+Relative Abundance: Other Bacteria,ZF vs ZH,"25.3% [18.1%, 32.9%] ***",<0.001
+Relative Abundance: Viruses,ZF vs ZH,"70.8% [44.8%, 101.4%] ***",<0.001
+Relative Abundance: Fungi,ZF vs ZH,"9.2% [3.0%, 15.9%] **",0.003
+Relative Abundance: Unclassified,ZF vs ZH,"9.3% [5.4%, 13.4%] ***",<0.001
