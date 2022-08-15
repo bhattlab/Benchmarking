@@ -73,7 +73,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) +
   scale_y_log10() +
   # stat_pvalue_manual(sig %>% filter(Feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(14.5, 14.3, 14, 13.8, 13, 12.8), 
   #                    tip.length=0, label = "p.signif") +
-  stat_pvalue_manual(sig %>% filter(Feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(13.8, 13, 12.8), 
+  stat_pvalue_manual(sig %>% filter(feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(13.8, 13, 12.8), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Microbes per Gram") + 
@@ -102,7 +102,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
   geom_point(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, y=Mean), size=2.5) +
   #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121), 
   #                   tip.length=0, label = "p.signif") +
-  stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%") %>% filter(p.adj <= 0.05), y.position=c(127, 124, 121), 
+  stat_pvalue_manual(sig %>% filter(feature == "Richness 0.01%") %>% filter(p.adj <= 0.05), y.position=c(127, 124, 121), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Number of Genera") + 
@@ -195,6 +195,7 @@ bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1,
 bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
 bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
 bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
+bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
 
 r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder), y=rel_abundance, fill=Genus)) +
   geom_bar(stat="identity") +
@@ -228,12 +229,12 @@ r
 
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-  ylim(-0.1, 0.1) +
+  ylim(-0.05, 0.05) +
   theme_void() + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 b
 
-stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.03), align="v", axis='lr')
+stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="v", axis='lr')
 stackedbargenus
 
 ggsave(here("QSU_Data/Figure3A.pdf"), dpi=300, h=4, w=6)
@@ -252,10 +253,10 @@ se <- ggplot(raw , aes(Sample_Type, Shannon)) +
   geom_errorbar(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
   ylim(1,4.5) +
-  stat_pvalue_manual(sig %>% filter(Feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.3, 4.1, 3.9,3.7), 
+  stat_pvalue_manual(sig %>% filter(feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.3, 4.1, 3.9,3.7), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
-  ylab("Shannon entropy") + 
+  ylab("Shannon Entropy") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 se
@@ -265,7 +266,7 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
   ylim(-0.1, 0.1) +
   theme_void() +
-  theme(plot.margin = unit(c(0.3, 0, 0.3, 0), "cm"))
+  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
 b
 shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
 shannon
@@ -286,7 +287,7 @@ p <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Bacteroidetes)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
-  stat_pvalue_manual(sig %>% filter(Feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.95, 1, 0.7,0.75), 
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.95, 1, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Relative Abundance: Bacteroidetes") + 
@@ -299,7 +300,7 @@ bact <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Bacteroidetes)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(Feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylim(0,1) + 
@@ -313,7 +314,7 @@ firm <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Firmicutes)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(Feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylim(0,1) + 
@@ -328,7 +329,7 @@ act <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Actinobacteria)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(Feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(0.22, 0.27, 0.17,0.12, 0.12), 
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(0.22, 0.27, 0.17,0.12, 0.12), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylim(0,1) + 
@@ -399,3 +400,54 @@ a <- plot_grid(nfof + theme(legend.position="none"), oother, nfzf, zother, nrow=
 plot_grid(a, z, ncol=2, nrow=1, rel_widths=c(1, 0.3), scale=0.9)
 
 ggsave(here("QSU_Data/PhylumEnrichmentDraft_heatmap.pdf"), dpi=300, h=4, w=5)
+
+##### Metagenomic Bray Curtis #####
+bc_raw <- read.csv(here("QSU_Data/raw_data_all_braycurtis.csv"), header=TRUE)
+bc_raw <- bc_raw %>% mutate(UniqueComparison = ifelse(Protocol_1 > Protocol_2, paste(Patient, Protocol_1, Protocol_2, sep="_"), paste(Patient, Protocol_2, Protocol_1, sep="_")))
+bc_raw <- bc_raw %>% select(Patient, bcdist, UniqueComparison)
+bc_unique <- distinct(bc_raw, UniqueComparison, bcdist, .keep_all = TRUE)
+
+bc_model <- read.csv(here("QSU_Data/raw_data_model_means_braycurtis.csv"), header=TRUE)
+bc_model <- bc_model %>% separate(Protocols, c("group1", "group2"), remove=FALSE) %>% filter(group1 == "NF") %>% filter(group1 != group2)
+bc_model <- bc_model %>% mutate(Condition=group2)
+
+bc_sig <- read.csv(here("QSU_Data/raw_data_significance_braycurtis.csv"), header=TRUE)
+bc_sig_toNF <- bc_sig %>% filter(Feature == "BrayCurtisBetweenConditions")
+bc_sig_toNF <- bc_sig_toNF %>% mutate(group1=gsub("_NF", "", group1)) %>% mutate(group2=gsub("_NF", "", group2))
+
+# across condition Bray Curtis
+bc_across <- bc_unique %>% separate(UniqueComparison, c("Donor", "group1", "group2"), remove=FALSE)
+bc_across <- bc_across %>% filter(group1 != group2) %>% filter(group1 == "NF" | group2 == "NF")
+bc_across <- bc_across %>% mutate(modelID = paste(group2, group1, sep="_"))
+bc_across <- bc_across %>% mutate(group1 = fct_relevel(group1,  "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+
+bc_plot <- ggplot(bc_across, aes(x=group1, y=bcdist)) + 
+  geom_vline(aes(xintercept=3.5), alpha=0.2, size=0.3) + 
+  geom_jitter(width=0.2, aes(color=group1),  shape=16, size=2) + 
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_errorbar(data=bc_model, inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=bc_model, inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
+  ylim(0,1) +
+  stat_pvalue_manual(bc_sig_toNF %>% filter(p.adj <= 0.05), y.position=c(1, .9, .7, .8), 
+                      tip.length=0, label = "p.signif") +
+  theme_bw() + 
+  ylab("Bray-Curtis Dissimilarity") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+bc_plot
+
+#Legend formatting
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") %>% filter(Sample_Type != "NF"), aes(x=Sample_Type, y=0)) +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  ylim(-0.05, 0.05) +
+  theme_void() +
+  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+b
+bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
+bc_full
+
+#Cowplot 3A and 3B and 3C!
+abc<-plot_grid(stackedbargenus, shannon, bc_full, nrow=1, ncol=3, scale=0.9, rel_widths=c(1, 0.7, 0.7), labels=c("a", "b", "c"))
+abc
+ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=4, w=14)
