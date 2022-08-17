@@ -451,3 +451,157 @@ bc_full
 abc<-plot_grid(stackedbargenus, shannon, bc_full, nrow=1, ncol=3, scale=0.9, rel_widths=c(1, 0.7, 0.7), labels=c("a", "b", "c"))
 abc
 ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=4, w=14)
+
+
+##### GENUS HEATMAP #####
+genus_sig <- read.csv(here("QSU_Data/genus_significance.csv"), header=TRUE)
+genus_sig <- genus_sig %>% mutate(PercentFormatted = as.numeric(gsub("%.*", "", Percent)))
+genus_sig <- genus_sig %>% mutate(PFormatted = as.numeric(ifelse(p == "< 0.001", "0.001", p)))
+genus_sig <- genus_sig %>% mutate(Condition = gsub("_.*", "", Comparison))
+genus_sig <- transform(genus_sig, x.position=as.numeric(factor(feature)))
+genus_sig <- genus_sig %>% mutate(y.position = ifelse(Condition == "OF", 2, 
+                                                      ifelse(Condition=="ZF", 1, 
+                                                             ifelse(Condition=="OR", 0, 
+                                                                    ifelse(Condition == "OH", 2, 
+                                                                           ifelse(Condition == "ZR", 0, 1))))))
+
+raw_abundance <- read.csv(here("QSU_Data/genus_model_means.csv"), header=TRUE)
+raw_abundance <- raw_abundance %>% filter(Condition == "NF") %>% select(feature, Mean)
+names(raw_abundance) <- c("feature", "NFMean")
+raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Clostridiales.*", "Firmicutes: unclassified Clostridiales (miscel...", feature))
+raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Firmicutes sensu.*", "Firmicutes: unclassified Firmicutes sensu stri...", feature))
+genus_sig <- merge(genus_sig, raw_abundance, by="feature", all.x = TRUE)
+genus_sig <- genus_sig %>% mutate(Phylum = gsub(":.*", "", feature))
+genus_sig <- genus_sig %>% mutate(Phylum = ifelse(Phylum == "null", "Virus", Phylum))
+genus_sig <- genus_sig %>% mutate(Plabel = ifelse(PFormatted <= 0.05, "*", ""))
+genus_sig <- genus_sig %>% mutate(Genus = gsub(" sensu.*", "", gsub("unclassified ", "other ", gsub(".*: ", "", gsub(" \\(misc.*", "", gsub(": environmental.*", "", feature))))))
+
+preservative <- ggplot(genus_sig %>% filter(Condition == "OF" | Condition == "ZF"), aes(x=x.position, y=y.position, fill=PercentFormatted)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1, 2), labels=c("Zymo -80°C", "OMNI -80°C")) + 
+  labs(title = "Preservative Effect (Relative to no preservative)") +
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-81, 81)) +
+  labs(fill="Percent\nEnrichment")+
+  geom_point(data = genus_sig %>% filter(Condition == "OF" | Condition == "ZF") %>% filter(Plabel == "*"), size=1, color="white") + 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  geom_vline(xintercept=48.5) + 
+  geom_vline(xintercept=49.5) + 
+  geom_vline(xintercept=50.5) + 
+  geom_vline(xintercept=53.5) + 
+  theme(panel.border = element_rect(size=1))
+
+preservative
+
+z <- get_legend(preservative)
+
+temperature <- ggplot(genus_sig %>% filter(Condition == "OH" | Condition == "ZH"), aes(x=x.position, y=y.position, fill=PercentFormatted)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0), breaks=genus_sig$x.position, labels=genus_sig$Genus) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1,2), labels=c("Zymo 40°C", "OMNI 40°C")) + 
+  labs(title = "Temperature Effect (Relative to -80°C for each preservative)") +
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(),
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-81, 81)) +
+  geom_point(data = genus_sig %>% filter(Condition == "OH") %>% filter(Plabel == "*"), size=1, color="white") +
+  theme(axis.text.x = element_text(angle=45, hjust=1, vjust=1))+ 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  geom_vline(xintercept=48.5) + 
+  geom_vline(xintercept=49.5) + 
+  geom_vline(xintercept=50.5) + 
+  geom_vline(xintercept=53.5) + 
+  theme(panel.border = element_rect(size=1))
+
+
+temperature
+
+wolegend <- plot_grid(preservative + theme(legend.position="none"), temperature + theme(legend.position="none"), nrow=2, ncol=1, align="v", axis="lr")
+main <- plot_grid(wolegend, z, ncol=2, nrow=1, rel_widths=c(1, 0.3), rel_heights = c(1, 0.8))
+
+raw_abund <- ggplot(genus_sig %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=NFMean)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Abundance")) + 
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  scale_fill_gradientn(colours = c("#F3F3F3", "black")) +
+  labs(fill="Baseline\nAbundance")+ 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  geom_vline(xintercept=48.5) + 
+  geom_vline(xintercept=49.5) + 
+  geom_vline(xintercept=50.5) + 
+  geom_vline(xintercept=53.5) + 
+  theme(panel.border = element_rect(size=1))
+raw_abund
+
+z2 <- get_legend(raw_abund)
+
+phylum_scale <- ggplot(genus_sig %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=Phylum)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Phylum")) + 
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  labs(fill="Phylum") + 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  geom_vline(xintercept=48.5) + 
+  geom_vline(xintercept=49.5) + 
+  geom_vline(xintercept=50.5) + 
+  geom_vline(xintercept=53.5) + 
+  theme(panel.border = element_rect(size=1))
+phylum_scale 
+
+z3 <- get_legend(phylum_scale)
+
+
+main_andabund <- plot_grid(phylum_scale + theme(legend.position="none"),
+                           raw_abund + theme(legend.position="none"), 
+                           preservative + theme(legend.position="none"), 
+                           temperature + theme(legend.position="none"), 
+          nrow=4, ncol=1, align="v", axis="lr", rel_heights = c(0.5, 0.5, 2.5, 2.5))
+
+legend_plot <- plot_grid(z3,z2, z, ncol=3, nrow=1, align = "v")
+legend_plot
+
+plot_grid(main_andabund, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
+
+
+##### heatmap with phylum labels #####
+phylum_positions <- genus_sig %>% select(Phylum, x.position) %>%
+  group_by(Phylum) %>%
+  summarise_at(vars(x.position), list(Position = mean))
+
+test2 <- ggplot(phylum_positions, aes(x=Position, y=0)) + 
+  geom_text(aes(label=Phylum), size=3, hjust=1) + 
+  theme_void() + 
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+
+plot_grid(test2, 
+          raw_abund + theme(legend.position="none"), 
+          preservative + theme(legend.position="none"), 
+          temperature + theme(legend.position="none"), 
+          nrow=4, ncol=1, align="v", axis="lr", rel_heights = c(1, 0.5, 2.5, 2.5))
+
+
+##### heatmap without phylum panel
+main_andabund <- plot_grid(raw_abund + theme(legend.position="none"), 
+                           preservative + theme(legend.position="none"), 
+                           temperature + theme(legend.position="none"), 
+                           nrow=3, ncol=1, align="v", axis="lr", rel_heights = c(0.5, 2, 2.5))
+
+main_andabund
+legend_plot <- plot_grid(z2, z, ncol=2, nrow=1, align = "v")
+legend_plot
+
+plot_grid(main_andabund, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
+ggsave(here("QSU_Data/Figure3_heatmap.pdf"), dpi=300, w=12, h=4)
