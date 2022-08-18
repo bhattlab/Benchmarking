@@ -1,17 +1,17 @@
 ﻿Genus,Phylum,PlotOrder
-Alistipes,Bacteroidetes,1
-Bacteroides,Bacteroidetes,2
-Parabacteroides,Bacteroidetes,3
-Blautia,Firmicutes,4
-Clostridiaceae,Firmicutes,5
-Clostridiales ,Firmicutes,6
-Clostridium,Firmicutes,7
-Eubacterium,Firmicutes,8
-Faecalibacterium,Firmicutes,9
-Fusicatenibacter,Firmicutes,10
-Lachnospiraceae,Firmicutes,11
-Roseburia,Firmicutes,12
-Ruminococcaceae,Firmicutes,13
-Ruminococcus,Firmicutes,14
-Subdoligranulum,Firmicutes,15
+Bifidobacterium,Actinobacteria,1
+Alistipes,Bacteroidetes,2
+Bacteroides,Bacteroidetes,3
+Parabacteroides,Bacteroidetes,4
+Prevotella,Bacteroidetes,5
+Blautia,Firmicutes,6
+Clostridiales ,Firmicutes,7
+Clostridium,Firmicutes,8
+Coprococcus,Firmicutes,9
+Eubacterium,Firmicutes,10
+Faecalibacterium,Firmicutes,11
+Lachnospiraceae,Firmicutes,12
+Roseburia,Firmicutes,13
+Ruminococcaceae,Firmicutes,14
+Ruminococcus,Firmicutes,15
 Other,Other,16
