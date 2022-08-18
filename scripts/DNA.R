@@ -156,7 +156,7 @@ metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
 metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
 
 genus <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
-
+phylum_plottingorder <- read.csv(here("QSU_Data/genus_to_phylum.csv"), header=TRUE)
 #Color palette
 n_taxa <- 20
 myCols <- colorRampPalette(brewer.pal(9, "Set1")) # WAS Set1
@@ -196,8 +196,10 @@ bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
 bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
 bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
 bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
-
-r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder), y=rel_abundance, fill=Genus)) +
+bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
+bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
+barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
+r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
   geom_bar(stat="identity") +
   labs(
     x = "",
@@ -279,26 +281,24 @@ ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=4, w=12)
 
 
 ###### Phylum forest plotting testing #####
-p <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Bacteroidetes)) + 
-  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
-  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=2) + 
-  scale_color_manual(values=condition_palette) +
-  scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
-  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.95, 1, 0.7,0.75), 
-                     tip.length=0, label = "p.signif") +
-  theme_bw() + 
-  ylab("Relative Abundance: Bacteroidetes") + 
-  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
-p
 
-bact <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Bacteroidetes)) + 
+raw <- mutate(raw, PlotOrder=ifelse(Sample_Type == "NF", 1, 
+                                                        ifelse(Sample_Type == "OF", 2, 
+                                                               ifelse(Sample_Type == "OR", 3, 
+                                                                      ifelse(Sample_Type == "OH", 4, 
+                                                                             ifelse(Sample_Type == "ZF", 5,
+                                                                                    ifelse(Sample_Type == "ZR", 6, 7)))))))
+model <- mutate(model, PlotOrder=ifelse(Condition == "NF", 1, 
+                                    ifelse(Condition == "OF", 2, 
+                                           ifelse(Condition == "OR", 3, 
+                                                  ifelse(Condition == "OH", 4, 
+                                                         ifelse(Condition == "ZF", 5,
+                                                                ifelse(Condition == "ZR", 6, 7)))))))
+
+bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..Bacteroidetes)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
@@ -307,13 +307,14 @@ bact <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Bacteroidetes)) +
   ylab("Relative Abundance") + 
   xlab("Bacteroidetes") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+        legend.position = "none", text = element_text(size=12), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+bact
 
-firm <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Firmicutes)) + 
+firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Firmicutes)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), y=Mean, color=Sample_Type), size=3) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -321,85 +322,27 @@ firm <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Firmicutes)) +
   ylab("Relative Abundance") + 
   xlab("Firmicutes") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
+        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
         axis.ticks.y = element_blank(), axis.text.y=element_blank())
 
-act <- ggplot(raw , aes(Sample_Type, Relative.Abundance..Actinobacteria)) + 
+act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Actinobacteria)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(0.22, 0.27, 0.17,0.12, 0.12), 
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), y=Mean, color=Sample_Type), size=3) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(0.22, 0.27, 0.12,0.17, 0.12), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylim(0,1) + 
   ylab("Relative Abundance") + 
   xlab("Actinobacteria") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
+        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
         axis.ticks.y = element_blank(), axis.text.y=element_blank())
 
 plot_grid(bact, firm, act, nrow=1, ncol=3, rel_widths = c(1.3, 1, 1))
 
 ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
-
-# build a named set of labels for each condition (just the temperatures)
-phylum_labels <- c("Bacteroidetes", "Firmicutes", "Actinobacteria")
-
-# format data into a long format for heatmap plotting
-phyla <- read.csv(here("QSU_Data/phylum_enrichment.csv"), header=TRUE)
-phyla <- phyla %>% mutate(PercentChange=gsub("%.*", "", Interval)) %>% mutate(pvalue=ifelse(p == "<0.001", 0.001, p)) %>% mutate(Taxon=gsub(".*: ","",Taxon))
-phyla <- phyla %>% mutate(x_position = ifelse(Taxon == "Bacteroidetes", 1, ifelse(Taxon == "Firmicutes", 2, ifelse(Taxon == "Actinobacteria", 3, 0))))
-phyla <- phyla %>% mutate(y_position = ifelse(Comparison == "NF vs. OF", 7, ifelse(Comparison == "OF vs OR", 6, ifelse(Comparison == "OF vs OH",5, ifelse(Comparison == "NF vs ZF", 3, ifelse(Comparison == "ZF vs ZR", 2, 1))))))
-phyla$PercentChange = as.numeric(phyla$PercentChange)
-
-ggplot(phyla %>% filter(x_position != 0), aes(x=x_position, y=y_position, fill=PercentChange)) + 
-  geom_tile() + 
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-37, 60)) + 
-  scale_x_continuous(expand = c(0,0), breaks=c(1,2,3), labels=phylum_labels) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(7,6,5,3,2,1), labels=c("-80°C vs OMNI -80°C", "OMNI, -80°C vs 23°C", "OMNI, -80°C vs 40°C", "-80°C vs Zymo -80°C", "Zymo, -80°C vs 23°C", "Zymo, -80°C vs 40°C")) + 
-  theme_bw() + theme(panel.border = element_blank(), axis.line.x = element_blank(), axis.line.y = element_blank(), 
-                     panel.grid = element_blank(), axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_text(angle = 45, hjust=1, vjust=1))
-
-
-
-nfof <- ggplot(phyla %>% filter(x_position != 0, y_position == 7), aes(x=x_position, y=y_position, fill=PercentChange)) + 
-  geom_tile() + 
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-37, 60)) + 
-  scale_x_continuous(expand = c(0,0), breaks=c(1,2,3), labels=phylum_labels) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(7,6,5,3,2,1), labels=c("-80°C vs OMNI -80°C", "OMNI, -80°C vs 23°C", "OMNI, -80°C vs 40°C", "-80°C vs Zymo -80°C", "Zymo, -80°C vs 23°C", "Zymo, -80°C vs 40°C")) + 
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank()) + 
-  ggtitle("OMNIgene") + 
-  guides(fill=guide_legend(title="Percent Change"))
-
-nfzf <- ggplot(phyla %>% filter(x_position != 0, y_position == 3), aes(x=x_position, y=y_position, fill=PercentChange)) + 
-  geom_tile() + 
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-37, 60)) + 
-  scale_x_continuous(expand = c(0,0), breaks=c(1,2,3), labels=phylum_labels) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(7,6,5,3,2,1), labels=c("-80°C vs OMNI -80°C", "OMNI, -80°C vs 23°C", "OMNI, -80°C vs 40°C", "-80°C vs Zymo -80°C", "Zymo, -80°C vs 23°C", "Zymo, -80°C vs 40°C")) + 
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), legend.position = "none") + 
-  ggtitle("Zymo")
-
-oother <- ggplot(phyla %>% filter(x_position != 0, y_position == 6 | y_position == 5), aes(x=x_position, y=y_position, fill=PercentChange)) + 
-  geom_tile() + 
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-37, 60)) + 
-  scale_x_continuous(expand = c(0,0), breaks=c(1,2,3), labels=phylum_labels) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(7,6,5,3,2,1), labels=c("-80°C vs OMNI -80°C", "OMNI, -80°C vs 23°C", "OMNI, -80°C vs 40°C", "-80°C vs Zymo -80°C", "Zymo, -80°C vs 23°C", "Zymo, -80°C vs 40°C")) + 
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), legend.position = "none")
-
-zother <- ggplot(phyla %>% filter(x_position != 0, y_position == 1 | y_position == 2), aes(x=x_position, y=y_position, fill=PercentChange)) + 
-  geom_tile() + 
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-37, 60)) + 
-  scale_x_continuous(expand = c(0,0), breaks=c(1,2,3), labels=phylum_labels) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(7,6,5,3,2,1), labels=c("-80°C vs OMNI -80°C", "OMNI, -80°C vs 23°C", "OMNI, -80°C vs 40°C", "-80°C vs Zymo -80°C", "Zymo, -80°C vs 23°C", "Zymo, -80°C vs 40°C")) + 
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), legend.position = "none", axis.text.x = element_text(angle = 45, vjust=1, hjust=1))
-
-z <- get_legend(nfof)
-
-a <- plot_grid(nfof + theme(legend.position="none"), oother, nfzf, zother, nrow=4, ncol=1, rel_heights = c(1, 1.1, 1, 1.9))
-plot_grid(a, z, ncol=2, nrow=1, rel_widths=c(1, 0.3), scale=0.9)
-
-ggsave(here("QSU_Data/PhylumEnrichmentDraft_heatmap.pdf"), dpi=300, h=4, w=5)
 
 ##### Metagenomic Bray Curtis #####
 bc_raw <- read.csv(here("QSU_Data/raw_data_all_braycurtis.csv"), header=TRUE)
@@ -458,18 +401,24 @@ genus_sig <- read.csv(here("QSU_Data/genus_significance.csv"), header=TRUE)
 genus_sig <- genus_sig %>% mutate(PercentFormatted = as.numeric(gsub("%.*", "", Percent)))
 genus_sig <- genus_sig %>% mutate(PFormatted = as.numeric(ifelse(p == "< 0.001", "0.001", p)))
 genus_sig <- genus_sig %>% mutate(Condition = gsub("_.*", "", Comparison))
-genus_sig <- transform(genus_sig, x.position=as.numeric(factor(feature)))
 genus_sig <- genus_sig %>% mutate(y.position = ifelse(Condition == "OF", 2, 
                                                       ifelse(Condition=="ZF", 1, 
-                                                             ifelse(Condition=="OR", 0, 
-                                                                    ifelse(Condition == "OH", 2, 
-                                                                           ifelse(Condition == "ZR", 0, 1))))))
+                                                             ifelse(Condition=="OR", 4, 
+                                                                    ifelse(Condition == "OH", 3, 
+                                                                           ifelse(Condition == "ZR", 2, 1))))))
 
 raw_abundance <- read.csv(here("QSU_Data/genus_model_means.csv"), header=TRUE)
 raw_abundance <- raw_abundance %>% filter(Condition == "NF") %>% select(feature, Mean)
 names(raw_abundance) <- c("feature", "NFMean")
 raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Clostridiales.*", "Firmicutes: unclassified Clostridiales (miscel...", feature))
 raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Firmicutes sensu.*", "Firmicutes: unclassified Firmicutes sensu stri...", feature))
+raw_abundance <- raw_abundance %>% mutate(Phylum = gsub(":.*", "", feature))
+raw_abundance <- raw_abundance %>% 
+  group_by(Phylum) %>% 
+  arrange(Phylum, desc(NFMean))
+raw_abundance$x.position <- as.numeric(row.names(raw_abundance))
+
+
 genus_sig <- merge(genus_sig, raw_abundance, by="feature", all.x = TRUE)
 genus_sig <- genus_sig %>% mutate(Phylum = gsub(":.*", "", feature))
 genus_sig <- genus_sig %>% mutate(Phylum = ifelse(Phylum == "null", "Virus", Phylum))
@@ -574,7 +523,8 @@ legend_plot <- plot_grid(z3,z2, z, ncol=3, nrow=1, align = "v")
 legend_plot
 
 plot_grid(main_andabund, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
-
+ggsave(here("QSU_Data/Figure3_heatmap_phylumscale.pdf"), dpi=300, w=14, h=5)
+ggsave(here("QSU_Data/Figure3_heatmap_phylumscale.jpeg"), dpi=300, w=14, h=5)
 
 ##### heatmap with phylum labels #####
 phylum_positions <- genus_sig %>% select(Phylum, x.position) %>%
@@ -605,3 +555,120 @@ legend_plot
 
 plot_grid(main_andabund, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
 ggsave(here("QSU_Data/Figure3_heatmap.pdf"), dpi=300, w=12, h=4)
+ggsave(here("QSU_Data/Figure3_heatmap.jpeg"), dpi=300, w=12, h=4)
+
+
+##### heatmap with only top phyla
+genus_top <- genus_sig %>% filter(Phylum %in% c("Actinobacteria", "Bacteroidetes", "Firmicutes"))
+
+preservative <- ggplot(genus_top %>% filter(Condition == "OF" | Condition == "ZF"), aes(x=x.position, y=y.position, fill=PercentFormatted)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1, 2), labels=c("Zymo -80°C", "OMNI -80°C")) + 
+  labs(title = "Preservative Effect (Relative to no preservative)") +
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-81, 81)) +
+  labs(fill="Percent\nEnrichment")+
+  geom_point(data = genus_top %>% filter(Condition == "OF" | Condition == "ZF") %>% filter(Plabel == "*"), size=1, color="white") + 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  theme(panel.border = element_rect(size=1))
+
+preservative
+
+z <- get_legend(preservative)
+
+temperature <- ggplot(genus_top %>% filter(Condition != "OF" | Condition != "ZF"), aes(x=x.position, y=y.position, fill=PercentFormatted)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0), breaks=genus_sig$x.position, labels=genus_sig$Genus) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1,2,3,4), labels=c("Zymo 40°C", "Zymo 23°C", "OMNI 40°C", "OMNI 23°C")) + 
+  labs(title = "Temperature Effect (Relative to -80°C for each preservative)") +
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(),
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-81, 81)) +
+  geom_point(data = genus_top %>% filter(Condition != "ZF" & Condition != "OF") %>% filter(Plabel == "*"), size=1, color="white") +
+  theme(axis.text.x = element_text(angle=45, hjust=1, vjust=1))+ 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  geom_hline(yintercept=2.5) +
+  theme(panel.border = element_rect(size=1))
+
+
+temperature
+
+wolegend <- plot_grid(preservative + theme(legend.position="none"), temperature + theme(legend.position="none"), nrow=2, ncol=1, align="v", axis="lr")
+main <- plot_grid(wolegend, z, ncol=2, nrow=1, rel_widths=c(1, 0.3), rel_heights = c(1, 0.8))
+
+raw_abund <- ggplot(genus_top %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=NFMean)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Abundance")) + 
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  scale_fill_gradientn(colours = c("#F3F3F3", "black")) +
+  labs(fill="Baseline\nAbundance")+ 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  theme(panel.border = element_rect(size=1))
+raw_abund
+
+z2 <- get_legend(raw_abund)
+
+phylum_scale <- ggplot(genus_top %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=Phylum)) + 
+  geom_tile() + 
+  coord_fixed() + 
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Phylum")) + 
+  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+  labs(fill="Phylum") + 
+  geom_vline(xintercept=3.5) + 
+  geom_vline(xintercept=11.5) + 
+  theme(panel.border = element_rect(size=1))
+phylum_scale 
+
+z3 <- get_legend(phylum_scale)
+
+
+main_andabund <- plot_grid(phylum_scale + theme(legend.position="none"),
+                           raw_abund + theme(legend.position="none"), 
+                           preservative + theme(legend.position="none"), 
+                           temperature + theme(legend.position="none"), 
+                           nrow=4, ncol=1, align="v", axis="lr", rel_heights = c(0.5, 0.5, 2.5, 2.5))
+
+legend_plot <- plot_grid(z3,z2, z, ncol=3, nrow=1, align = "v")
+legend_plot
+
+plot_grid(main_andabund, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
+ggsave(here("QSU_Data/Figure3_heatmap_phylumscale_withRT.pdf"), dpi=300, w=14, h=6)
+ggsave(here("QSU_Data/Figure3_heatmap_phylumscale_withRT.jpeg"), dpi=300, w=14, h=6)
+
+##### heatmap with phylum labels #####
+phylum_positions <- genus_top %>% select(Phylum, x.position) %>%
+  group_by(Phylum) %>%
+  summarise_at(vars(x.position), list(Position = mean))
+
+test2 <- ggplot(phylum_positions, aes(x=Position, y=0)) + 
+  xlim(c(0,48)) +
+  geom_text(aes(label=Phylum), size=3.5, hjust=1.3) + 
+  theme_void() + 
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+test2
+
+test3 <- plot_grid(test2, 
+          raw_abund + theme(legend.position="none"), 
+          preservative + theme(legend.position="none"), 
+          temperature + theme(legend.position="none"), 
+          nrow=4, ncol=1, align="v", axis="lr", rel_heights = c(1, 0.5, 2.5, 2.5))
+
+legend_plot <- plot_grid(z2, z, ncol=2, nrow=1, align = "v")
+legend_plot
+
+plot_grid(test3, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
+ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.pdf"), dpi=300, w=17, h=6)
+ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.jpeg"), dpi=300, w=17, h=6)
+
