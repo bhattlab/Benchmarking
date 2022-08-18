@@ -158,7 +158,7 @@ metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "O
 genus <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
 phylum_plottingorder <- read.csv(here("QSU_Data/genus_to_phylum.csv"), header=TRUE)
 #Color palette
-n_taxa <- 20
+n_taxa <- 15
 myCols <- colorRampPalette(brewer.pal(9, "Set1")) # WAS Set1
 barplot_pal <- myCols(n_taxa)
 barplot_pal <- sample(barplot_pal)
@@ -199,6 +199,14 @@ bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
 bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
 bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
 barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
+
+bluegreens <- c("#dff2f1","#b2dfdb","#80cbc4","#4db6ac","#26a59a","#009788","#01887b","#00796b","#00695c","#004d40")
+blues <- c("#e3f2fe","#bbdefb","#90caf9","#64b5f7","#42a5f5","#2096f3","#1f88e5","#1a76d2","#1665c0","#0d47a1", "#082b71")
+purples <- c("#EDE7F6","#D1C4E9","#B39EDB","#9575CD","#7E58C2","#673AB7","#5E34B1","#512DA8","#4527A0","#311B92")
+pinks <- c("#FDE4EC","#F8BBD0","#F48FB1","#F06293","#EB3F7A","#E91E63","#D81A60","#C2185B","#AD1456","#880E4F")
+orages <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
+barplot_pal <- c(pinks[3], rev(oranges[2:5]), rev(blues[1:10]), "#939393")
+
 r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
   geom_bar(stat="identity") +
   labs(
@@ -241,6 +249,7 @@ stackedbargenus
 
 ggsave(here("QSU_Data/Figure3A.pdf"), dpi=300, h=4, w=6)
 ggsave(here("QSU_Data/Figure3A.jpeg"), dpi=300, h=4, w=6)
+
 
 #B: Shannon entropy across conditions
 #Change column name
