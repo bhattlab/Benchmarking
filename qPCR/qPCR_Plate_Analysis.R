@@ -10,6 +10,7 @@ library(cowplot)
 library(ggpubr)
 library(ggnewscale)
 library(scales)
+library(ggpattern)
 
 #####Plate 1: Standard Curve#####
 #Create and edit unified sample datafile
@@ -640,8 +641,8 @@ plate4 <- read.csv(here("qPCR/Plate_4/qPCR_plate4.tsv"), sep="\t", header=TRUE)
 allplate <- rbind(plate1 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate2 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate3 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate4 %>% select(SampleName,CopyNumber, SampleNameFull, Condition))
 #Calculate copies/gram for each sample
 massnf <- (50/0.062)
-massomni <- (50/0.037)
-masszymo <- (50/0.08)
+massomni <- (50/0.013)
+masszymo <- (50/0.006)
 
 allplate <- mutate(allplate, Preservative=substr(Condition,1,1))
 allplate <- mutate(allplate, Copiesgram=ifelse(Preservative =="Z",CopyNumber*masszymo,
@@ -683,7 +684,7 @@ donor_total <- mutate(donor_total, PlotOrder=ifelse(Condition == "NF", 1,
                                                                        ifelse(Condition == "ZF", 5,
                                                                               ifelse(Condition == "ZR", 6, 7)))))))
 #Color palette for conditions
-condition_palette <- c("#7c1836","#a22a5e","#c36599","#acaaaf","#bfcd6e","#9dad34","#85950f")
+condition_palette <- c("#762983","#9a6faa","#c3a5d0","#acaaaf","#7ebd42","#4d9222","#26641a") 
 names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
 #Export total bacteria/g of sample file
@@ -700,7 +701,7 @@ ggplot(donor_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH
     y = "Total Bacteria/g"
   ) +
   theme_bw() +
-  scale_y_log10(limits=c(1e+5, 1e+19), n.breaks=1e1, minor_breaks=NULL) +
+  scale_y_log10(limits=c(1e+5, 1e+21), n.breaks=1e1, minor_breaks=NULL) +
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
 
@@ -711,23 +712,24 @@ mega_total <- merge(donor_total,kraken_long, by="Sample")
 mega_total <- mutate(mega_total, Countgram=((rel_abundance*TotalBacteria)/100))
 mega_total <- mega_total %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove=FALSE)
 
-ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Bacteroidetes"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
+f <- ggplot(mega_total %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")) %>%filter(Phylum=="Firmicutes"| Phylum=="Bacteroidetes"), aes(x=reorder(Condition, PlotOrder), y=Countgram, color=Condition)) +
   geom_jitter(width=0.1) + 
-  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
-  stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
-                     tip.length = 0, label="p.signif") +
+  #geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_boxplot_pattern(aes(pattern=Phylum)) +
+  #stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
+                     #tip.length = 0, label="p.signif") +
   labs(
     x = "Condition",
     y = "Total Bacteria/g"
   ) +
   theme_bw() +
-  scale_y_log10(limits=c(1e+5, 1e+16), n.breaks=1e1, minor_breaks=NULL) +
+  scale_y_log10(limits=c(1e+5, 1e+20), n.breaks=1e1, minor_breaks=NULL) +
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
+f
+#ggsave(here("qPCR/Plots/qPCRFirmicutesBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
 
-ggsave(here("qPCR/Plots/qPCRBacteroidetes.jpg"), dpi=300, w = 5, h = 5)
-
-#Calculating Firmicute/Bacteroidetes Ratio by Condition
+#Calculating Firmicutes/Bacteroidetes Ratio by Condition
 fb <- mega_total %>% filter(Phylum %in% c("Firmicutes","Bacteroidetes"))
 fb <- fb %>% select(Sample, Phylum, Countgram)
 fb <- spread(fb, key="Phylum", value="Countgram") #change df format to have F and B as columns
@@ -741,7 +743,7 @@ fbratio <- mutate(fbratio, PlotOrder=ifelse(Condition == "NF", 1,
                                                              ifelse(Condition == "ZF", 5,
                                                                     ifelse(Condition == "ZR", 6, 7)))))))
 
-ggplot(fbratio %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=FBRatio, color=Condition)) +
+fb <- ggplot(fbratio %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "ZH")), aes(x=reorder(Condition, PlotOrder), y=FBRatio, color=Condition)) +
   geom_jitter(width=0.1) + 
   geom_boxplot(outlier.shape = NA, alpha = 0.5) +
   stat_compare_means(comparisons=list(c("OF","OR"), c("OR", "OH"), c("OF","OH"), c("ZF", "ZR"), c("ZR", "ZH"), c("ZF", "ZH"), c("ZF", "NF"), c("OF", "NF")),
@@ -754,8 +756,13 @@ ggplot(fbratio %>% filter(Condition %in% c("NF", "OF", "ZF", "OR", "ZR", "OH", "
   ylim(0,20) +
   scale_color_manual(values=condition_palette) +
   theme(legend.position = "none") 
-
+fb
 ggsave(here("qPCR/Plots/qPCRFBRatio.jpg"), dpi=300, w=5, h=5)
+
+fandb <- plot_grid(f,b, nrow=1, ncol=2, align="v", axis='lr')
+fandb
+fbratio<-plot_grid(fb, fandb, nrow=2, ncol=1)
+fbratio
 
 ##### Absolute Counts at Genus Level#####
 #Create a unified dataframe containing all Plate data
@@ -767,8 +774,8 @@ plate4 <- read.csv(here("qPCR/Plate_4/qPCR_plate4.tsv"), sep="\t", header=TRUE)
 allplate <- rbind(plate1 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate2 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate3 %>% select(SampleName,CopyNumber, SampleNameFull, Condition), plate4 %>% select(SampleName,CopyNumber, SampleNameFull, Condition))
 #Calculate copies/gram for each sample
 massnf <- (50/0.062)
-massomni <- (50/0.037)
-masszymo <- (50/0.08)
+massomni <- (50/0.013)
+masszymo <- (50/0.006)
 
 allplate <- mutate(allplate, Preservative=substr(Condition,1,1))
 allplate <- mutate(allplate, Copiesgram=ifelse(Preservative =="Z",CopyNumber*masszymo,

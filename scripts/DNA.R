@@ -240,6 +240,7 @@ stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="
 stackedbargenus
 
 ggsave(here("QSU_Data/Figure3A.pdf"), dpi=300, h=4, w=6)
+ggsave(here("QSU_Data/Figure3A.jpeg"), dpi=300, h=4, w=6)
 
 #B: Shannon entropy across conditions
 #Change column name

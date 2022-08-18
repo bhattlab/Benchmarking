@@ -1,0 +1,7 @@
+﻿feature,group1,group2,p,p.adj,p.format,p.signif,method
+Bacteroidetes/Firmicutes,NF,OF,< 0.001,0.001,0.001,***,NA
+Bacteroidetes/Firmicutes,NF,ZF,< 0.001,0.001,0.001,***,NA
+Bacteroidetes/Firmicutes,OF,OR,0.42,0.42,0.42,ns,NA
+Bacteroidetes/Firmicutes,OF,OH,0.69,0.69,0.69,ns,NA
+Bacteroidetes/Firmicutes,ZF,ZR,< 0.001,0.001,0.001,***,NA
+Bacteroidetes/Firmicutes,ZF,ZH,< 0.001,0.001,0.001,***,NA
