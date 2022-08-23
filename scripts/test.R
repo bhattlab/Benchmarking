@@ -36,9 +36,9 @@ kraken_long <- merge(kraken_long, metadata, by="SampleID")
 kraken_long <- kraken_long %>% filter(Phylum == "Firmicutes" | Phylum == "Bacteroidetes")
 kraken_long <- kraken_long %>% filter(Donor == "D10")
 kraken_long <- kraken_long %>% mutate(Grouping = ifelse(Condition == "NF", "Baseline", ifelse(Condition == "OF" | Condition == "ZF", "Kit", ifelse(Condition == "OR" | Condition == "ZR", "Time", "Temperature"))))
-
-ggplot(kraken_long, aes(x=Grouping, y=rel_abundance, color = Phylum)) + 
-  geom_point(size=2) + 
+kraken_long <- kraken_long %>% mutate(Preservative = ifelse(Condition == "NF", "None", ifelse(Condition == "OF" | Condition == "OR" | Condition == "OH", "Omni", "Zymo")))
+ggplot(kraken_long, aes(x=Grouping, y=rel_abundance, color = Phylum, shape=Preservative)) + 
+  geom_jitter(size=2, width=0.1) + 
   theme_classic() +
   ylab("Relative Abundance") +
   theme(axis.title.x = element_blank(), axis.text.x = element_text(size=12))
@@ -47,3 +47,11 @@ ggplot(kraken_long, aes(x=Grouping, y=rel_abundance, color = Phylum)) +
 summary <- kraken_long %>% 
   group_by(Phylum, Grouping) %>%
   summarise_at(vars(rel_abundance), list(Mean = mean, Max=max, Min=min))
+summary <- summary %>% mutate(Grouping = fct_relevel(Grouping,  "Baseline", "Kit", "Time", "Temperature"))
+
+ggplot(summary, aes(x=Grouping, y=Mean, color = Phylum)) + 
+  geom_point(size=4, position=position_dodge(width=0.2)) + 
+  geom_errorbar(aes(ymin=Min, ymax=Max), width=0.1, position=position_dodge(width=0.2)) +
+  theme_classic() +
+  ylab("Relative Abundance") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_text(size=12)) 

@@ -1,0 +1,17 @@
+﻿Genus,Phylum,PlotOrder
+Tobamovirus,Virus,1
+Azospirillum,Proteobacteria,2
+Sutterella,Proteobacteria,3
+Alistipes,Bacteroidetes,4
+Bacteroides,Bacteroidetes,5
+Parabacteroides,Bacteroidetes,6
+Prevotella,Bacteroidetes,7
+Clostridiales ,Firmicutes,8
+Clostridium,Firmicutes,9
+Faecalibacterium,Firmicutes,10
+Roseburia,Firmicutes,11
+Ruminococcaceae,Firmicutes,12
+Ruminococcus,Firmicutes,13
+Firmicutes: environmental samples,Firmicutes,14
+Oscillibacter,Firmicutes,15
+Other,Other,16
