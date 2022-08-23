@@ -1,0 +1,15 @@
+﻿feature,group1,group2,change,p,p.format,p.adj,p.signif,method
+BrayCurtisWithinCondition,OF,NF,"-9.2% [-35.0%, 26.9%]",0.573,0.573,0.573,,NA
+BrayCurtisWithinCondition,OR,NF,"-1.5% [-33.7%, 46.2%]",0.939,0.939,0.939,,NA
+BrayCurtisWithinCondition,ZF,NF,"-28.2% [-52.6%, 8.6%]",0.116,0.116,0.116,,NA
+BrayCurtisWithinCondition,ZR,NF,"13.2% [-24.7%, 70.1%]",0.552,0.552,0.552,,NA
+BrayCurtisWithinCondition,ZH,NF,"-47.2% [-72.6%, 1.9%]",0.057,0.057,0.057,,NA
+BrayCurtisBetweenKits,OF_NF,NF_NF,"106.0% [66.7%, 154.6%] ***",< 0.001,0.001,0.001,***,NA
+BrayCurtisBetweenKits,OF_ZF,NF_NF,"121.7% [74.7%, 181.4%] ***",< 0.001,0.001,0.001,***,NA
+BrayCurtisBetweenTemps,OF_OR,OF_OF,"168.8% [98.4%, 264.1%] ***",< 0.001,0.001,0.001,***,NA
+BrayCurtisBetweenTemps,ZF_ZR,ZF_ZF,"70.1% [28.4%, 125.4%] ***",< 0.001,0.001,0.001,***,NA
+BrayCurtisBetweenTemps,ZF_ZH,ZF_ZF,"208.0% [120.2%, 330.9%] ***",< 0.001,0.001,0.001,***,NA
+BrayCurtisBetweenConditions,OF_NF,ZF_NF,"-7.1% [-22.7%, 11.7%]",0.43,0.43,0.43,,NA
+BrayCurtisBetweenConditions,OR_NF,OF_NF,"35.1% [7.4%, 70.1%] **",0.01,0.01,0.01,**,NA
+BrayCurtisBetweenConditions,ZR_NF,ZF_NF,"24.5% [10.9%, 39.7%] ***",< 0.001,0.001,0.001,***,NA
+BrayCurtisBetweenConditions,ZH_NF,ZF_NF,"62.5% [34.3%, 96.6%] ***",< 0.001,0.001,0.001,***,NA
