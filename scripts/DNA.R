@@ -801,3 +801,138 @@ plot_grid(test3, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.2), scale=0.9)
 ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.pdf"), dpi=300, w=17, h=6)
 ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.jpeg"), dpi=300, w=17, h=6)
 
+
+##### SUPPLEMENT: ALL DONORS STACKED BAR #####
+#3A: Stacked bar plot for Donor 1
+# read in metadata
+metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
+
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+#Separate the Condition column to create preservation method and temperature columns
+metadata <- mutate(metadata, Preservation=substr(Condition,1,1))
+metadata <- mutate(metadata, Temperature=substr(Condition,2,2))
+metadata <- metadata %>% mutate(TemperatureLong = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
+metadata <- mutate(metadata, TemperatureLong=ifelse(Replicate == "R2", TemperatureLong, ""))
+#Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
+metadata <- metadata %>% separate(SampleID, c("Donor", "Condition", "Replicate"), remove=FALSE)
+#Modify Condition column, so that anything labeled with B# is changed to Controls
+metadata <- mutate(metadata, Condition=ifelse(Condition %in% c("B1", "B2", "B3", "B4"), "Controls", Condition))
+#Within the DNA dataframe and Condition/Donor column, factor() alters the sorting of the variables in Condition/Donor - does not change the data frame
+metadata$Donor <- factor(metadata$Donor, levels = c("NCO", "PCO", "D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10"))
+metadata <- mutate(metadata, Label=ifelse(Replicate == "R2", Condition, ""))
+metadata$Condition <- factor(metadata$Condition, levels = c("Controls", "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+
+genus <- read.csv(here("DNA/2.kraken/kraken2_classification/processed_results/taxonomy_matrices_classified_only/bracken_genus_percentage.txt"), sep="\t", header=TRUE)
+phylum_plottingorder <- read.csv(here("QSU_Data/genus_to_phylum.csv"), header=TRUE)
+#Color palette
+n_taxa <- 15
+myCols <- colorRampPalette(brewer.pal(9, "Set1")) # WAS Set1
+barplot_pal <- myCols(n_taxa)
+barplot_pal <- sample(barplot_pal)
+barplot_pal[n_taxa + 1] <- "gray"
+
+abundance_threshold <- sort(rowSums(genus), decreasing = T)[n_taxa]
+bracken_plot <- genus[rowSums(genus) >= abundance_threshold,]
+bracken_plot <- rbind(bracken_plot, t(data.frame("Other" =  100 - colSums(bracken_plot))))
+
+bracken_plot$Genus <- row.names(bracken_plot)
+bracken_plot$Genus <- gsub("\\(miscellaneous\\)", "", bracken_plot$Genus)
+bracken_long <- melt(bracken_plot, id.vars = "Genus", variable.name = "Sample", value.name = "rel_abundance")
+bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
+
+# Merge in the metadata
+colnames(metadata)[3]<-"Sample"
+bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
+#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
+
+# Correct the plotting order
+bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
+
+samplabels <- bracken_pheno$TemperatureLong
+names(samplabels) <- bracken_pheno$Sample
+
+bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1, 
+                                                        ifelse(Condition == "OF", 2, 
+                                                               ifelse(Condition == "OR", 3, 
+                                                                      ifelse(Condition == "OH", 4, 
+                                                                             ifelse(Condition == "ZF", 5,
+                                                                                    ifelse(Condition == "ZR", 6, 7)))))))
+
+#Filter out controls and other donors
+bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
+bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
+bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
+bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
+bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
+barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
+
+bracken_pheno <- mutate(bracken_pheno, DonorLabel=ifelse(Donor == "D10", "Donor 10", paste("Donor", substr(Donor, 3,3))))
+bracken_pheno$DonorLabel <- factor(bracken_pheno$DonorLabel, levels = c("Donor 1", "Donor 2", "Donor 3", "Donor 4", "Donor 5", "Donor 6", "Donor 7", "Donor 8", "Donor 9", "Donor 10"))
+bracken_pheno <- bracken_pheno %>% mutate(PreservationLong = ifelse(Preservation == "N", "No Preservative", ifelse(Preservation == "O", "OMNI", "Zymo")))
+bracken_pheno <- bracken_pheno %>% mutate(TemperatureLongAll = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
+bracken_pheno <- bracken_pheno %>% mutate(LegendLabel = paste(PreservationLong, TemperatureLongAll, sep=" "))
+
+bluegreens <- c("#dff2f1","#b2dfdb","#80cbc4","#4db6ac","#26a59a","#009788","#01887b","#00796b","#00695c","#004d40")
+blues <- c("#e3f2fe","#bbdefb","#90caf9","#64b5f7","#42a5f5","#2096f3","#1f88e5","#1a76d2","#1665c0","#0d47a1", "#082b71")
+purples <- c("#EDE7F6","#D1C4E9","#B39EDB","#9575CD","#7E58C2","#673AB7","#5E34B1","#512DA8","#4527A0","#311B92")
+pinks <- c("#FDE4EC","#F8BBD0","#F48FB1","#F06293","#EB3F7A","#E91E63","#D81A60","#C2185B","#AD1456","#880E4F")
+oranges <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
+barplot_pal <- c(pinks[3], rev(oranges[2:5]), rev(blues[1:10]), "#939393")
+
+r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
+  geom_bar(stat="identity") +
+  labs(
+    x = "",
+    y = "Relative Abundance (%)"
+  ) +
+  scale_fill_manual("Genus", values = barplot_pal) +
+  guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
+  theme_bw() +
+  scale_x_discrete(labels = samplabels) +
+  theme(
+    plot.title = element_text(face = "plain", size = 14),
+    legend.text = element_text(size = 10),
+    axis.ticks.x = element_blank(),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.grid = element_blank(), 
+    panel.border = element_blank(),
+    strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
+    strip.text = element_text(color = "black", size = 12)) + 
+  scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
+  facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
+  new_scale_fill() +
+  geom_tile(aes(x=Sample, y = -2, fill = Condition), show.legend = F) + 
+  geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
+  geom_tile(aes(x=Sample, y = -4, fill = Condition), show.legend = F) +
+  scale_fill_manual(values = condition_palette) +
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+r
+
+a <- get_legend(r)
+condition_labels2 <- c("OMNI 40°C","OMNI 23°C","OMNI -80°C","No Preservative -80°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
+names(condition_labels2) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
+  geom_bar(stat="identity", aes(fill=Condition)) + 
+  scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
+  theme(legend.direction="horizontal", legend.position = "bottom") + 
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+dummy
+b <- get_legend(dummy)
+plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
+
+ggsave(here("QSU_Data/Supplement_DNA_stackedbar.pdf"), dpi=300, h=6, w=15)
+ggsave(here("QSU_Data/Supplement_DNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
+
+
+
+
+
