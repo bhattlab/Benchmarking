@@ -92,37 +92,37 @@ absolute
 
 
 ##### Richness 
-p <- ggplot(raw, aes(x = Sample_Type, y=Richness.100M)) + 
-  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
-  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-  geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=1.5) + 
-  scale_fill_manual(values=condition_palette) +
-  scale_color_manual(values=condition_palette) + 
-  scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Richness 100M"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Richness 100M"), inherit.aes=FALSE, aes(x=Sample_Type, y=Mean), size=2.5) +
-  #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121), 
-  #                   tip.length=0, label = "p.signif") +
-  stat_pvalue_manual(sig %>% filter(feature == "Richness 100M") %>% filter(p.adj <= 0.05), y.position=c(1400, 1300), 
-                     tip.length=0, label = "p.signif") +
-  theme_bw() + 
-  ylab("Number of Genera above \n100M counts/gram") + 
-  ylim(0,1500) + 
-  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+# p <- ggplot(raw, aes(x = Sample_Type, y=Richness.100M)) + 
+#   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
+#   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
+#   geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=1.5) + 
+#   scale_fill_manual(values=condition_palette) +
+#   scale_color_manual(values=condition_palette) + 
+#   scale_x_discrete(labels=condition_labels) +
+#   geom_errorbar(data=model %>% filter(feature == "Richness 100M"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+#   geom_point(data=model %>% filter(feature == "Richness 100M"), inherit.aes=FALSE, aes(x=Sample_Type, y=Mean), size=2.5) +
+#   #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121), 
+#   #                   tip.length=0, label = "p.signif") +
+#   stat_pvalue_manual(sig %>% filter(feature == "Richness 100M") %>% filter(p.adj <= 0.05), y.position=c(1400, 1300), 
+#                      tip.length=0, label = "p.signif") +
+#   theme_bw() + 
+#   ylab("Number of Genera above \n100M counts/gram") + 
+#   ylim(0,1500) + 
+#   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+#         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+# 
+# p
+# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
+#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+#   ylim(-0.5, 0.5) +
+#   theme_void() + 
+#   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+# b
+# 
+# richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
+# richness
 
-p
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-  ylim(-0.5, 0.5) +
-  theme_void() + 
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-b
 
-richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
-richness
-
-plot_grid(absolute, richness, nrow=1, ncol=2, scale=0.9, labels=c("A","B"))
 # p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) + 
 #   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
 #   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
@@ -152,6 +152,7 @@ plot_grid(absolute, richness, nrow=1, ncol=2, scale=0.9, labels=c("A","B"))
 # 
 # richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
 # richness
+
 #Figure 2C: Firmcutes and Bacteroidetes Ratio
 abs <- raw[c("Sample_Type","Absolute.Abundance..Firmicutes", "Absolute.Abundance..Bacteroidetes")]
 meltabs <- melt(abs, id.vars = "Sample_Type", variable.name = "Phyla", value.name = "MicrobesPerGram")
@@ -186,12 +187,22 @@ fb <- ggplot(meltabs, aes(x=Sample_Type, y=MicrobesPerGram)) +
   theme_bw() + 
   ylab("Microbes per Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = c(0.8, 0.75), legend.title=element_blank()) +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = c(0.8, 0.75), legend.title=element_blank()) 
+  # theme(axis.title.x=element_blank(),
+  #       axis.text.x=element_blank(),
+  #       axis.ticks.x=element_blank())
 fb
 
+#Stich in legend info
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+  ylim(-0.05, 0.05) +
+  theme_void() + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+b
+
+fb <- plot_grid(fb,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
+fb
 
 #Read in QSU ratio data as three dataframes
 rratio <- read.csv(here("QSU_Data/rawratio.csv"), header=TRUE) # raw per sample information
@@ -236,21 +247,20 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
   theme_void() + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 b
-fbratio<-plot_grid(fb, r,b, nrow = 3, ncol = 1,rel_heights=c(1, 2,0.2), align="v", axis="l")
-fbratio
+r<-plot_grid(r,b, nrow = 2, ncol = 1,rel_heights=c(1,0.1), align="v", axis="l")
+r
 
-#ggsave(here("QSU_Data/Figure2C.jpeg"), w=6.5, h=6.5, dpi=300)
+ggsave(here("QSU_Data/Figure2Ceven.jpeg"), w=6.5, h=6.5, dpi=300)
 
 #Plot Figure 2!
-two<-plot_grid(absolute, richness, fbratio, nrow=1, ncol=3, scale=0.9, labels=c("A","B", "C"))
+two<-plot_grid(absolute, fb, r, nrow=1, ncol=3, scale=0.9, labels=c("A","B", "C"))
 two
 ggsave(here("QSU_Data/Figure2.jpeg"), dpi=300, h=5.5, w=16)
-ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=5.5, w=16)
+ggsave(here("QSU_Data/Figure2.pdf"), dpi=300, h=5.5, w=16)
 
 ##### FIGURE 3 #####
 #Relative abundance analysis
-
-#3A: Stacked bar plot for Donor 1
+#3A: Stacked bar plot for all donors
 # read in metadata
 metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
 
@@ -311,20 +321,25 @@ bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1,
                                                                              ifelse(Condition == "ZF", 5,
                                                                                     ifelse(Condition == "ZR", 6, 7)))))))
 
-#Filter out controls and other donors
+#Filter out controls
 bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
-bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
 bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
 bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
 bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
 bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
 barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
 
+bracken_pheno <- mutate(bracken_pheno, DonorLabel=ifelse(Donor == "D10", "Donor 10", paste("Donor", substr(Donor, 3,3))))
+bracken_pheno$DonorLabel <- factor(bracken_pheno$DonorLabel, levels = c("Donor 1", "Donor 2", "Donor 3", "Donor 4", "Donor 5", "Donor 6", "Donor 7", "Donor 8", "Donor 9", "Donor 10"))
+bracken_pheno <- bracken_pheno %>% mutate(PreservationLong = ifelse(Preservation == "N", "No Preservative", ifelse(Preservation == "O", "OMNI", "Zymo")))
+bracken_pheno <- bracken_pheno %>% mutate(TemperatureLongAll = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
+bracken_pheno <- bracken_pheno %>% mutate(LegendLabel = paste(PreservationLong, TemperatureLongAll, sep=" "))
+
 bluegreens <- c("#dff2f1","#b2dfdb","#80cbc4","#4db6ac","#26a59a","#009788","#01887b","#00796b","#00695c","#004d40")
 blues <- c("#e3f2fe","#bbdefb","#90caf9","#64b5f7","#42a5f5","#2096f3","#1f88e5","#1a76d2","#1665c0","#0d47a1", "#082b71")
 purples <- c("#EDE7F6","#D1C4E9","#B39EDB","#9575CD","#7E58C2","#673AB7","#5E34B1","#512DA8","#4527A0","#311B92")
 pinks <- c("#FDE4EC","#F8BBD0","#F48FB1","#F06293","#EB3F7A","#E91E63","#D81A60","#C2185B","#AD1456","#880E4F")
-orages <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
+oranges <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
 barplot_pal <- c(pinks[3], rev(oranges[2:5]), rev(blues[1:10]), "#939393")
 
 r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
@@ -340,7 +355,6 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(
     plot.title = element_text(face = "plain", size = 14),
     legend.text = element_text(size = 10),
-    #axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
@@ -349,6 +363,7 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
     strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
     strip.text = element_text(color = "black", size = 12)) + 
   scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
+  facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
   new_scale_fill() +
   geom_tile(aes(x=Sample, y = -2, fill = Condition), show.legend = F) + 
   geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
@@ -357,21 +372,25 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 r
 
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-  ylim(-0.05, 0.05) +
-  theme_void() + 
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-b
+a <- get_legend(r)
+condition_labels2 <- c("OMNI 40°C","OMNI 23°C","OMNI -80°C","No Preservative -80°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
+names(condition_labels2) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
-stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="v", axis='lr')
-stackedbargenus
+dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
+  geom_bar(stat="identity", aes(fill=Condition)) + 
+  scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
+  theme(legend.direction="horizontal", legend.position = "bottom") + 
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+dummy
+b <- get_legend(dummy)
+fig3a <- plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
+fig3a
 
-ggsave(here("QSU_Data/Figure3A.pdf"), dpi=300, h=4, w=6)
-ggsave(here("QSU_Data/Figure3A.jpeg"), dpi=300, h=4, w=6)
+#ggsave(here("QSU_Data/Fig3ADNA_stackedbar.pdf"), dpi=300, h=6, w=15)
+#ggsave(here("QSU_Data/Fig3ADNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
 
-
-#3B: Shannon entropy across conditions
+#3C: Shannon entropy across conditions
 #Change column name
 colnames(raw)[colnames(raw) == "Shannon.Entropy"] <- "Shannon"
 
@@ -802,7 +821,7 @@ ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.pdf"), dpi=300, w=17, h=6)
 ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.jpeg"), dpi=300, w=17, h=6)
 
 
-##### SUPPLEMENT: ALL DONORS STACKED BAR #####
+##### SUPPLEMENT/DISCARDED FIGURES
 #3A: Stacked bar plot for Donor 1
 # read in metadata
 metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
@@ -866,23 +885,18 @@ bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1,
 
 #Filter out controls and other donors
 bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
+bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
 bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
 bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
 bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
 bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
 barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
 
-bracken_pheno <- mutate(bracken_pheno, DonorLabel=ifelse(Donor == "D10", "Donor 10", paste("Donor", substr(Donor, 3,3))))
-bracken_pheno$DonorLabel <- factor(bracken_pheno$DonorLabel, levels = c("Donor 1", "Donor 2", "Donor 3", "Donor 4", "Donor 5", "Donor 6", "Donor 7", "Donor 8", "Donor 9", "Donor 10"))
-bracken_pheno <- bracken_pheno %>% mutate(PreservationLong = ifelse(Preservation == "N", "No Preservative", ifelse(Preservation == "O", "OMNI", "Zymo")))
-bracken_pheno <- bracken_pheno %>% mutate(TemperatureLongAll = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
-bracken_pheno <- bracken_pheno %>% mutate(LegendLabel = paste(PreservationLong, TemperatureLongAll, sep=" "))
-
 bluegreens <- c("#dff2f1","#b2dfdb","#80cbc4","#4db6ac","#26a59a","#009788","#01887b","#00796b","#00695c","#004d40")
 blues <- c("#e3f2fe","#bbdefb","#90caf9","#64b5f7","#42a5f5","#2096f3","#1f88e5","#1a76d2","#1665c0","#0d47a1", "#082b71")
 purples <- c("#EDE7F6","#D1C4E9","#B39EDB","#9575CD","#7E58C2","#673AB7","#5E34B1","#512DA8","#4527A0","#311B92")
 pinks <- c("#FDE4EC","#F8BBD0","#F48FB1","#F06293","#EB3F7A","#E91E63","#D81A60","#C2185B","#AD1456","#880E4F")
-oranges <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
+orages <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
 barplot_pal <- c(pinks[3], rev(oranges[2:5]), rev(blues[1:10]), "#939393")
 
 r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
@@ -898,6 +912,7 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(
     plot.title = element_text(face = "plain", size = 14),
     legend.text = element_text(size = 10),
+    #axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
@@ -906,7 +921,6 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
     strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
     strip.text = element_text(color = "black", size = 12)) + 
   scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
-  facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
   new_scale_fill() +
   geom_tile(aes(x=Sample, y = -2, fill = Condition), show.legend = F) + 
   geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
@@ -915,24 +929,18 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 r
 
-a <- get_legend(r)
-condition_labels2 <- c("OMNI 40°C","OMNI 23°C","OMNI -80°C","No Preservative -80°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
-names(condition_labels2) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+  ylim(-0.05, 0.05) +
+  theme_void() + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+b
 
-dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
-  geom_bar(stat="identity", aes(fill=Condition)) + 
-  scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
-  theme(legend.direction="horizontal", legend.position = "bottom") + 
-  guides(fill = guide_legend(nrow = 1)) +
-  theme(plot.margin = unit(c(0,0,0,0), "cm"))
-dummy
-b <- get_legend(dummy)
-plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
+stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="v", axis='lr')
+stackedbargenus
 
-ggsave(here("QSU_Data/Supplement_DNA_stackedbar.pdf"), dpi=300, h=6, w=15)
-ggsave(here("QSU_Data/Supplement_DNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
-
-
+ggsave(here("QSU_Data/Figure3A.pdf"), dpi=300, h=4, w=6)
+ggsave(here("QSU_Data/Figure3A.jpeg"), dpi=300, h=4, w=6)
 
 
 
