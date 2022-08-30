@@ -40,7 +40,8 @@ colnames(model)[colnames(model) == "prediction"] <- "Mean"
 
 
 ##### TAXONOMIC RELATIVE ABUNDANCE STACKED BAR #####
-
+#3A: Stacked bar plot for all donors
+# read in metadata
 metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
 
 #Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
@@ -85,6 +86,7 @@ bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
 # Merge in the metadata
 colnames(metadata)[3]<-"Sample"
 bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
+#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
 
 # Correct the plotting order
 bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
@@ -101,19 +103,23 @@ bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1,
 
 #Filter out controls and other donors
 bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
-bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
 bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
 bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
 bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
 bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
 barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
 
+bracken_pheno <- mutate(bracken_pheno, DonorLabel=ifelse(Donor == "D10", "Donor 10", paste("Donor", substr(Donor, 3,3))))
+bracken_pheno$DonorLabel <- factor(bracken_pheno$DonorLabel, levels = c("Donor 1", "Donor 2", "Donor 3", "Donor 4", "Donor 5", "Donor 6", "Donor 7", "Donor 8", "Donor 9", "Donor 10"))
+bracken_pheno <- bracken_pheno %>% mutate(PreservationLong = ifelse(Preservation == "N", "No Preservative", ifelse(Preservation == "O", "OMNI", "Zymo")))
+bracken_pheno <- bracken_pheno %>% mutate(TemperatureLongAll = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
+bracken_pheno <- bracken_pheno %>% mutate(LegendLabel = paste(PreservationLong, TemperatureLongAll, sep=" "))
+
 bluegreens <- c("#dff2f1","#b2dfdb","#80cbc4","#4db6ac","#26a59a","#009788","#01887b","#00796b","#00695c","#004d40")
 blues <- c("#e3f2fe","#bbdefb","#90caf9","#64b5f7","#42a5f5","#2096f3","#1f88e5","#1a76d2","#1665c0","#0d47a1", "#082b71")
 purples <- c("#EDE7F6","#D1C4E9","#B39EDB","#9575CD","#7E58C2","#673AB7","#5E34B1","#512DA8","#4527A0","#311B92")
 pinks <- c("#FDE4EC","#F8BBD0","#F48FB1","#F06293","#EB3F7A","#E91E63","#D81A60","#C2185B","#AD1456","#880E4F")
 oranges <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
-# 1 2 4 8
 barplot_pal <- c(bluegreens[3], rev(purples[3:4]), rev(oranges[2:5]), rev(blues[1:8]), "#939393")
 
 r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
@@ -125,11 +131,10 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   scale_fill_manual("Genus", values = barplot_pal) +
   guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
   theme_bw() +
-  scale_x_discrete(labels = samplabels) +
+  scale_x_discrete(labels = NULL) +
   theme(
     plot.title = element_text(face = "plain", size = 14),
     legend.text = element_text(size = 10),
-    #axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
@@ -138,6 +143,7 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
     strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
     strip.text = element_text(color = "black", size = 12)) + 
   scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
+  facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
   new_scale_fill() +
   geom_tile(aes(x=Sample, y = -2, fill = Condition), show.legend = F) + 
   geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
@@ -146,20 +152,22 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 r
 
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-  ylim(-0.05, 0.05) +
-  theme_void() + 
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-b
+a <- get_legend(r)
+condition_labels2 <- c("No Preservative -80°C","OMNI -80°C","OMNI 23°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
+names(condition_labels2) <- c( "NF","OF", "OR", "ZF", "ZR", "ZH")
+condition_palette <- c("#acaaaf","#c3a5d0","#9a6faa","#7ebd42","#4d9222","#26641a") 
+names(condition_palette) <- c("NF", "OF", "OR", "ZF", "ZR", "ZH")
 
-stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="v", axis='lr')
-stackedbargenus
-
-ggsave(here("QSU_Data/Figure4A.pdf"), dpi=300, h=4, w=6)
-ggsave(here("QSU_Data/Figure4A.jpeg"), dpi=300, h=4, w=6)
-
-
+dummy <- ggplot(bracken_pheno %>% filter(Condition != "OH"), aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
+  geom_bar(stat="identity", aes(fill=Condition)) + 
+  scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
+  theme(legend.direction="horizontal", legend.position = "bottom") + 
+  guides(fill = guide_legend(nrow = 1)) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+dummy
+b <- get_legend(dummy)
+stacked <- plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
+stacked
 ##### SHANNON DIVERSITY #####
 #Change column name
 colnames(raw)[colnames(raw) == "Shannon.Entropy"] <- "Shannon"
@@ -286,7 +294,8 @@ act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Act
         axis.ticks.y = element_blank(), axis.text.y=element_blank())
 act
 
-plot_grid(bact, firm, act, nrow=1, ncol=3, rel_widths = c(1.3, 1, 1))
+pdiff <- plot_grid(bact, firm, act, nrow=1, ncol=3, rel_widths = c(1.3, 1, 1))
+pdiff
 
 ggsave(here("QSU_Data/Fig4_PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
 ggsave(here("QSU_Data/Fig4_PhylumEnrichmentDraft.jpeg"), dpi=300, h=3.2, w=4)
@@ -343,138 +352,148 @@ ggsave(here("QSU_Data/Fig4_BrayCurtis.pdf"), dpi=300, w=5, h=5)
 
 ##### HEATMAP #####
 
-sig <- sig %>% mutate(PercentFormatted = as.numeric(gsub("%.*", "", percentchange)))
-sig <- sig %>% mutate(Condition = group2)
-sig <- sig %>% mutate(y.position = ifelse(Condition == "OF", 2, 
-                                                      ifelse(Condition=="ZF", 1, 
-                                                             ifelse(Condition=="OR", 3, 
-                                                                           ifelse(Condition == "ZR", 2, 1)))))
+# sig <- sig %>% mutate(PercentFormatted = as.numeric(gsub("%.*", "", percentchange)))
+# sig <- sig %>% mutate(Condition = group2)
+# sig <- sig %>% mutate(y.position = ifelse(Condition == "OF", 2, 
+#                                                       ifelse(Condition=="ZF", 1, 
+#                                                              ifelse(Condition=="OR", 3, 
+#                                                                            ifelse(Condition == "ZR", 2, 1)))))
+# 
+# genus_sig <- sig %>% filter(grepl(":", feature)) %>% filter(!grepl("Relative", feature))
+# raw_abundance <- model %>% filter(grepl(":", feature)) %>% filter(!grepl("Relative", feature))
+# raw_abundance <- raw_abundance %>% filter(Condition == "NF") %>% select(feature, Mean)
+# names(raw_abundance) <- c("feature", "NFMean")
+# raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Clostridiales.*", "Firmicutes: unclassified Clostridiales (miscel...", feature))
+# raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Firmicutes sensu.*", "Firmicutes: unclassified Firmicutes sensu stri...", feature))
+# raw_abundance <- raw_abundance %>% mutate(feature = gsub("Bacteroidetes: Prevotellaceae: environmental.*", "Bacteroidetes: Prevotellaceae: environmental s...", feature))
+# raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: Lachnospiraceae: environmental.*", "Firmicutes: Lachnospiraceae: environmental sam...", feature))
+# 
+# 
+# raw_abundance <- raw_abundance %>% mutate(Phylum = gsub(":.*", "", feature))
+# raw_abundance <- raw_abundance %>% 
+#   group_by(Phylum) %>% 
+#   arrange(Phylum, desc(NFMean))
+# raw_abundance$x.position <- as.numeric(row.names(raw_abundance))
+# 
+# 
+# genus_sig <- merge(genus_sig, raw_abundance, by="feature", all.x = TRUE)
+# genus_sig <- genus_sig %>% mutate(Phylum = gsub(":.*", "", feature))
+# genus_sig <- genus_sig %>% mutate(Phylum = ifelse(Phylum == "null", "Virus", Phylum))
+# genus_sig <- genus_sig %>% mutate(Plabel = ifelse(p.format <= 0.05, "*", ""))
+# genus_sig <- genus_sig %>% mutate(Genus = gsub(" sensu.*", "", gsub("unclassified ", "other ", gsub(".*: ", "", gsub(" \\(misc.*", "", gsub(": environmental.*", "", feature))))))
+# genus_sig <- genus_sig %>% mutate(PercentFormatted2 = ifelse(PercentFormatted > 100, 100, PercentFormatted))
+# preservative <- ggplot(genus_sig %>% filter(Condition == "OF" | Condition == "ZF"), aes(x=x.position, y=y.position, fill=PercentFormatted2)) + 
+#   geom_tile() + 
+#   coord_fixed() + 
+#   scale_x_continuous(expand = c(0,0)) + 
+#   scale_y_continuous(expand = c(0,0), breaks=c(1, 2), labels=c("Zymo -80°C", "OMNI -80°C")) + 
+#   labs(title = "Preservative Effect (Relative to no preservative)") +
+#   theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+#                      title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+#   scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-100, 100)) +
+#   labs(fill="Percent\nEnrichment")+
+#   geom_point(data = genus_sig %>% filter(Condition == "OF" | Condition == "ZF") %>% filter(Plabel == "*"), size=1, color="white") + 
+#   theme(panel.border = element_rect(size=1)) + 
+#   geom_vline(xintercept=4.5) +
+#   geom_vline(xintercept=12.5) +
+#   geom_vline(xintercept=13.5) +
+#   geom_vline(xintercept=44.5) +
+#   geom_vline(xintercept=45.5) +
+#   geom_vline(xintercept=47.5) +
+#   geom_vline(xintercept=50.5) 
+# preservative
+# 
+# z <- get_legend(preservative)
+# 
+# temperature <- ggplot(genus_sig %>% filter(Condition == "OR" | Condition == "ZH" | Condition == "ZR"), aes(x=x.position, y=y.position, fill=PercentFormatted2)) + 
+#   geom_tile() + 
+#   coord_fixed() + 
+#   scale_x_continuous(expand = c(0,0), breaks=genus_sig$x.position, labels=genus_sig$Genus) + 
+#   scale_y_continuous(expand = c(0,0), breaks=c(1,2,3), labels=c("Zymo 40°C", "Zymo 23°C", "OMNI 23°C")) + 
+#   labs(title = "Temperature Effect (Relative to -80°C for each preservative)") +
+#   theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(),
+#                      title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+#   scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-100, 100)) +
+#   geom_point(data = genus_sig %>% filter(Condition == "OR" | Condition == "ZH" | Condition == "ZR") %>% filter(Plabel == "*"), size=1, color="white") +
+#   theme(axis.text.x = element_text(angle=45, hjust=1, vjust=1))+ 
+#   geom_vline(xintercept=4.5) +
+#   geom_vline(xintercept=12.5) +
+#   geom_vline(xintercept=13.5) +
+#   geom_vline(xintercept=44.5) +
+#   geom_vline(xintercept=45.5) +
+#   geom_vline(xintercept=47.5) +
+#   geom_vline(xintercept=50.5) +
+#   theme(panel.border = element_rect(size=1))
+# temperature
+# 
+# raw_abund <- ggplot(genus_sig %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=NFMean)) + 
+#   geom_tile() + 
+#   coord_fixed() + 
+#   scale_x_continuous(expand = c(0,0)) + 
+#   scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Abundance")) + 
+#   theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+#                      title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+#   scale_fill_gradientn(colours = c("#F3F3F3", "black")) +
+#   labs(fill="Baseline\nAbundance")+ 
+#   geom_vline(xintercept=4.5) +
+#   geom_vline(xintercept=12.5) +
+#   geom_vline(xintercept=13.5) +
+#   geom_vline(xintercept=44.5) +
+#   geom_vline(xintercept=45.5) +
+#   geom_vline(xintercept=47.5) +
+#   geom_vline(xintercept=50.5) +
+#   theme(panel.border = element_rect(size=1))
+# raw_abund
+# 
+# z2 <- get_legend(raw_abund)
+# 
+# phylum_scale <- ggplot(genus_sig %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=Phylum)) + 
+#   geom_tile() + 
+#   coord_fixed() + 
+#   scale_x_continuous(expand = c(0,0)) + 
+#   scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Phylum")) + 
+#   theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
+#                      title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
+#   labs(fill="Phylum") + 
+#   geom_vline(xintercept=4.5) +
+#   geom_vline(xintercept=12.5) +
+#   geom_vline(xintercept=13.5) +
+#   geom_vline(xintercept=44.5) +
+#   geom_vline(xintercept=45.5) +
+#   geom_vline(xintercept=47.5) +
+#   geom_vline(xintercept=50.5) +
+#   theme(panel.border = element_rect(size=1))
+# phylum_scale 
+# 
+# z3 <- get_legend(phylum_scale)
+# 
+# main <- plot_grid(phylum_scale + theme(legend.position = "none"),
+#           raw_abund + theme(legend.position ="none"),  
+#           preservative + theme(legend.position = "none"), 
+#           temperature + theme(legend.position = "none"), 
+#           ncol=1, nrow=4, rel_widths = c(1,1,1,1), rel_heights = c(1, 1, 1, 3),
+#           align="v", axis="l")
+# 
+# plot_grid(main, z3, z2, z, nrow=1, ncol=4, rel_widths = c(1,.1,.1,.1), scale=0.9)
 
-genus_sig <- sig %>% filter(grepl(":", feature)) %>% filter(!grepl("Relative", feature))
-raw_abundance <- model %>% filter(grepl(":", feature)) %>% filter(!grepl("Relative", feature))
-raw_abundance <- raw_abundance %>% filter(Condition == "NF") %>% select(feature, Mean)
-names(raw_abundance) <- c("feature", "NFMean")
-raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Clostridiales.*", "Firmicutes: unclassified Clostridiales (miscel...", feature))
-raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: unclassified Firmicutes sensu.*", "Firmicutes: unclassified Firmicutes sensu stri...", feature))
-raw_abundance <- raw_abundance %>% mutate(feature = gsub("Bacteroidetes: Prevotellaceae: environmental.*", "Bacteroidetes: Prevotellaceae: environmental s...", feature))
-raw_abundance <- raw_abundance %>% mutate(feature = gsub("Firmicutes: Lachnospiraceae: environmental.*", "Firmicutes: Lachnospiraceae: environmental sam...", feature))
+# ggsave(here("QSU_Data/Fig4_Heatmap.pdf"), dpi=300, w=11, h=4)
+# ggsave(here("QSU_Data/Fig4_Heatmap.jpeg"), dpi=300, w=11, h=4)
 
+#Plot Figure 4
+a <- plot_grid(stacked,shannon, nrow=1, ncol=2, scale=0.9, rel_widths=c(1,0.3), labels=c("a","b"))
+a
+b <- plot_grid(richness,bc_full,pdiff, nrow=1, ncol=3, scale=0.9, rel_widths=c(0.8,0.8,1), labels=c("c","d","e"))
+b
 
-raw_abundance <- raw_abundance %>% mutate(Phylum = gsub(":.*", "", feature))
-raw_abundance <- raw_abundance %>% 
-  group_by(Phylum) %>% 
-  arrange(Phylum, desc(NFMean))
-raw_abundance$x.position <- as.numeric(row.names(raw_abundance))
+four <- plot_grid(a,b,nrow=2,ncol=1)
+four
 
+ggsave(here("QSU_Data/Figure4.pdf"), dpi=300, w=15, h=8)
+ggsave(here("QSU_Data/Figure4.jpeg"), dpi=300, w=14, h=8)
 
-genus_sig <- merge(genus_sig, raw_abundance, by="feature", all.x = TRUE)
-genus_sig <- genus_sig %>% mutate(Phylum = gsub(":.*", "", feature))
-genus_sig <- genus_sig %>% mutate(Phylum = ifelse(Phylum == "null", "Virus", Phylum))
-genus_sig <- genus_sig %>% mutate(Plabel = ifelse(p.format <= 0.05, "*", ""))
-genus_sig <- genus_sig %>% mutate(Genus = gsub(" sensu.*", "", gsub("unclassified ", "other ", gsub(".*: ", "", gsub(" \\(misc.*", "", gsub(": environmental.*", "", feature))))))
-genus_sig <- genus_sig %>% mutate(PercentFormatted2 = ifelse(PercentFormatted > 100, 100, PercentFormatted))
-preservative <- ggplot(genus_sig %>% filter(Condition == "OF" | Condition == "ZF"), aes(x=x.position, y=y.position, fill=PercentFormatted2)) + 
-  geom_tile() + 
-  coord_fixed() + 
-  scale_x_continuous(expand = c(0,0)) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(1, 2), labels=c("Zymo -80°C", "OMNI -80°C")) + 
-  labs(title = "Preservative Effect (Relative to no preservative)") +
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
-                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-100, 100)) +
-  labs(fill="Percent\nEnrichment")+
-  geom_point(data = genus_sig %>% filter(Condition == "OF" | Condition == "ZF") %>% filter(Plabel == "*"), size=1, color="white") + 
-  theme(panel.border = element_rect(size=1)) + 
-  geom_vline(xintercept=4.5) +
-  geom_vline(xintercept=12.5) +
-  geom_vline(xintercept=13.5) +
-  geom_vline(xintercept=44.5) +
-  geom_vline(xintercept=45.5) +
-  geom_vline(xintercept=47.5) +
-  geom_vline(xintercept=50.5) 
-preservative
+#### EXTRA ####
+#Stacked Bar Plot for Donor 1 only
 
-z <- get_legend(preservative)
-
-temperature <- ggplot(genus_sig %>% filter(Condition == "OR" | Condition == "ZH" | Condition == "ZR"), aes(x=x.position, y=y.position, fill=PercentFormatted2)) + 
-  geom_tile() + 
-  coord_fixed() + 
-  scale_x_continuous(expand = c(0,0), breaks=genus_sig$x.position, labels=genus_sig$Genus) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(1,2,3), labels=c("Zymo 40°C", "Zymo 23°C", "OMNI 23°C")) + 
-  labs(title = "Temperature Effect (Relative to -80°C for each preservative)") +
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(),
-                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
-  scale_fill_gradientn(colours = c("blue", "white", "red"), limits=c(-100, 100)) +
-  geom_point(data = genus_sig %>% filter(Condition == "OR" | Condition == "ZH" | Condition == "ZR") %>% filter(Plabel == "*"), size=1, color="white") +
-  theme(axis.text.x = element_text(angle=45, hjust=1, vjust=1))+ 
-  geom_vline(xintercept=4.5) +
-  geom_vline(xintercept=12.5) +
-  geom_vline(xintercept=13.5) +
-  geom_vline(xintercept=44.5) +
-  geom_vline(xintercept=45.5) +
-  geom_vline(xintercept=47.5) +
-  geom_vline(xintercept=50.5) +
-  theme(panel.border = element_rect(size=1))
-temperature
-
-raw_abund <- ggplot(genus_sig %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=NFMean)) + 
-  geom_tile() + 
-  coord_fixed() + 
-  scale_x_continuous(expand = c(0,0)) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Abundance")) + 
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
-                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
-  scale_fill_gradientn(colours = c("#F3F3F3", "black")) +
-  labs(fill="Baseline\nAbundance")+ 
-  geom_vline(xintercept=4.5) +
-  geom_vline(xintercept=12.5) +
-  geom_vline(xintercept=13.5) +
-  geom_vline(xintercept=44.5) +
-  geom_vline(xintercept=45.5) +
-  geom_vline(xintercept=47.5) +
-  geom_vline(xintercept=50.5) +
-  theme(panel.border = element_rect(size=1))
-raw_abund
-
-z2 <- get_legend(raw_abund)
-
-phylum_scale <- ggplot(genus_sig %>% filter(Condition == "ZF"), aes(x=x.position, y=y.position, fill=Phylum)) + 
-  geom_tile() + 
-  coord_fixed() + 
-  scale_x_continuous(expand = c(0,0)) + 
-  scale_y_continuous(expand = c(0,0), breaks=c(1), labels=c("Phylum")) + 
-  theme_bw() + theme(axis.ticks = element_blank(), axis.title = element_blank(), axis.text.x = element_blank(), 
-                     title = element_text(size=8), plot.margin = unit(c(0,0,0,0), "cm")) +
-  labs(fill="Phylum") + 
-  geom_vline(xintercept=4.5) +
-  geom_vline(xintercept=12.5) +
-  geom_vline(xintercept=13.5) +
-  geom_vline(xintercept=44.5) +
-  geom_vline(xintercept=45.5) +
-  geom_vline(xintercept=47.5) +
-  geom_vline(xintercept=50.5) +
-  theme(panel.border = element_rect(size=1))
-phylum_scale 
-
-z3 <- get_legend(phylum_scale)
-
-main <- plot_grid(phylum_scale + theme(legend.position = "none"),
-          raw_abund + theme(legend.position ="none"),  
-          preservative + theme(legend.position = "none"), 
-          temperature + theme(legend.position = "none"), 
-          ncol=1, nrow=4, rel_widths = c(1,1,1,1), rel_heights = c(1, 1, 1, 3),
-          align="v", axis="l")
-
-plot_grid(main, z3, z2, z, nrow=1, ncol=4, rel_widths = c(1,.1,.1,.1), scale=0.9)
-
-ggsave(here("QSU_Data/Fig4_Heatmap.pdf"), dpi=300, w=11, h=4)
-ggsave(here("QSU_Data/Fig4_Heatmap.jpeg"), dpi=300, w=11, h=4)
-
-
-#### SUPPLEMENTS ####
-
-#3A: Stacked bar plot for Donor 1
-# read in metadata
 metadata <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
 
 #Separate the SampleID name into Donor, Condition and Replicate columns; remove=FALSE keeps the SampleID column
@@ -519,7 +538,6 @@ bracken_long <- mutate(bracken_long, Sample=gsub("\\.", "_", Sample))
 # Merge in the metadata
 colnames(metadata)[3]<-"Sample"
 bracken_pheno <- merge(bracken_long, metadata, by = "Sample")
-#bracken_pheno <- mutate(bracken_pheno, label=paste(Donor, groupedID))
 
 # Correct the plotting order
 bracken_pheno$Genus <- factor(bracken_pheno$Genus, levels = bracken_plot$Genus)
@@ -536,23 +554,19 @@ bracken_pheno <- mutate(bracken_pheno, PlotOrder=ifelse(Condition == "NF", 1,
 
 #Filter out controls and other donors
 bracken_pheno <- bracken_pheno %>% filter(Donor != "NCO" & Donor != "PCO")
+bracken_pheno <- bracken_pheno %>% filter(Donor=="D01")
 bracken_pheno <- mutate(bracken_pheno, Temperature=substr(Condition, 2,2))
 bracken_pheno <- mutate(bracken_pheno, Genus=gsub("unclassified ", "", Genus))
 bracken_pheno <- merge(bracken_pheno, phylum_plottingorder, by="Genus", all.x=TRUE)
 bracken_pheno$Genus <- reorder(bracken_pheno$Genus, bracken_pheno$PlotOrder.y)
 barplot_pal <- c("#7BBD5D", "#91C74E", "#A7D03E", "#D9C634", "#E8DB41", "#D12E2E", "#D95034", "#E0723B", "#E89441", "#2E3CD1","#3C3ED6","#4B41DA","#5943DF","#6846E3","#7648E8","#844AED","#934DF1","#A14FF6","#B052FA","#BE54FF", "#939393" )
 
-bracken_pheno <- mutate(bracken_pheno, DonorLabel=ifelse(Donor == "D10", "Donor 10", paste("Donor", substr(Donor, 3,3))))
-bracken_pheno$DonorLabel <- factor(bracken_pheno$DonorLabel, levels = c("Donor 1", "Donor 2", "Donor 3", "Donor 4", "Donor 5", "Donor 6", "Donor 7", "Donor 8", "Donor 9", "Donor 10"))
-bracken_pheno <- bracken_pheno %>% mutate(PreservationLong = ifelse(Preservation == "N", "No Preservative", ifelse(Preservation == "O", "OMNI", "Zymo")))
-bracken_pheno <- bracken_pheno %>% mutate(TemperatureLongAll = ifelse(Temperature == "F", "-80°C", ifelse(Temperature == "R", "23°C", "40°C"))) # write out temperature
-bracken_pheno <- bracken_pheno %>% mutate(LegendLabel = paste(PreservationLong, TemperatureLongAll, sep=" "))
-
 bluegreens <- c("#dff2f1","#b2dfdb","#80cbc4","#4db6ac","#26a59a","#009788","#01887b","#00796b","#00695c","#004d40")
 blues <- c("#e3f2fe","#bbdefb","#90caf9","#64b5f7","#42a5f5","#2096f3","#1f88e5","#1a76d2","#1665c0","#0d47a1", "#082b71")
 purples <- c("#EDE7F6","#D1C4E9","#B39EDB","#9575CD","#7E58C2","#673AB7","#5E34B1","#512DA8","#4527A0","#311B92")
 pinks <- c("#FDE4EC","#F8BBD0","#F48FB1","#F06293","#EB3F7A","#E91E63","#D81A60","#C2185B","#AD1456","#880E4F")
 oranges <- c("#FFF3E0","#FFE0B2","#FFCC80","#FFB74D","#FFA726","#FF9801","#FB8B00","#F57C01","#EF6C00","#E65100")
+# 1 2 4 8
 barplot_pal <- c(bluegreens[3], rev(purples[3:4]), rev(oranges[2:5]), rev(blues[1:8]), "#939393")
 
 r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, fill=Genus)) +
@@ -568,6 +582,7 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(
     plot.title = element_text(face = "plain", size = 14),
     legend.text = element_text(size = 10),
+    #axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
@@ -576,7 +591,6 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
     strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
     strip.text = element_text(color = "black", size = 12)) + 
   scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
-  facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
   new_scale_fill() +
   geom_tile(aes(x=Sample, y = -2, fill = Condition), show.legend = F) + 
   geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
@@ -585,24 +599,17 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 r
 
-a <- get_legend(r)
-condition_labels2 <- c("No Preservative -80°C","OMNI -80°C","OMNI 23°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
-names(condition_labels2) <- c( "NF","OF", "OR", "ZF", "ZR", "ZH")
-condition_palette <- c("#acaaaf","#c3a5d0","#9a6faa","#7ebd42","#4d9222","#26641a") 
-names(condition_palette) <- c("NF", "OF", "OR", "ZF", "ZR", "ZH")
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+  ylim(-0.05, 0.05) +
+  theme_void() + 
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+b
 
-dummy <- ggplot(bracken_pheno %>% filter(Condition != "OH"), aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
-  geom_bar(stat="identity", aes(fill=Condition)) + 
-  scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
-  theme(legend.direction="horizontal", legend.position = "bottom") + 
-  guides(fill = guide_legend(nrow = 1)) +
-  theme(plot.margin = unit(c(0,0,0,0), "cm"))
-dummy
-b <- get_legend(dummy)
-plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
+stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="v", axis='lr')
+stackedbargenus
 
-ggsave(here("QSU_Data/Supplement_RNA_stackedbar.pdf"), dpi=300, h=6, w=15)
-ggsave(here("QSU_Data/Supplement_RNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
-
+ggsave(here("QSU_Data/Figure4A.pdf"), dpi=300, h=4, w=6)
+ggsave(here("QSU_Data/Figure4A.jpeg"), dpi=300, h=4, w=6)
 
 

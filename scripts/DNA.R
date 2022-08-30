@@ -18,10 +18,28 @@ names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 condition_labels <- c("40°C","23°C","-80°C","-80°C","-80°C","23°C","40°C")
 names(condition_labels) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
-# read in the QSU data as three separate dataframes 
-raw <- read.csv(here("QSU_Data/raw_data_all.csv"), header=TRUE) # raw per sample information
-model <- read.csv(here("QSU_Data/raw_data_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
-sig <- read.csv(here("QSU_Data/raw_data_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+#read in the QSU relative data as three separate dataframes
+raw <- read.csv(here("QSU_Data/raw_data_relative.csv"), header=TRUE) # raw per sample information
+model <- read.csv(here("QSU_Data/raw_model_relative.csv"), header=TRUE) # means and confidence intervals for all conditions
+sig <- read.csv(here("QSU_Data/raw_significance_relative.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+
+#Filter QSU relative data to remove outdated absolute data
+model <- filter(model, feature!="MicrobesPerGram" & feature!="mean_16s_count" & feature!="DNAConcentration")
+raw <- raw %>% select(-mean_16s_count)
+raw <-raw %>% select(-DNAConcentration)
+raw <-raw %>% select(-Patient, -Sample_Type, -Replication)
+sig <- filter(sig, feature!="mean_16s_count")
+colnames(model)[colnames(model) == "estimate"] <- "prediction"
+
+# read in the QSU absolute data as three separate dataframes 
+rawabs <- read.csv(here("QSU_Data/raw_data_all.csv"), header=TRUE) # raw per sample information
+modelabs <- read.csv(here("QSU_Data/raw_data_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
+sigabs <- read.csv(here("QSU_Data/raw_data_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+
+#merge the absolute and relative QSU data
+raw <- merge(raw,rawabs, by="Sample")
+model <- rbind(model, modelabs)
+sig <- rbind(sig,sigabs)
 
 # format and edit dataframes 
 sig <- sig %>% mutate(y.position=15) # significance table requires a column called y.position for plotting - 15 is a dummy value
@@ -34,7 +52,7 @@ raw <- raw %>% mutate(TemperatureLong = ifelse(Temperature == "F", "-80C", ifels
 raw <- raw %>% mutate(PreservativeLong = ifelse(Preservative == "N", "None", ifelse(Preservative == "O", "Omnigene", "Zymo"))) # write out preservative
 raw <- raw %>% mutate(Label = paste(TemperatureLong, PreservativeLong, sep="\n")) # make a label of temperature and preserative
 raw <- raw %>% mutate(hiddenLabel=ifelse(Sample_Type == "OR", "OMNIgene", ifelse(Sample_Type== "ZR", "Zymo", ifelse(Sample_Type == "NF", "None", "")))) # make a label just for the "R" samples
-colnames(model)[colnames(model) == "prediction"] <- "Mean"
+
 
 ##### FIGURE 2 #####
 ##### Microbes per Gram 
@@ -351,7 +369,7 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   scale_fill_manual("Genus", values = barplot_pal) +
   guides(fill = guide_legend(ncol=1, keywidth = 0.125, keyheight = 0.1, default.unit = "inch")) +
   theme_bw() +
-  scale_x_discrete(labels = samplabels) +
+  scale_x_discrete(labels = NULL) +
   theme(
     plot.title = element_text(face = "plain", size = 14),
     legend.text = element_text(size = 10),
@@ -390,7 +408,7 @@ fig3a
 #ggsave(here("QSU_Data/Fig3ADNA_stackedbar.pdf"), dpi=300, h=6, w=15)
 #ggsave(here("QSU_Data/Fig3ADNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
 
-#3C: Shannon entropy across conditions
+#3B: Shannon entropy across conditions
 #Change column name
 colnames(raw)[colnames(raw) == "Shannon.Entropy"] <- "Shannon"
 
@@ -401,8 +419,8 @@ se <- ggplot(raw , aes(Sample_Type, Shannon)) +
   geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=2) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
+  geom_errorbar(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   ylim(1,4.5) +
   stat_pvalue_manual(sig %>% filter(feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.3, 4.1, 3.9,3.7), 
                      tip.length=0, label = "p.signif") +
@@ -422,13 +440,7 @@ b
 shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
 shannon
 
-#Cowplot Figure 3!
-ab<-plot_grid(stackedbargenus, shannon, nrow=1, ncol=2, scale=0.9, rel_widths=c(1, 0.7), labels=c("A","B"))
-ab
-ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=4, w=12)
-
-
-###### Phylum forest plotting testing #####
+#Figure 3E:Phylum forest plotting testing
 
 raw <- mutate(raw, PlotOrder=ifelse(Sample_Type == "NF", 1, 
                                                         ifelse(Sample_Type == "OF", 2, 
@@ -436,18 +448,18 @@ raw <- mutate(raw, PlotOrder=ifelse(Sample_Type == "NF", 1,
                                                                       ifelse(Sample_Type == "OH", 4, 
                                                                              ifelse(Sample_Type == "ZF", 5,
                                                                                     ifelse(Sample_Type == "ZR", 6, 7)))))))
-model <- mutate(model, PlotOrder=ifelse(Condition == "NF", 1, 
-                                    ifelse(Condition == "OF", 2, 
-                                           ifelse(Condition == "OR", 3, 
-                                                  ifelse(Condition == "OH", 4, 
-                                                         ifelse(Condition == "ZF", 5,
-                                                                ifelse(Condition == "ZR", 6, 7)))))))
+model <- mutate(model, PlotOrder=ifelse(Sample_Type == "NF", 1, 
+                                    ifelse(Sample_Type == "OF", 2, 
+                                           ifelse(Sample_Type == "OR", 3, 
+                                                  ifelse(Sample_Type == "OH", 4, 
+                                                         ifelse(Sample_Type == "ZF", 5,
+                                                                ifelse(Sample_Type == "ZR", 6, 7)))))))
 
 bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..Bacteroidetes)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Condition, y=Mean, color=Sample_Type), size=3) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, color=Sample_Type), size=3) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -461,8 +473,8 @@ bact
 firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Firmicutes)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), y=Mean, color=Sample_Type), size=3) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, color=Sample_Type), size=3) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -476,8 +488,8 @@ firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Fi
 act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Actinobacteria)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Condition, PlotOrder), y=Mean, color=Sample_Type), size=3) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, color=Sample_Type), size=3) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(0.22, 0.27, 0.12,0.17, 0.12), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -488,11 +500,11 @@ act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Act
         legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
         axis.ticks.y = element_blank(), axis.text.y=element_blank())
 
-plot_grid(bact, firm, act, nrow=1, ncol=3, rel_widths = c(1.3, 1, 1))
+pdiff <- plot_grid(bact, firm, act, nrow=1, ncol=3, rel_widths = c(1.3, 1, 1))
+pdiff
+#ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
 
-ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
-
-##### Metagenomic Bray Curtis #####
+#Figure 3D: Metagenomic Bray Curtis #
 bc_raw <- read.csv(here("QSU_Data/raw_data_all_braycurtis.csv"), header=TRUE)
 bc_raw <- bc_raw %>% mutate(UniqueComparison = ifelse(Protocol_1 > Protocol_2, paste(Patient, Protocol_1, Protocol_2, sep="_"), paste(Patient, Protocol_2, Protocol_1, sep="_")))
 bc_raw <- bc_raw %>% select(Patient, bcdist, UniqueComparison)
@@ -538,11 +550,47 @@ b
 bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
 bc_full
 
-#Cowplot 3A and 3B and 3C!
-abc<-plot_grid(stackedbargenus, shannon, bc_full, nrow=1, ncol=3, scale=0.9, rel_widths=c(1, 0.7, 0.7), labels=c("a", "b", "c"))
-abc
-ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=4, w=14)
+#Figure3C: Relative Richness 0.01%
+p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
+  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
+  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) +
+  geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=2) +
+  scale_fill_manual(values=condition_palette) +
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_errorbar(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
+  #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121),
+  #                   tip.length=0, label = "p.signif") +
+  stat_pvalue_manual(sig %>% filter(feature == "Richness 0.01%") %>% filter(p.adj <= 0.05), y.position=c(127, 124, 121),
+                     tip.length=0, label = "p.signif") +
+  theme_bw() +
+  ylab("Number of Genera") +
+  ylim(50,130) +
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 
+p
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  ylim(-0.5, 0.5) +
+  theme_void() +
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+b
+
+richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
+richness
+
+#Plot Figure 3!
+a <- plot_grid(fig3a,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"))
+a
+b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3,scale=0.9,rel_widths=c(0.8, 0.8,1),labels=c("c","d","e"))
+b
+three<-plot_grid(a, b, nrow=2, ncol=1, scale=0.9, rel_widths=c(1, 0.8))
+three
+
+ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=6, w=15)
+ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=8, w=15)
 
 ##### GENUS HEATMAP #####
 genus_sig <- read.csv(here("QSU_Data/genus_significance.csv"), header=TRUE)
