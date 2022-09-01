@@ -387,7 +387,7 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   geom_tile(aes(x=Sample, y = -3, fill = Condition), show.legend = F) + 
   geom_tile(aes(x=Sample, y = -4, fill = Condition), show.legend = F) +
   scale_fill_manual(values = condition_palette) +
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm")) 
 r
 
 a <- get_legend(r)
@@ -422,7 +422,7 @@ se <- ggplot(raw , aes(Sample_Type, Shannon)) +
   geom_errorbar(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   ylim(1,4.5) +
-  stat_pvalue_manual(sig %>% filter(feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.3, 4.1, 3.9,3.7), 
+  stat_pvalue_manual(sig %>% filter(feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.1, 4.3, 3.7,3.9), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Shannon Entropy") + 
@@ -455,54 +455,87 @@ model <- mutate(model, PlotOrder=ifelse(Sample_Type == "NF", 1,
                                                          ifelse(Sample_Type == "ZF", 5,
                                                                 ifelse(Sample_Type == "ZR", 6, 7)))))))
 
-bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..Bacteroidetes)) + 
+bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..Bacteroidetes*100)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction*100, color=Sample_Type), size=3) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(90, 95, 70, 75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
-  ylim(0,1) + 
-  ylab("Relative Abundance") + 
+  ylim(0,100) + 
+  ylab("Relative Abundance (%)") + 
   xlab("Bacteroidetes") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12), axis.text.x = element_blank(), axis.ticks.x = element_blank())
 bact
 
-firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Firmicutes)) + 
+firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Firmicutes*100)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(0.9, 0.95, 0.7,0.75), 
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(90, 95, 70,75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
-  ylim(0,1) + 
+  ylim(0,100) + 
   ylab("Relative Abundance") + 
   xlab("Firmicutes") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
-        axis.ticks.y = element_blank(), axis.text.y=element_blank())
+        axis.ticks.y = element_blank(), axis.text.y = element_blank())
 
-act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Actinobacteria)) + 
+act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Actinobacteria*100)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(0.22, 0.27, 0.12,0.17, 0.12), 
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(25, 29, 17, 21, 17), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
-  ylim(0,1) + 
   ylab("Relative Abundance") + 
   xlab("Actinobacteria") + 
+  ylim(0,100)+
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
-        axis.ticks.y = element_blank(), axis.text.y=element_blank())
+        axis.ticks.y = element_blank(), axis.text.y = element_blank())
+act
+vir <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Viruses*100)) + 
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Viruses") %>% filter(p.adj <= 0.05), y.position=c(0.45, 0.38, 0.41, 0.38, 0.41),
+                     tip.length=0, label = "p.signif") +
+  theme_bw() + 
+  ylab("Relative Abundance") + 
+  xlab("Viruses") + 
+  ylim(0,0.5)+
+  theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank())
 
-pdiff <- plot_grid(bact, firm, act, nrow=1, ncol=3, rel_widths = c(1.3, 1, 1))
+vir
+
+fungi <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Fungi*100)) + 
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Fungi") %>% filter(p.adj <= 0.05), y.position=c(0.15, 0.13),
+                     tip.length=0, label = "p.signif") +
+  theme_bw() + 
+  ylab("Relative Abundance") + 
+  xlab("Fungi") + 
+  ylim(0,0.5) +
+  theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
+        axis.ticks.y = element_blank(), axis.text.y = element_blank())
+
+fungi
+
+pdiff <- plot_grid(bact, firm, act, vir, fungi, nrow=1, ncol=5, rel_widths = c(1.3, 1, 1, 1.1, 1))
 pdiff
-#ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
+ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
 
 #Figure 3D: Metagenomic Bray Curtis #
 bc_raw <- read.csv(here("QSU_Data/raw_data_all_braycurtis.csv"), header=TRUE)
@@ -547,7 +580,7 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") %>% filter(Sa
   theme_void() +
   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
 b
-bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
+bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 bc_full
 
 #Figure3C: Relative Richness 0.01%
@@ -565,7 +598,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
   stat_pvalue_manual(sig %>% filter(feature == "Richness 0.01%") %>% filter(p.adj <= 0.05), y.position=c(127, 124, 121),
                      tip.length=0, label = "p.signif") +
   theme_bw() +
-  ylab("Number of Genera") +
+  ylab("Number of Genera\n>0.01% Relative Abundance") +
   ylim(50,130) +
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
@@ -582,15 +615,15 @@ richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", a
 richness
 
 #Plot Figure 3!
-a <- plot_grid(fig3a,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"))
+a <- plot_grid(fig3a,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"), align = "v")
 a
-b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3,scale=0.9,rel_widths=c(0.8, 0.8,1),labels=c("c","d","e"))
+b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3, scale=0.9, rel_widths=c(0.7, 0.6,1.1),labels=c("c","d","e"), align="v", axis="t")
 b
-three<-plot_grid(a, b, nrow=2, ncol=1, scale=0.9, rel_widths=c(1, 0.8))
+three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
 three
 
-ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=6, w=15)
-ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=8, w=15)
+ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=9, w=16)
+ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=9, w=16)
 
 ##### GENUS HEATMAP #####
 genus_sig <- read.csv(here("QSU_Data/genus_significance.csv"), header=TRUE)
