@@ -95,315 +95,58 @@ Inv Simpson,OR,6.407418527,4.821368083,8.515220466
 Inv Simpson,ZF,6.35679211,5.000838908,8.080405442
 Inv Simpson,ZR,5.157006517,4.018366816,6.618289825
 Inv Simpson,ZH,3.30867237,2.385861447,4.588410976
-Firmicutes: Faecalibacterium,NF,0.083801041,0.042422559,0.165539626
-Firmicutes: Faecalibacterium,OF,0.054344913,0.023954572,0.123290435
-Firmicutes: Faecalibacterium,OR,0.015234761,0.005794661,0.040053752
-Firmicutes: Faecalibacterium,ZF,0.050121754,0.018495193,0.135829359
-Firmicutes: Faecalibacterium,ZR,0.026848837,0.00996596,0.072332222
-Firmicutes: Faecalibacterium,ZH,0.02458758,0.007611385,0.079426949
-Firmicutes: unclassified Clostridiales (miscellaneous),NF,0.043515549,0.025383856,0.074598712
-Firmicutes: unclassified Clostridiales (miscellaneous),OF,0.029077914,0.017937715,0.047136723
-Firmicutes: unclassified Clostridiales (miscellaneous),OR,0.031467241,0.021274911,0.046542487
-Firmicutes: unclassified Clostridiales (miscellaneous),ZF,0.04756189,0.031741768,0.071266772
-Firmicutes: unclassified Clostridiales (miscellaneous),ZR,0.033595682,0.021498855,0.05249907
-Firmicutes: unclassified Clostridiales (miscellaneous),ZH,0.019280512,0.012602044,0.029498242
-Firmicutes: Firmicutes: environmental samples,NF,0.02423611,0.015571556,0.037721923
-Firmicutes: Firmicutes: environmental samples,OF,0.015613332,0.008874905,0.027468028
-Firmicutes: Firmicutes: environmental samples,OR,0.017253579,0.009258575,0.032152463
-Firmicutes: Firmicutes: environmental samples,ZF,0.024122688,0.01473209,0.039499084
-Firmicutes: Firmicutes: environmental samples,ZR,0.017612767,0.009439525,0.032862837
-Firmicutes: Firmicutes: environmental samples,ZH,0.004625528,0.002047297,0.010450611
-Firmicutes: unclassified Ruminococcaceae,NF,0.029359875,0.020675556,0.041691853
-Firmicutes: unclassified Ruminococcaceae,OF,0.021815667,0.013906245,0.034223712
-Firmicutes: unclassified Ruminococcaceae,OR,0.015757623,0.009412207,0.026380921
-Firmicutes: unclassified Ruminococcaceae,ZF,0.034383991,0.024369935,0.048513007
-Firmicutes: unclassified Ruminococcaceae,ZR,0.026717152,0.019560371,0.036492467
-Firmicutes: unclassified Ruminococcaceae,ZH,0.008797524,0.004789722,0.016158855
-Firmicutes: Ruminococcus,NF,0.015973427,0.00976187,0.026137449
-Firmicutes: Ruminococcus,OF,0.013714404,0.008310445,0.022632346
-Firmicutes: Ruminococcus,OR,0.008119771,0.004205587,0.015676927
-Firmicutes: Ruminococcus,ZF,0.035616235,0.021540317,0.058890322
-Firmicutes: Ruminococcus,ZR,0.026028339,0.016282252,0.041608152
-Firmicutes: Ruminococcus,ZH,0.006857192,0.003135562,0.014996061
-Firmicutes: Clostridium,NF,0.020535348,0.012515937,0.033693087
-Firmicutes: Clostridium,OF,0.015366191,0.009525774,0.024787469
-Firmicutes: Clostridium,OR,0.015687231,0.010352837,0.02377022
-Firmicutes: Clostridium,ZF,0.014892316,0.009256326,0.023959945
-Firmicutes: Clostridium,ZR,0.0123716,0.007416892,0.020636202
-Firmicutes: Clostridium,ZH,0.008068795,0.005291236,0.012304394
-Firmicutes: Roseburia,NF,0.011958276,0.005330334,0.026827658
-Firmicutes: Roseburia,OF,0.008011071,0.004662859,0.013763502
-Firmicutes: Roseburia,OR,0.018989458,0.008049898,0.044795537
-Firmicutes: Roseburia,ZF,0.006170448,0.002907436,0.013095534
-Firmicutes: Roseburia,ZR,0.005287472,0.002453395,0.011395376
-Firmicutes: Roseburia,ZH,0.002376944,0.001268333,0.004454558
-Firmicutes: Oscillibacter,NF,0.021786373,0.013073546,0.036305838
-Firmicutes: Oscillibacter,OF,0.012570844,0.00830907,0.019018508
-Firmicutes: Oscillibacter,OR,0.011783414,0.007423094,0.018704984
-Firmicutes: Oscillibacter,ZF,0.010195293,0.006916647,0.015028092
-Firmicutes: Oscillibacter,ZR,0.009570369,0.006839441,0.013391733
-Firmicutes: Oscillibacter,ZH,0.006594204,0.004908258,0.008859258
-Firmicutes: Butyricicoccus,NF,0.00890747,0.004809517,0.016497085
-Firmicutes: Butyricicoccus,OF,0.005924163,0.003573248,0.009821795
-Firmicutes: Butyricicoccus,OR,0.005349596,0.002550645,0.011219976
-Firmicutes: Butyricicoccus,ZF,0.008883664,0.005730098,0.013772799
-Firmicutes: Butyricicoccus,ZR,0.007156737,0.00437224,0.011714565
-Firmicutes: Butyricicoccus,ZH,0.001342395,0.000863681,0.002086446
-Firmicutes: Clostridiales: environmental samples,NF,0.007284511,0.003753373,0.014137709
-Firmicutes: Clostridiales: environmental samples,OF,0.004699658,0.002132791,0.010355813
-Firmicutes: Clostridiales: environmental samples,OR,0.004664249,0.001804034,0.012059209
-Firmicutes: Clostridiales: environmental samples,ZF,0.005328712,0.002628258,0.010803798
-Firmicutes: Clostridiales: environmental samples,ZR,0.004145201,0.001996344,0.00860708
-Firmicutes: Clostridiales: environmental samples,ZH,0.001708639,0.00056658,0.005152749
-Firmicutes: Coprococcus,NF,0.00546697,0.003472837,0.008606153
-Firmicutes: Coprococcus,OF,0.003211174,0.001495682,0.006894274
-Firmicutes: Coprococcus,OR,0.003676889,0.001750133,0.007724848
-Firmicutes: Coprococcus,ZF,0.005922307,0.002952383,0.0118798
-Firmicutes: Coprococcus,ZR,0.004661501,0.002445994,0.008883747
-Firmicutes: Coprococcus,ZH,0.00098259,0.000467511,0.002065157
-Firmicutes: unclassified Lachnospiraceae,NF,0.005370348,0.003490282,0.008263126
-Firmicutes: unclassified Lachnospiraceae,OF,0.005712715,0.00358044,0.009114832
-Firmicutes: unclassified Lachnospiraceae,OR,0.00539635,0.003450845,0.008438686
-Firmicutes: unclassified Lachnospiraceae,ZF,0.005825525,0.003581489,0.009475596
-Firmicutes: unclassified Lachnospiraceae,ZR,0.004757626,0.003010631,0.007518359
-Firmicutes: unclassified Lachnospiraceae,ZH,0.001435956,0.000851002,0.002422992
-Firmicutes: Megamonas,NF,2.29e-05,5.11e-06,0.000102388
-Firmicutes: Megamonas,OF,3.35e-05,4.3e-06,0.00026126
-Firmicutes: Megamonas,OR,8e-05,2.7e-05,0.000237315
-Firmicutes: Megamonas,ZF,2.24e-05,3.53e-06,0.000142464
-Firmicutes: Megamonas,ZR,1.53e-05,2.53e-06,9.22e-05
-Firmicutes: Megamonas,ZH,2.47e-05,5.84e-06,0.000104657
-Firmicutes: Gemmiger,NF,0.004674971,0.002428715,0.008998731
-Firmicutes: Gemmiger,OF,0.00306255,0.001600443,0.005860387
-Firmicutes: Gemmiger,OR,0.002090872,0.001034816,0.004224661
-Firmicutes: Gemmiger,ZF,0.004402613,0.002377884,0.008151365
-Firmicutes: Gemmiger,ZR,0.003516769,0.001840562,0.006719503
-Firmicutes: Gemmiger,ZH,0.000529469,0.000246934,0.001135274
-Firmicutes: Eubacterium,NF,0.004399178,0.002816457,0.006871315
-Firmicutes: Eubacterium,OF,0.004708107,0.003470722,0.006386645
-Firmicutes: Eubacterium,OR,0.003615952,0.002439014,0.005360818
-Firmicutes: Eubacterium,ZF,0.0049065,0.003474901,0.006927895
-Firmicutes: Eubacterium,ZR,0.004006033,0.002634805,0.006090887
-Firmicutes: Eubacterium,ZH,0.00246016,0.001239259,0.004883878
-Firmicutes: unclassified Oscillospiraceae,NF,0.003163662,0.001186179,0.008437817
-Firmicutes: unclassified Oscillospiraceae,OF,0.002009545,0.000737417,0.005476241
-Firmicutes: unclassified Oscillospiraceae,OR,0.002785102,0.001038893,0.0074664
-Firmicutes: unclassified Oscillospiraceae,ZF,0.001688136,0.000774803,0.0036781
-Firmicutes: unclassified Oscillospiraceae,ZR,0.001438632,0.000667158,0.003102205
-Firmicutes: unclassified Oscillospiraceae,ZH,0.000638325,0.000228498,0.001783203
-Firmicutes: unclassified Firmicutes sensu stricto (miscellaneous),NF,0.00329312,0.001546897,0.007010575
-Firmicutes: unclassified Firmicutes sensu stricto (miscellaneous),OF,0.002481614,0.00123739,0.004976932
-Firmicutes: unclassified Firmicutes sensu stricto (miscellaneous),OR,0.00171323,0.000750707,0.003909858
-Firmicutes: unclassified Firmicutes sensu stricto (miscellaneous),ZF,0.003656414,0.00195072,0.006853553
-Firmicutes: unclassified Firmicutes sensu stricto (miscellaneous),ZR,0.002996283,0.001697894,0.005287556
-Firmicutes: unclassified Firmicutes sensu stricto (miscellaneous),ZH,0.001020633,0.000453509,0.002296957
-Firmicutes: Subdoligranulum,NF,0.004119054,0.002872418,0.005906734
-Firmicutes: Subdoligranulum,OF,0.002490384,0.001454883,0.004262894
-Firmicutes: Subdoligranulum,OR,0.002018499,0.001106778,0.003681258
-Firmicutes: Subdoligranulum,ZF,0.004115818,0.002371824,0.007142167
-Firmicutes: Subdoligranulum,ZR,0.002735398,0.001515389,0.004937609
-Firmicutes: Subdoligranulum,ZH,0.000594095,0.000258308,0.001366384
-Firmicutes: Flavonifractor,NF,0.006324123,0.003656761,0.010937147
-Firmicutes: Flavonifractor,OF,0.00285864,0.001999948,0.004086017
-Firmicutes: Flavonifractor,OR,0.002416076,0.00146079,0.003996074
-Firmicutes: Flavonifractor,ZF,0.001861848,0.001069903,0.003239993
-Firmicutes: Flavonifractor,ZR,0.001488058,0.00085319,0.002595337
-Firmicutes: Flavonifractor,ZH,0.000918675,0.000646291,0.001305856
-Firmicutes: Blautia,NF,0.003385981,0.002443988,0.004691049
-Firmicutes: Blautia,OF,0.00300836,0.001867494,0.004846188
-Firmicutes: Blautia,OR,0.002106474,0.001218632,0.003641158
-Firmicutes: Blautia,ZF,0.00487688,0.003301371,0.007204268
-Firmicutes: Blautia,ZR,0.003238028,0.002355742,0.004450751
-Firmicutes: Blautia,ZH,0.000664208,0.000476491,0.000925878
-Firmicutes: Dialister,NF,0.000371186,0.000108793,0.001266441
-Firmicutes: Dialister,OF,0.000536451,0.000120695,0.002384349
-Firmicutes: Dialister,OR,0.000444313,0.000140146,0.001408632
-Firmicutes: Dialister,ZF,0.00044242,8.9e-05,0.002200401
-Firmicutes: Dialister,ZR,0.000253131,4.65e-05,0.001378717
-Firmicutes: Dialister,ZH,0.000116574,2.69e-05,0.000504383
-Firmicutes: Dorea,NF,0.001623875,0.001045032,0.002523338
-Firmicutes: Dorea,OF,0.001624321,0.000895013,0.00294791
-Firmicutes: Dorea,OR,0.00153079,0.000861615,0.00271968
-Firmicutes: Dorea,ZF,0.001870675,0.001314829,0.002661506
-Firmicutes: Dorea,ZR,0.001449814,0.001091779,0.001925262
-Firmicutes: Dorea,ZH,0.000278348,0.000187107,0.00041408
-Firmicutes: Streptococcus,NF,0.000990978,0.000533189,0.001841818
-Firmicutes: Streptococcus,OF,0.002190838,0.001078315,0.004451177
-Firmicutes: Streptococcus,OR,0.002190283,0.001174085,0.004086026
-Firmicutes: Streptococcus,ZF,0.000662771,0.000338704,0.001296899
-Firmicutes: Streptococcus,ZR,0.000457203,0.000252706,0.000827184
-Firmicutes: Streptococcus,ZH,0.000472808,0.000360603,0.000619927
-Firmicutes: Lachnoclostridium,NF,0.001623921,0.001019178,0.002587495
-Firmicutes: Lachnoclostridium,OF,0.001200454,0.000855491,0.001684517
-Firmicutes: Lachnoclostridium,OR,0.001492557,0.00089073,0.002501012
-Firmicutes: Lachnoclostridium,ZF,0.001205999,0.000665594,0.002185166
-Firmicutes: Lachnoclostridium,ZR,0.000945144,0.000533525,0.001674331
-Firmicutes: Lachnoclostridium,ZH,0.000760194,0.000506918,0.001140019
-Firmicutes: Megasphaera,NF,3.66e-05,9.43e-06,0.00014214
-Firmicutes: Megasphaera,OF,4.16e-05,1.01e-05,0.000171782
-Firmicutes: Megasphaera,OR,4.91e-05,1.26e-05,0.00019042
-Firmicutes: Megasphaera,ZF,3.36e-05,7.85e-06,0.000144056
-Firmicutes: Megasphaera,ZR,2.45e-05,5.84e-06,0.000102532
-Firmicutes: Megasphaera,ZH,1.08e-05,2.8e-06,4.15e-05
-Firmicutes: Neglecta,NF,0.000325643,0.000121879,0.000870069
-Firmicutes: Neglecta,OF,0.000167909,4.57e-05,0.000617104
-Firmicutes: Neglecta,OR,0.000204003,6.28e-05,0.000662501
-Firmicutes: Neglecta,ZF,0.000269164,8.84e-05,0.000819214
-Firmicutes: Neglecta,ZR,0.00019272,5.8e-05,0.000639838
-Firmicutes: Neglecta,ZH,4.83e-05,1.5e-05,0.000155541
-Firmicutes: Intestinimonas,NF,0.001446786,0.000617638,0.003389022
-Firmicutes: Intestinimonas,OF,0.000722091,0.000378191,0.00137871
-Firmicutes: Intestinimonas,OR,0.000472296,0.000227765,0.000979359
-Firmicutes: Intestinimonas,ZF,0.000572363,0.000328373,0.000997644
-Firmicutes: Intestinimonas,ZR,0.000534223,0.000291999,0.000977379
-Firmicutes: Intestinimonas,ZH,0.000266995,0.00014939,0.000477184
-Firmicutes: Lachnospiraceae: environmental samples,NF,0.000977984,0.00066961,0.001428374
-Firmicutes: Lachnospiraceae: environmental samples,OF,0.000814655,0.000522988,0.001268985
-Firmicutes: Lachnospiraceae: environmental samples,OR,0.001077173,0.000620177,0.001870922
-Firmicutes: Lachnospiraceae: environmental samples,ZF,0.00090101,0.00057165,0.001420131
-Firmicutes: Lachnospiraceae: environmental samples,ZR,0.000765612,0.000462721,0.00126677
-Firmicutes: Lachnospiraceae: environmental samples,ZH,0.000428653,0.000206655,0.000889128
-Firmicutes: unclassified Clostridiaceae,NF,0.001107637,0.00076489,0.001603968
-Firmicutes: unclassified Clostridiaceae,OF,0.00100906,0.000663021,0.001535701
-Firmicutes: unclassified Clostridiaceae,OR,0.00054033,0.000354324,0.000823981
-Firmicutes: unclassified Clostridiaceae,ZF,0.001313682,0.00100506,0.001717072
-Firmicutes: unclassified Clostridiaceae,ZR,0.000832365,0.000583093,0.001188201
-Firmicutes: unclassified Clostridiaceae,ZH,0.000340178,0.000216811,0.000533743
-Firmicutes: Anaerotruncus,NF,0.001340178,0.000546732,0.003285118
-Firmicutes: Anaerotruncus,OF,0.000684281,0.000352061,0.001329997
-Firmicutes: Anaerotruncus,OR,0.00024818,0.00013451,0.000457909
-Firmicutes: Anaerotruncus,ZF,0.000351424,0.000207002,0.000596608
-Firmicutes: Anaerotruncus,ZR,0.000281797,0.000160011,0.000496275
-Firmicutes: Anaerotruncus,ZH,0.000202908,9e-05,0.000457403
-Firmicutes: Candidatus Borkfalkia,NF,3.26e-05,8.84e-06,0.000120018
-Firmicutes: Candidatus Borkfalkia,OF,3.25e-05,7.65e-06,0.000138226
-Firmicutes: Candidatus Borkfalkia,OR,2.36e-05,6.96e-06,8.02e-05
-Firmicutes: Candidatus Borkfalkia,ZF,5.31e-05,9.15e-06,0.000308514
-Firmicutes: Candidatus Borkfalkia,ZR,7.05e-05,1.27e-05,0.000390325
-Firmicutes: Candidatus Borkfalkia,ZH,2.96e-05,6.1e-06,0.000143383
-Bacteroidetes: Bacteroides,NF,0.063422553,0.040676136,0.098888946
-Bacteroidetes: Bacteroides,OF,0.151045892,0.09612543,0.237344702
-Bacteroidetes: Bacteroides,OR,0.082256846,0.047662811,0.141959498
-Bacteroidetes: Bacteroides,ZF,0.151114099,0.087332862,0.261476269
-Bacteroidetes: Bacteroides,ZR,0.177911282,0.100591414,0.31466328
-Bacteroidetes: Bacteroides,ZH,0.35871224,0.23567358,0.545985982
-Bacteroidetes: Alistipes,NF,0.041703775,0.025290891,0.068768032
-Bacteroidetes: Alistipes,OF,0.062753984,0.033724235,0.116772478
-Bacteroidetes: Alistipes,OR,0.108048203,0.058930475,0.198104872
-Bacteroidetes: Alistipes,ZF,0.05951282,0.03364927,0.105255647
-Bacteroidetes: Alistipes,ZR,0.071154812,0.047656292,0.10624006
-Bacteroidetes: Alistipes,ZH,0.073608494,0.042414944,0.127742958
-Bacteroidetes: Prevotella,NF,0.000519156,0.000100771,0.002674596
-Bacteroidetes: Prevotella,OF,0.000804058,0.000185358,0.003487896
-Bacteroidetes: Prevotella,OR,0.00161147,0.000445904,0.005823752
-Bacteroidetes: Prevotella,ZF,0.000797659,0.000146044,0.00435663
-Bacteroidetes: Prevotella,ZR,0.000860886,0.000144337,0.005134675
-Bacteroidetes: Prevotella,ZH,0.001708551,0.000304841,0.009575964
-Bacteroidetes: Parabacteroides,NF,0.00259825,0.001069556,0.006311874
-Bacteroidetes: Parabacteroides,OF,0.006247791,0.003336441,0.01169956
-Bacteroidetes: Parabacteroides,OR,0.004941177,0.002781599,0.008777406
-Bacteroidetes: Parabacteroides,ZF,0.006149475,0.002500454,0.01512367
-Bacteroidetes: Parabacteroides,ZR,0.006458894,0.002808524,0.014853821
-Bacteroidetes: Parabacteroides,ZH,0.013766806,0.006296883,0.030098217
-Bacteroidetes: Odoribacter,NF,0.000555338,0.000206666,0.001492263
-Bacteroidetes: Odoribacter,OF,0.00210524,0.000656929,0.0067466
-Bacteroidetes: Odoribacter,OR,0.000685895,0.000309493,0.001520073
-Bacteroidetes: Odoribacter,ZF,0.001863388,0.000465639,0.007456877
-Bacteroidetes: Odoribacter,ZR,0.002182878,0.000619562,0.007690843
-Bacteroidetes: Odoribacter,ZH,0.002495826,0.000814088,0.007651687
-Bacteroidetes: Butyricimonas,NF,7.19e-05,7.91e-06,0.000654334
-Bacteroidetes: Butyricimonas,OF,0.000121165,1.71e-05,0.000856263
-Bacteroidetes: Butyricimonas,OR,5.87e-05,1.15e-05,0.000301137
-Bacteroidetes: Butyricimonas,ZF,0.000100089,1.59e-05,0.000630311
-Bacteroidetes: Butyricimonas,ZR,0.000103611,1.65e-05,0.000648751
-Bacteroidetes: Butyricimonas,ZH,0.000259369,4.03e-05,0.001670677
-Bacteroidetes: unclassified Rikenellaceae,NF,0.000395089,0.000186659,0.000836259
-Bacteroidetes: unclassified Rikenellaceae,OF,0.00049304,0.000231163,0.001051592
-Bacteroidetes: unclassified Rikenellaceae,OR,0.001150911,0.00066888,0.00198032
-Bacteroidetes: unclassified Rikenellaceae,ZF,0.000559354,0.00027749,0.001127525
-Bacteroidetes: unclassified Rikenellaceae,ZR,0.000623784,0.000359733,0.001081653
-Bacteroidetes: unclassified Rikenellaceae,ZH,0.000530843,0.000290456,0.00097018
-Bacteroidetes: Prevotellaceae: environmental samples,NF,0.000121841,4.97e-05,0.00029869
-Bacteroidetes: Prevotellaceae: environmental samples,OF,0.000164502,7.63e-05,0.000354692
-Bacteroidetes: Prevotellaceae: environmental samples,OR,0.000209189,8.8e-05,0.000497514
-Bacteroidetes: Prevotellaceae: environmental samples,ZF,0.00021862,8.76e-05,0.000545731
-Bacteroidetes: Prevotellaceae: environmental samples,ZR,0.000246182,8.91e-05,0.000680524
-Bacteroidetes: Prevotellaceae: environmental samples,ZH,0.000332636,0.000117891,0.000938553
-Actinobacteria: Collinsella,NF,0.003552439,0.000936971,0.013468744
-Actinobacteria: Collinsella,OF,0.002087698,0.000577517,0.007546932
-Actinobacteria: Collinsella,OR,0.002348587,0.000648082,0.008511053
-Actinobacteria: Collinsella,ZF,0.002160204,0.000586879,0.007951358
-Actinobacteria: Collinsella,ZR,0.001444274,0.000395926,0.00526848
-Actinobacteria: Collinsella,ZH,0.000188509,8.21e-05,0.000432855
-Actinobacteria: Bifidobacterium,NF,0.006395757,0.002833033,0.01443884
-Actinobacteria: Bifidobacterium,OF,0.003142286,0.001460474,0.006760794
-Actinobacteria: Bifidobacterium,OR,0.006358857,0.00315024,0.012835549
-Actinobacteria: Bifidobacterium,ZF,0.002184294,0.001030927,0.004628012
-Actinobacteria: Bifidobacterium,ZR,0.001541029,0.000685256,0.003465525
-Actinobacteria: Bifidobacterium,ZH,0.000731225,0.000317302,0.001685112
-Actinobacteria: Enterorhabdus,NF,0.000473305,0.000174143,0.0012864
-Actinobacteria: Enterorhabdus,OF,0.001002761,0.000335807,0.002994366
-Actinobacteria: Enterorhabdus,OR,0.000551332,0.000150601,0.002018358
-Actinobacteria: Enterorhabdus,ZF,0.000578101,0.000187478,0.001782609
-Actinobacteria: Enterorhabdus,ZR,0.000633223,0.00020249,0.001980203
-Actinobacteria: Enterorhabdus,ZH,5.07e-05,1.91e-05,0.000134581
-Actinobacteria: Eggerthella,NF,0.001060306,0.000523073,0.002149316
-Actinobacteria: Eggerthella,OF,0.000714769,0.000360176,0.001418458
-Actinobacteria: Eggerthella,OR,0.000623419,0.000246266,0.001578176
-Actinobacteria: Eggerthella,ZF,0.000599246,0.000354435,0.00101315
-Actinobacteria: Eggerthella,ZR,0.000549075,0.000276279,0.001091228
-Actinobacteria: Eggerthella,ZH,7.92e-05,4.35e-05,0.000143951
-Proteobacteria: Azospirillum,NF,6.61e-05,1.58e-05,0.000277155
-Proteobacteria: Azospirillum,OF,5.54e-05,8.66e-06,0.000354849
-Proteobacteria: Azospirillum,OR,0.000177166,5.72e-05,0.000549205
-Proteobacteria: Azospirillum,ZF,4.04e-05,5.97e-06,0.000273377
-Proteobacteria: Azospirillum,ZR,4.84e-05,6.45e-06,0.000363454
-Proteobacteria: Azospirillum,ZH,7.2e-05,1.16e-05,0.000445649
-Proteobacteria: Sutterella,NF,0.000886326,0.000184671,0.004253915
-Proteobacteria: Sutterella,OF,0.001329656,0.000215199,0.00821557
-Proteobacteria: Sutterella,OR,0.002279839,0.000441742,0.011766299
-Proteobacteria: Sutterella,ZF,0.00103648,0.000121015,0.008877371
-Proteobacteria: Sutterella,ZR,0.001699279,0.000214375,0.013469599
-Proteobacteria: Sutterella,ZH,0.002022081,0.000279451,0.014631559
-Proteobacteria: Bilophila,NF,0.001807707,0.000530785,0.006156549
-Proteobacteria: Bilophila,OF,0.001306484,0.000388573,0.004392734
-Proteobacteria: Bilophila,OR,0.001914334,0.000412683,0.008880121
-Proteobacteria: Bilophila,ZF,0.000481337,0.000114591,0.00202184
-Proteobacteria: Bilophila,ZR,0.000595484,0.000110493,0.003209276
-Proteobacteria: Bilophila,ZH,0.001286377,0.000261876,0.006318884
-Lentisphaerae: unclassified Lentisphaeria,NF,2.81e-05,6.84e-06,0.000115278
-Lentisphaerae: unclassified Lentisphaeria,OF,3.61e-05,5.76e-06,0.000225668
-Lentisphaerae: unclassified Lentisphaeria,OR,4.22e-05,9.01e-06,0.000197332
-Lentisphaerae: unclassified Lentisphaeria,ZF,4.4e-05,6.92e-06,0.00027986
-Lentisphaerae: unclassified Lentisphaeria,ZR,4.64e-05,6.79e-06,0.000316883
-Lentisphaerae: unclassified Lentisphaeria,ZH,1.73e-05,1.96e-06,0.00015251
-Basidiomycota: Malassezia,NF,0.000668169,0.000354309,0.001260056
-Basidiomycota: Malassezia,OF,0.000242096,0.000103697,0.000565208
-Basidiomycota: Malassezia,OR,0.006426153,0.003133939,0.013176851
-Basidiomycota: Malassezia,ZF,0.000102505,4.85e-05,0.000216495
-Basidiomycota: Malassezia,ZR,0.000138559,6.52e-05,0.000294264
-Basidiomycota: Malassezia,ZH,0.001145727,0.000737004,0.001781115
-null: Tobamovirus,NF,0.007675159,0.000718923,0.08193935
-null: Tobamovirus,OF,0.004038897,0.000339216,0.04808939
-null: Tobamovirus,OR,0.015020583,0.002759219,0.081768749
-null: Tobamovirus,ZF,0.001648846,0.000134406,0.0202275
-null: Tobamovirus,ZR,0.002064971,0.000165831,0.025713578
-null: Tobamovirus,ZH,0.002421632,0.000379308,0.015460516
-null: Viruses: environmental samples,NF,0.000879867,0.000307814,0.002515043
-null: Viruses: environmental samples,OF,0.000692818,0.000206195,0.002327869
-null: Viruses: environmental samples,OR,0.007751279,0.002031076,0.029581525
-null: Viruses: environmental samples,ZF,0.000440983,0.000133584,0.001455763
-null: Viruses: environmental samples,ZR,0.00063978,0.000195419,0.002094566
-null: Viruses: environmental samples,ZH,0.000418929,0.000158642,0.00110627
-Verrucomicrobia: Akkermansia,NF,0.000217558,4.06e-05,0.001166696
-Verrucomicrobia: Akkermansia,OF,0.000228998,4.85e-05,0.001081483
-Verrucomicrobia: Akkermansia,OR,0.00046902,9.59e-05,0.002294304
-Verrucomicrobia: Akkermansia,ZF,9.23e-05,2.93e-05,0.000290907
-Verrucomicrobia: Akkermansia,ZR,8.3e-05,2.51e-05,0.00027435
-Verrucomicrobia: Akkermansia,ZH,0.000131575,3.48e-05,0.000497879
 RNAConcentration,NF,152.0435582,118.2227373,195.5397424
 RNAConcentration,OF,21.70770812,12.69193069,37.12788885
 RNAConcentration,OR,10.90853541,8.169215058,14.56641108
 RNAConcentration,ZF,8.344440466,6.404683795,10.87168218
 RNAConcentration,ZR,7.895840272,6.459130969,9.652117893
 RNAConcentration,ZH,21.85763131,16.15251548,29.57781077
+Actinobacteria: Cutibacterium,NF,0.000135,NA,NA
+Actinobacteria: Corynebacterium,NF,0.000285,NA,NA
+Actinobacteria: Enterorhabdus,NF,0.000473,NA,NA
+Actinobacteria: Eggerthella,NF,0.00106,NA,NA
+Actinobacteria: Bifidobacterium,NF,0.006396,NA,NA
+Actinobacteria: Collinsella,NF,0.003552,NA,NA
+Bacteroidetes: unclassified Rikenellaceae,NF,0.000395,NA,NA
+Bacteroidetes: Odoribacter,NF,0.000555,NA,NA
+Bacteroidetes: Parabacteroides,NF,0.002598,NA,NA
+Bacteroidetes: Prevotella,NF,0.000519,NA,NA
+Bacteroidetes: Alistipes,NF,0.041704,NA,NA
+Bacteroidetes: Bacteroides,NF,0.063423,NA,NA
+Basidiomycota: Malassezia,NF,0.000668,NA,NA
+Firmicutes: Staphylococcus,NF,0.000164,NA,NA
+Firmicutes: Weissella,NF,0.00012,NA,NA
+Firmicutes: Lachnospiraceae: environmental sam...,NF,0.000978,NA,NA
+Firmicutes: unclassified Clostridiaceae,NF,0.001108,NA,NA
+Firmicutes: Streptococcus,NF,0.000991,NA,NA
+Firmicutes: Dorea,NF,0.001624,NA,NA
+Firmicutes: Lachnoclostridium,NF,0.001624,NA,NA
+Firmicutes: Anaerotruncus,NF,0.00134,NA,NA
+Firmicutes: Intestinimonas,NF,0.001447,NA,NA
+Firmicutes: Blautia,NF,0.003386,NA,NA
+Firmicutes: Subdoligranulum,NF,0.004119,NA,NA
+Firmicutes: Eubacterium,NF,0.004399,NA,NA
+Firmicutes: unclassified Firmicutes sensu stri...,NF,0.003293,NA,NA
+Firmicutes: unclassified Lachnospiraceae,NF,0.00537,NA,NA
+Firmicutes: Coprococcus,NF,0.005467,NA,NA
+Firmicutes: Gemmiger,NF,0.004675,NA,NA
+Firmicutes: unclassified Oscillospiraceae,NF,0.003164,NA,NA
+Firmicutes: Flavonifractor,NF,0.006324,NA,NA
+Firmicutes: Clostridiales: environmental samples,NF,0.007285,NA,NA
+Firmicutes: Butyricicoccus,NF,0.008907,NA,NA
+Firmicutes: Ruminococcus,NF,0.015973,NA,NA
+Firmicutes: Oscillibacter,NF,0.021786,NA,NA
+Firmicutes: Clostridium,NF,0.020535,NA,NA
+Firmicutes: Roseburia,NF,0.011958,NA,NA
+Firmicutes: Firmicutes: environmental samples,NF,0.024236,NA,NA
+Firmicutes: unclassified Ruminococcaceae,NF,0.02936,NA,NA
+Firmicutes: unclassified Clostridiales (miscel...,NF,0.043516,NA,NA
+Firmicutes: Faecalibacterium,NF,0.083801,NA,NA
+Proteobacteria: Sphingomonas,NF,0.000158,NA,NA
+Proteobacteria: Methylobacterium,NF,0.000148,NA,NA
+Proteobacteria: Pelomonas,NF,0.000238,NA,NA
+Proteobacteria: Pseudomonas,NF,0.000547,NA,NA
+Proteobacteria: Bilophila,NF,0.001808,NA,NA
+Proteobacteria: Sutterella,NF,0.000886,NA,NA
+null: Viruses: environmental samples,NF,0.00088,NA,NA
+null: Tobamovirus,NF,0.007675,NA,NA
