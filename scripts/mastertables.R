@@ -47,21 +47,13 @@ readcounts_DNA <- read.table(here("DNA/1.preprocess/preprocessing/01_processing/
 readcounts_DNA <- readcounts_DNA %>% select(Sample, raw_reads, dedup_reads, trimmed_reads,host_removed_reads,orphan_reads)
 names(readcounts_DNA) <- c("Sample", "RawReads_DNA", "DeduplicatedReads_DNA", "TrimmedReads_DNA", "HostRemovedReads_DNA", "OrphanReads_DNA")
 
-# read in the metatranscriptomic preprocessing readcounts information
-readcounts_RNA <- read.table(here("RNA/01_rrna/readcounts.tsv"), header=TRUE, sep="\t")
-readcounts_RNA <- readcounts_RNA %>% select(SampleID, raw_reads, dedup_reads, trimmed_reads,host_removed_reads,orphan_reads, After_RRNA)
-names(readcounts_RNA) <- c("Sample", "RawReads_RNA", "DeduplicatedReads_RNA", "TrimmedReads_RNA", "HostRemovedReads_RNA", "OrphanReads_RNA", "rRNARemovedReads_RNA")
-readcounts_RNA <- readcounts_RNA %>% mutate(Sample=gsub(" ", "-", Sample))
-
-# edit existing dataframes such that column names indicate that all values are genomic
-colnames(raw) <- paste(colnames(raw),"_DNA", sep="")
-colnames(raw)[1] <- "Sample"
-model <- model %>% mutate(measurement = "DNA")
-sig <- sig %>% mutate(measurement = "DNA")
-
 # merge preprocessing dataframes with raw dataframe
 raw <- merge(raw, readcounts_DNA, by="Sample")
-raw <- merge(raw, readcounts_RNA, by="Sample")
+
+#save to Github repo
+write.table(raw, here("QSU_Data/raw_data_dna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(model, here("QSU_Data/model_data_dna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(sig, here("QSU_Data/sig_data_dna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
 
 # NEXT, add in transcriptomic data
 
@@ -70,35 +62,24 @@ rawrna <- read.csv(here("QSU_Data/raw_data_rna_all.csv"), header=TRUE) # raw per
 modelrna <- read.csv(here("QSU_Data/raw_data_rna_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
 sigrna <- read.csv(here("QSU_Data/raw_data_rna_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
 
-# edit RNA dataframes such that column names indicate that all values are transcriptomic
-colnames(rawrna) <- paste(colnames(rawrna),"_RNA", sep="")
-colnames(rawrna)[1] <- "Sample"
-colnames(rawrna)[2] <- "Patient"
-colnames(rawrna)[3] <- "SampleType"
-colnames(rawrna)[4] <- "Replication"
-modelrna <- modelrna %>% mutate(measurement = "RNA")
-sigrna <- sigrna %>% mutate(measurement = "RNA")
-
-# merge all dataframes
-raw <- merge(raw, rawrna, by="Sample")
-model <- rbind(model, modelrna)
-sig <- rbind(sig, sigrna)
-
 # NEXT, read in raw sample data to get DNA and RNA concentrations
-dna_meta <- read.csv(here("data/DNAExtraction.tsv"), sep="\t", header=TRUE)
-dna_meta <- dna_meta %>% select(SampleID, DNAConcentration)
-colnames(dna_meta) <- c("Sample", "DNAConcentration")
-dna_meta <- dna_meta %>% mutate(Sample=gsub("_", "-", Sample))
+
 rna_meta <- read.csv(here("data/RNAExtraction.tsv"), sep="\t", header=TRUE)
 rna_meta <- rna_meta %>% select(SampleID, RNAConcentration)
 colnames(rna_meta) <- c("Sample", "RNAConcentration")
 rna_meta <- rna_meta %>% mutate(Sample=gsub("_", "-", Sample))
+rawrna <- merge(raw, rna_meta, by="Sample")
 
-
-raw <- merge(raw, dna_meta, by="Sample")
-raw <- merge(raw, rna_meta, by="Sample")
+# read in the metatranscriptomic preprocessing readcounts information
+readcounts_RNA <- read.table(here("RNA/01_rrna/readcounts.tsv"), header=TRUE, sep="\t")
+readcounts_RNA <- readcounts_RNA %>% select(SampleID, raw_reads, dedup_reads, trimmed_reads,host_removed_reads,orphan_reads, After_RRNA)
+names(readcounts_RNA) <- c("Sample", "RawReads", "DeduplicatedReads", "TrimmedReads", "HostRemovedReads", "OrphanReads", "rRNARemovedReads")
+readcounts_RNA <- readcounts_RNA %>% mutate(Sample=gsub(" ", "-", Sample))
+rawrna <- merge(rawrna, readcounts_RNA, by="Sample")
 
 #save to Github repo
-write.table(raw, here("QSU_Data/raw_data_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
-write.table(model, here("QSU_Data/model_data_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
-write.table(sig, here("QSU_Data/sig_data_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(rawrna, here("QSU_Data/raw_data_rna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(modelrna, here("QSU_Data/model_data_rna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(sigrna, here("QSU_Data/sig_data_rna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+
+
