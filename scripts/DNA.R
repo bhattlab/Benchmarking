@@ -921,6 +921,8 @@ bc_model <- bc_model %>% mutate(Condition=group2)
 bc_sig <- read.csv(here("QSU_Data/raw_data_significance_braycurtis.csv"), header=TRUE)
 bc_sig <- bc_sig %>% filter(Feature == "BrayCurtisWithinCondition")
 bc_sig <- bc_sig %>% mutate(y.position = 0.2)
+bc_unique <- bc_unique %>% mutate(Condition = fct_relevel(Condition, "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH"))
+
 
 bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) + 
@@ -935,6 +937,7 @@ bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) +
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bray-Curtis Dissimilarity") + 
+  ggtitle("Metagenomic") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 bc_plot
@@ -967,6 +970,7 @@ bc_model <- bc_model %>% mutate(Condition=group2)
 bc_sig <- read.csv(here("QSU_Data/raw_data_rna_significance_braycurtis.csv"), header=TRUE)
 bc_sig <- bc_sig %>% filter(feature == "BrayCurtisWithinCondition")
 bc_sig <- bc_sig %>% mutate(y.position = 0.2)
+bc_unique <- bc_unique %>% mutate(Condition = fct_relevel(Condition, "NF", "OF", "OR", "ZF", "ZR", "ZH"))
 
 bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) + 
@@ -981,6 +985,7 @@ bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) +
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bray-Curtis Dissimilarity") + 
+  ggtitle("Metatranscriptomic") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 bc_plot
@@ -994,4 +999,9 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") , aes(x=Sampl
 b
 bc_full_rna <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 bc_full_rna
+
+
+plot_grid(bc_full_dna, bc_full_rna, nrow=1, ncol=2, scale=0.9, labels=c("a", "b"))
+ggsave(here("QSU_Data/Supplement_BC.jpg"), dpi=300, w=12, h=5)
+ggsave(here("QSU_Data/Supplement_BC.pdf"), dpi=300, w=12, h=5)
 
