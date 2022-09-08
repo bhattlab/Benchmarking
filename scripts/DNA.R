@@ -81,6 +81,7 @@ raw <- raw %>% mutate(hiddenLabel=ifelse(Sample_Type == "OR", "OMNIgene", ifelse
 # combines the plots: 
 # uses cowplot to plot both plots, in a single column, with the second plot having a very short height, and aligning the left axis of the plots (not centering relative to each other)
 
+#Figure 2A: Absolute Count across Conditions
 p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
@@ -88,7 +89,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) +
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, y=Mean), size=2.5) +
+  geom_point(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   scale_y_log10() +
   # stat_pvalue_manual(sig %>% filter(Feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(14.5, 14.3, 14, 13.8, 13, 12.8), 
   #                    tip.length=0, label = "p.signif") +
@@ -108,71 +109,8 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
 absolute <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
 absolute
 
-
-##### Richness 
-# p <- ggplot(raw, aes(x = Sample_Type, y=Richness.100M)) + 
-#   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
-#   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-#   geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=1.5) + 
-#   scale_fill_manual(values=condition_palette) +
-#   scale_color_manual(values=condition_palette) + 
-#   scale_x_discrete(labels=condition_labels) +
-#   geom_errorbar(data=model %>% filter(feature == "Richness 100M"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-#   geom_point(data=model %>% filter(feature == "Richness 100M"), inherit.aes=FALSE, aes(x=Sample_Type, y=Mean), size=2.5) +
-#   #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121), 
-#   #                   tip.length=0, label = "p.signif") +
-#   stat_pvalue_manual(sig %>% filter(feature == "Richness 100M") %>% filter(p.adj <= 0.05), y.position=c(1400, 1300), 
-#                      tip.length=0, label = "p.signif") +
-#   theme_bw() + 
-#   ylab("Number of Genera above \n100M counts/gram") + 
-#   ylim(0,1500) + 
-#   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-#         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
-# 
-# p
-# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-#   ylim(-0.5, 0.5) +
-#   theme_void() + 
-#   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-# b
-# 
-# richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
-# richness
-
-
-# p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) + 
-#   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
-#   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-#   geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=2) + 
-#   scale_fill_manual(values=condition_palette) +
-#   scale_color_manual(values=condition_palette) + 
-#   scale_x_discrete(labels=condition_labels) +
-#   geom_errorbar(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-#   geom_point(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, y=Mean), size=2.5) +
-#   #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121), 
-#   #                   tip.length=0, label = "p.signif") +
-#   stat_pvalue_manual(sig %>% filter(feature == "Richness 0.01%") %>% filter(p.adj <= 0.05), y.position=c(127, 124, 121), 
-#                      tip.length=0, label = "p.signif") +
-#   theme_bw() + 
-#   ylab("Number of Genera") + 
-#   ylim(50,130) + 
-#   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-#         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
-# 
-# p
-# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-#   ylim(-0.5, 0.5) +
-#   theme_void() + 
-#   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-# b
-# 
-# richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
-# richness
-
-#Figure 2C: Firmcutes and Bacteroidetes Ratio
-abs <- raw[c("Sample_Type","Absolute.Abundance..Firmicutes", "Absolute.Abundance..Bacteroidetes")]
+#Figure2B: Changing Absolute count of Bacteroidetes and Firmicutes across conditions
+abs<- raw[c("Sample_Type","Absolute.Abundance..Firmicutes", "Absolute.Abundance..Bacteroidetes")]
 meltabs <- melt(abs, id.vars = "Sample_Type", variable.name = "Phyla", value.name = "MicrobesPerGram")
 fbmodel <- filter(model, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Abundance: Bacteroidetes"))
 fbsig <- filter(sig, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Abundance: Bacteroidetes"))
@@ -189,39 +127,101 @@ fbmodel <- mutate(fbmodel, PlotOrder=ifelse(Sample_Type == "NF", 1,
 fbmodel$feature <- gsub("Absolute Abundance: Firmicutes","Firmicutes",fbmodel$feature)
 fbmodel$feature <- gsub("Absolute Abundance: Bacteroidetes","Bacteroidetes",fbmodel$feature)
 
-fb <- ggplot(meltabs, aes(x=Sample_Type, y=MicrobesPerGram)) + 
-  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
-  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-  #geom_jitter( aes(color=Sample_Type, shape=Phyla), position=position_jitterdodge(), size=2) + 
+#Plot Firmicutes and Bacteroidetes NFvOF
+nfof <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="OF"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=fbmodel, inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, linetype=feature), size=1, position=position_dodge(width=1), width=0) +
-  geom_point(data=fbmodel, inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=Mean, fill=feature, color=Sample_Type), size=2.5, position=position_dodge(width=1), show.legend = FALSE) +
-  scale_y_log10() +
-  # stat_pvalue_manual(sig %>% filter(Feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(14.5, 14.3, 14, 13.8, 13, 12.8), 
-  #                    tip.length=0, label = "p.signif") +
-  #stat_pvalue_manual(fbsig %>% filter(p.adj <= 0.05), y.position=(c(13,13.25,13.5,13.75)),
-  #tip.length=0, label = "p.signif") +
+  geom_line(data=fbmodel%>% filter(feature=="Bacteroidetes")%>% filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=1),linetype="dashed")+
+  geom_line(data=fbmodel%>% filter(feature=="Firmicutes") %>% filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=1))+
+  geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits = c(2e11, 4e12)) +
+  theme_bw() + 
+  ylab("OMNIgene\n\nMicrobes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
+        axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+  ggtitle("Preservative Effect")
+
+nfof
+
+#Plot Firmicutes and Bacteroidetes OFvORvOH
+omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette, guide="none") +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=fbmodel%>% filter(feature=="Bacteroidetes")%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=1), linetype="dashed")+
+  geom_line(data=fbmodel%>% filter(feature=="Firmicutes") %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=1))+
+  geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits = c(2e11, 4e12)) +
   theme_bw() + 
   ylab("Microbes per Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = c(0.8, 0.75), legend.title=element_blank()) 
-  # theme(axis.title.x=element_blank(),
-  #       axis.text.x=element_blank(),
-  #       axis.ticks.x=element_blank())
-fb
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
+        axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+  ggtitle("Temperature Effect")
 
-#Stich in legend info
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-  ylim(-0.05, 0.05) +
-  theme_void() + 
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-b
+omni
 
-fb <- plot_grid(fb,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
-fb
+o <- plot_grid(nfof, omni, nrow=1, ncol=2, align="h", rel_widths = c(0.8,1))
+o
 
+#Plot Firmicutes and Bacteroidetes NFvZF
+nfzf <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="ZF"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette, guide="none") +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=fbmodel%>% filter(feature=="Bacteroidetes")%>% filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=1),linetype="dashed")+
+  geom_line(data=fbmodel%>% filter(feature=="Firmicutes") %>% filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=1))+
+  geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits=c(5e10,9e11)) +
+  theme_bw() + 
+  ylab("Zymo\n\nMicrobes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none") 
+
+nfzf
+
+#Plot Firmicutes and Bacteroidetes ZFvZRvZH
+zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=fbmodel%>% filter(feature=="Bacteroidetes")%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=1), linetype="dashed")+
+  geom_line(data=fbmodel%>% filter(feature=="Firmicutes") %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=1))+
+  geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits=c(5e10,9e11)) +
+  theme_bw() + 
+  ylab("Microbes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
+        axis.text.y = element_blank(), axis.ticks.y = element_blank()) 
+
+zymo
+
+z <- plot_grid(nfzf, zymo, nrow=1, ncol=2, align="h", rel_widths = c(0.8,1))
+z
+
+oz <- plot_grid(o, z, nrow=2, ncol=1, align="v")
+oz
+
+#Make legend
+line <- c("solid","dashed")
+names(line) <- c("Firmicutes","Bacteroidetes")
+l <- ggplot(fbmodel %>% filter(feature=="Firmicutes" | feature=="Bacteroidetes"), aes(x=prediction, y=CI_low, linetype=feature)) +
+  geom_line()+
+  scale_linetype_manual(values=line)+
+  theme_bw()+
+  theme(legend.title = element_blank(),legend.direction="horizontal", legend.position = "bottom")
+l
+
+le <- get_legend(l)
+
+fig2b <- plot_grid(oz, le, nrow=2, ncol=1, rel_heights=c(1, 0.05))
+fig2b
+
+#ggsave(here("QSU_Data/Fig2Bline.jpeg"), dpi=300, h=5, w=8)
+
+
+#Figure 2C: Firmcutes and Bacteroidetes Ratio
 #Read in QSU ratio data as three dataframes
 rratio <- read.csv(here("QSU_Data/rawratio.csv"), header=TRUE) # raw per sample information
 mratio <- read.csv(here("QSU_Data/modelratio.csv"), header=TRUE) # means and confidence intervals for all conditions
@@ -268,12 +268,12 @@ b
 r<-plot_grid(r,b, nrow = 2, ncol = 1,rel_heights=c(1,0.1), align="v", axis="l")
 r
 
-ggsave(here("QSU_Data/Figure2Ceven.jpeg"), w=6.5, h=6.5, dpi=300)
+#ggsave(here("QSU_Data/Figure2Ceven.jpeg"), w=6.5, h=6.5, dpi=300)
 
 #Plot Figure 2!
-two<-plot_grid(absolute, fb, r, nrow=1, ncol=3, scale=0.9, labels=c("A","B", "C"))
+two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("A","B", "C"), align = "v",axis="tb")
 two
-ggsave(here("QSU_Data/Figure2.jpeg"), dpi=300, h=5.5, w=16)
+ggsave(here("QSU_Data/Figure2.jpeg"), dpi=300, h=8, w=22)
 ggsave(here("QSU_Data/Figure2.pdf"), dpi=300, h=5.5, w=16)
 
 ##### FIGURE 3 #####
