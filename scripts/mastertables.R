@@ -53,7 +53,7 @@ raw <- merge(raw, readcounts_DNA, by="Sample")
 #save to Github repo
 write.table(raw, here("QSU_Data/raw_data_dna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
 write.table(model, here("QSU_Data/model_data_dna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
-write.table(sig, here("QSU_Data/sig_data_dna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(sig, here("QSU_Data/sig_data_dna_full.tsv"), row.names = FALSE, sep="\t", quote=FALSE)
 
 # NEXT, add in transcriptomic data
 
@@ -80,6 +80,6 @@ rawrna <- merge(rawrna, readcounts_RNA, by="Sample")
 #save to Github repo
 write.table(rawrna, here("QSU_Data/raw_data_rna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
 write.table(modelrna, here("QSU_Data/model_data_rna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
-write.table(sigrna, here("QSU_Data/sig_data_rna_full.csv"), row.names = FALSE, sep=",", quote=FALSE)
+write.table(sigrna, here("QSU_Data/sig_data_rna_full.tsv"), row.names = FALSE, sep="\t", quote=FALSE)
 
 
