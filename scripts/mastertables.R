@@ -68,7 +68,7 @@ rna_meta <- read.csv(here("data/RNAExtraction.tsv"), sep="\t", header=TRUE)
 rna_meta <- rna_meta %>% select(SampleID, RNAConcentration)
 colnames(rna_meta) <- c("Sample", "RNAConcentration")
 rna_meta <- rna_meta %>% mutate(Sample=gsub("_", "-", Sample))
-rawrna <- merge(raw, rna_meta, by="Sample")
+rawrna <- merge(rawrna, rna_meta, by="Sample")
 
 # read in the metatranscriptomic preprocessing readcounts information
 readcounts_RNA <- read.table(here("RNA/01_rrna/readcounts.tsv"), header=TRUE, sep="\t")

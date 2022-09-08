@@ -1,0 +1,15 @@
+Feature	group1	group2	p	p.format
+BrayCurtisWithinCondition	OF	NF	0.573	0.573
+BrayCurtisWithinCondition	OR	NF	0.939	0.939
+BrayCurtisWithinCondition	ZF	NF	0.116	0.116
+BrayCurtisWithinCondition	ZR	NF	0.552	0.552
+BrayCurtisWithinCondition	ZH	NF	0.057	0.057
+BrayCurtisBetweenKits	OF_NF	NF_NF	< 0.001	0.001
+BrayCurtisBetweenKits	OF_ZF	NF_NF	< 0.001	0.001
+BrayCurtisBetweenTemps	OF_OR	OF_OF	< 0.001	0.001
+BrayCurtisBetweenTemps	ZF_ZR	ZF_ZF	< 0.001	0.001
+BrayCurtisBetweenTemps	ZF_ZH	ZF_ZF	< 0.001	0.001
+BrayCurtisBetweenConditions	OF_NF	ZF_NF	0.43	0.43
+BrayCurtisBetweenConditions	OR_NF	OF_NF	0.01	0.01
+BrayCurtisBetweenConditions	ZR_NF	ZF_NF	< 0.001	0.001
+BrayCurtisBetweenConditions	ZH_NF	ZF_NF	< 0.001	0.001

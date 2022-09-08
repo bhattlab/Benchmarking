@@ -141,13 +141,13 @@ Firmicutes: unclassified Lachnospiraceae,NF,0.035689,NA,NA
 Firmicutes: Blautia,NF,0.041406,NA,NA
 Firmicutes: Ruminococcus,NF,0.055068,NA,NA
 Firmicutes: Faecalibacterium,NF,0.086759,NA,NA
-MicrobesPerGram,NF,1.33055e+12,5.64993e+11,3.1334e+12
-MicrobesPerGram,OF,4.00326e+12,2.02641e+12,7.9086e+12
-MicrobesPerGram,OR,4.13933e+12,2.51224e+12,6.82024e+12
-MicrobesPerGram,OH,5.81988e+12,3.28092e+12,1.03236e+13
-MicrobesPerGram,ZF,6.26829e+11,3.05261e+11,1.28714e+12
-MicrobesPerGram,ZR,3.29108e+11,1.82212e+11,5.94429e+11
-MicrobesPerGram,ZH,1.52479e+11,76970644880,3.0206e+11
+MicrobesPerGram,NF,1.33e+12,5.65e+11,3.13e+12
+MicrobesPerGram,OF,4e+12,2.03e+12,7.91e+12
+MicrobesPerGram,OR,4.14e+12,2.51e+12,6.82e+12
+MicrobesPerGram,OH,5.82e+12,3.28e+12,1.03e+13
+MicrobesPerGram,ZF,6.27e+11,3.05e+11,1.29e+12
+MicrobesPerGram,ZR,3.29e+11,1.82e+11,5.94e+11
+MicrobesPerGram,ZH,1.52e+11,76970644880,3.02e+11
 mean_16s_count,NF,4.627857021,4.586880262,4.669199846
 mean_16s_count,OF,4.566822955,4.518976539,4.615175963
 mean_16s_count,OR,4.562805636,4.496219541,4.630377828
@@ -162,31 +162,31 @@ DNAConcentration,OH,46.64184125,34.80956987,62.49607114
 DNAConcentration,ZF,9.229847829,7.349304396,11.59158559
 DNAConcentration,ZR,5.381136413,4.212303076,6.874298591
 DNAConcentration,ZH,4.786299113,3.716755981,6.163616692
-Absolute Abundance: Firmicutes,NF,7.56964e+11,3.06721e+11,1.86813e+12
-Absolute Abundance: Firmicutes,OF,1.79927e+12,8.76918e+11,3.69176e+12
-Absolute Abundance: Firmicutes,OR,1.83506e+12,1.09794e+12,3.06704e+12
-Absolute Abundance: Firmicutes,OH,2.73553e+12,1.4242e+12,5.25427e+12
-Absolute Abundance: Firmicutes,ZF,3.25514e+11,1.51615e+11,6.98871e+11
-Absolute Abundance: Firmicutes,ZR,1.49996e+11,78326087539,2.87247e+11
-Absolute Abundance: Firmicutes,ZH,65416688739,30512712347,1.40248e+11
-Absolute Abundance: Bacteroidetes,NF,2.99063e+11,1.3506e+11,6.62213e+11
-Absolute Abundance: Bacteroidetes,OF,1.40251e+12,6.95989e+11,2.82624e+12
-Absolute Abundance: Bacteroidetes,OR,1.46961e+12,8.55883e+11,2.52341e+12
-Absolute Abundance: Bacteroidetes,OH,1.97526e+12,1.26919e+12,3.07413e+12
-Absolute Abundance: Bacteroidetes,ZF,1.87323e+11,96548699006,3.63441e+11
-Absolute Abundance: Bacteroidetes,ZR,1.14169e+11,67647794594,1.92682e+11
-Absolute Abundance: Bacteroidetes,ZH,57788727365,31923930568,1.04609e+11
-Absolute Abundance: Actinobacteria,NF,59503438930,24075606381,1.47064e+11
-Absolute Abundance: Actinobacteria,OF,1.26248e+11,65576444934,2.43054e+11
-Absolute Abundance: Actinobacteria,OR,1.10266e+11,60953703318,1.99472e+11
-Absolute Abundance: Actinobacteria,OH,1.33213e+11,58843932490,3.01572e+11
+Absolute Abundance: Firmicutes,NF,7.57e+11,3.07e+11,1.87e+12
+Absolute Abundance: Firmicutes,OF,1.8e+12,8.77e+11,3.69e+12
+Absolute Abundance: Firmicutes,OR,1.84e+12,1.1e+12,3.07e+12
+Absolute Abundance: Firmicutes,OH,2.74e+12,1.42e+12,5.25e+12
+Absolute Abundance: Firmicutes,ZF,3.26e+11,1.52e+11,6.99e+11
+Absolute Abundance: Firmicutes,ZR,1.5e+11,78326087539,2.87e+11
+Absolute Abundance: Firmicutes,ZH,65416688739,30512712347,1.4e+11
+Absolute Abundance: Bacteroidetes,NF,2.99e+11,1.35e+11,6.62e+11
+Absolute Abundance: Bacteroidetes,OF,1.4e+12,6.96e+11,2.83e+12
+Absolute Abundance: Bacteroidetes,OR,1.47e+12,8.56e+11,2.52e+12
+Absolute Abundance: Bacteroidetes,OH,1.98e+12,1.27e+12,3.07e+12
+Absolute Abundance: Bacteroidetes,ZF,1.87e+11,96548699006,3.63e+11
+Absolute Abundance: Bacteroidetes,ZR,1.14e+11,67647794594,1.93e+11
+Absolute Abundance: Bacteroidetes,ZH,57788727365,31923930568,1.05e+11
+Absolute Abundance: Actinobacteria,NF,59503438930,24075606381,1.47e+11
+Absolute Abundance: Actinobacteria,OF,1.26e+11,65576444934,2.43e+11
+Absolute Abundance: Actinobacteria,OR,1.1e+11,60953703318,1.99e+11
+Absolute Abundance: Actinobacteria,OH,1.33e+11,58843932490,3.02e+11
 Absolute Abundance: Actinobacteria,ZF,20484947488,10127137604,41436493706
 Absolute Abundance: Actinobacteria,ZR,9441079259,4401904370,20248958198
 Absolute Abundance: Actinobacteria,ZH,3142055341,1263306819,7814817126
 Absolute Abundance: Other Bacteria,NF,13534049478,4162506953,44004850287
-Absolute Abundance: Other Bacteria,OF,41974556877,16646738056,1.05838e+11
-Absolute Abundance: Other Bacteria,OR,46531999241,20023364460,1.08135e+11
-Absolute Abundance: Other Bacteria,OH,64214237943,22874782276,1.80263e+11
+Absolute Abundance: Other Bacteria,OF,41974556877,16646738056,1.06e+11
+Absolute Abundance: Other Bacteria,OR,46531999241,20023364460,1.08e+11
+Absolute Abundance: Other Bacteria,OH,64214237943,22874782276,1.8e+11
 Absolute Abundance: Other Bacteria,ZF,6429556418,2582248840,16008989953
 Absolute Abundance: Other Bacteria,ZR,3727874422,1585827236,8763279749
 Absolute Abundance: Other Bacteria,ZH,1942708415,695057983.8,5429929694
@@ -204,17 +204,17 @@ Absolute Abundance: Fungi,OH,4204365418,1959977780,9018820901
 Absolute Abundance: Fungi,ZF,431023430.1,199441714.4,931506219.3
 Absolute Abundance: Fungi,ZR,226298268.3,104878181.4,488289418.9
 Absolute Abundance: Fungi,ZH,113765468.9,47739973.19,271105764.2
-Absolute Abundance: Unclassified + Root,NF,1.39778e+11,59373186615,3.2907e+11
-Absolute Abundance: Unclassified + Root,OF,4.13518e+11,2.07421e+11,8.24395e+11
-Absolute Abundance: Unclassified + Root,OR,4.39395e+11,2.52459e+11,7.6475e+11
-Absolute Abundance: Unclassified + Root,OH,6.22486e+11,3.35577e+11,1.15469e+12
-Absolute Abundance: Unclassified + Root,ZF,62956319164,30408757441,1.30341e+11
+Absolute Abundance: Unclassified + Root,NF,1.4e+11,59373186615,3.29e+11
+Absolute Abundance: Unclassified + Root,OF,4.14e+11,2.07e+11,8.24e+11
+Absolute Abundance: Unclassified + Root,OR,4.39e+11,2.52e+11,7.65e+11
+Absolute Abundance: Unclassified + Root,OH,6.22e+11,3.36e+11,1.15e+12
+Absolute Abundance: Unclassified + Root,ZF,62956319164,30408757441,1.3e+11
 Absolute Abundance: Unclassified + Root,ZR,34842086897,18618800060,65201356446
 Absolute Abundance: Unclassified + Root,ZH,16990076267,8626327093,33462989341
-Absolute Abundance: Unclassified,NF,98440352555,39556704996,2.44978e+11
-Absolute Abundance: Unclassified,OF,2.5965e+11,1.33572e+11,5.04734e+11
-Absolute Abundance: Unclassified,OR,2.76546e+11,1.55635e+11,4.91391e+11
-Absolute Abundance: Unclassified,OH,4.13143e+11,2.13632e+11,7.98976e+11
+Absolute Abundance: Unclassified,NF,98440352555,39556704996,2.45e+11
+Absolute Abundance: Unclassified,OF,2.6e+11,1.34e+11,5.05e+11
+Absolute Abundance: Unclassified,OR,2.77e+11,1.56e+11,4.91e+11
+Absolute Abundance: Unclassified,OH,4.13e+11,2.14e+11,7.99e+11
 Absolute Abundance: Unclassified,ZF,43352986201,20806069396,90333324222
 Absolute Abundance: Unclassified,ZR,23573854599,12090511322,45963864214
 Absolute Abundance: Unclassified,ZH,11477069435,5502631527,23938205233
@@ -239,3 +239,10 @@ Richness 1M,OH,1587.727119,1250.07554,2016.580057
 Richness 1M,ZF,612.251058,421.4644358,889.4021089
 Richness 1M,ZR,424.3835722,287.5852325,626.2540493
 Richness 1M,ZH,293.4936152,190.8980363,451.2278065
+Bacteroidetes/Firmicutes,NF,0.379481,0.27636,0.537278
+Bacteroidetes/Firmicutes,OF,0.724332,0.522294,1.058888
+Bacteroidetes/Firmicutes,OR,0.739732,0.508159,1.157852
+Bacteroidetes/Firmicutes,OH,0.679689,0.490267,0.990961
+Bacteroidetes/Firmicutes,ZF,0.55795,0.455925,0.693683
+Bacteroidetes/Firmicutes,ZR,0.716693,0.535529,0.999016
+Bacteroidetes/Firmicutes,ZH,0.829184,0.622763,1.152623

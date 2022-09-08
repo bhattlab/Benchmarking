@@ -401,3 +401,9 @@ Absolute Abundance: Unclassified	ZF	ZH	-73.5% [-89.9%, -30.8%] **	0.007	0.007	0.
 Richness 100M	ZF	ZH	-38.5% [-57.5%, -10.8%] **	0.01	0.01	0.01	**	NA
 Richness 10M	ZF	ZH	-44.4% [-61.5%, -19.7%] **	0.002	0.002	0.002	**	NA
 Richness 1M	ZF	ZH	-52.1% [-70.5%, -22.2%] **	0.003	0.003	0.003	**	NA
+Bacteroidetes/Firmicutes	NF	OF	NA	0.001	0.001	0.001	***	NA
+Bacteroidetes/Firmicutes	NF	ZF	NA	0.001	0.001	0.001	***	NA
+Bacteroidetes/Firmicutes	OF	OR	NA	0.42	0.42	0.42		NA
+Bacteroidetes/Firmicutes	OF	OH	NA	0.69	0.69	0.69		NA
+Bacteroidetes/Firmicutes	ZF	ZR	NA	0.001	0.001	0.001	***	NA
+Bacteroidetes/Firmicutes	ZF	ZH	NA	0.001	0.001	0.001	***	NA
