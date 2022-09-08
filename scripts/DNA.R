@@ -276,6 +276,7 @@ two
 ggsave(here("QSU_Data/Figure2.jpeg"), dpi=300, h=8, w=22)
 ggsave(here("QSU_Data/Figure2.pdf"), dpi=300, h=5.5, w=16)
 
+
 ##### FIGURE 3 #####
 #Relative abundance analysis
 #3A: Stacked bar plot for all donors
