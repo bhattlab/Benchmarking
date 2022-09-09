@@ -44,7 +44,7 @@ sig <- rbind(sig,sigabs)
 # format and edit dataframes 
 sig <- sig %>% mutate(y.position=15) # significance table requires a column called y.position for plotting - 15 is a dummy value
 sig <- sig %>% mutate(p.signif=ifelse(p.signif == "", "ns", p.signif)) # add a label called "ns" for non-significant p-values
-model <- model %>% mutate(Sample_Type = Condition) # make all dataframes have a column called Sample_Type
+model <- model %>% mutate(Condition = Sample_Type) # make all dataframes have a column called Sample_Type
 raw <- raw %>% mutate(Preservative = substr(Sample_Type, 1, 1)) # make preservative column (first character of sample code)
 raw <- raw %>% mutate(Temperature = substr(Sample_Type, 2, 2)) # make temperature column (second character of sample code)
 raw <- raw %>% mutate(Sample_Type = fct_relevel(Sample_Type, "NF", "OF", "OR", "OH", "ZF", "ZR", "ZH")) # force the ordering of the conditions
@@ -400,7 +400,8 @@ dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundan
   scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
   theme(legend.direction="horizontal", legend.position = "bottom") + 
   guides(fill = guide_legend(nrow = 1)) +
-  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+  theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
+  theme(text = element_text(size=10))
 dummy
 b <- get_legend(dummy)
 fig3a <- plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
@@ -438,7 +439,7 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
   theme_void() +
   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
 b
-shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='lr')
+shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 shannon
 
 #Figure 3E:Phylum forest plotting testing
@@ -565,8 +566,8 @@ bc_plot <- ggplot(bc_across, aes(x=group1, y=bcdist)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=bc_model, inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=bc_model, inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
-  ylim(0,1) +
-  stat_pvalue_manual(bc_sig_toNF %>% filter(p.adj <= 0.05), y.position=c(1, .9, .7, .8), 
+  ylim(0,0.75) +
+  stat_pvalue_manual(bc_sig_toNF %>% filter(p.adj <= 0.05), y.position=c(0.75, .65, .55, .65), 
                       tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bray-Curtis Dissimilarity") + 
@@ -616,15 +617,22 @@ richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", a
 richness
 
 #Plot Figure 3!
-a <- plot_grid(fig3a,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"), align = "v")
+# a <- plot_grid(fig3a,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"), align = "v")
+# a
+# b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3, scale=0.9, rel_widths=c(0.7, 0.6,1.1),labels=c("c","d","e"), align="v", axis="t")
+# b
+# three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
+# three
+
+a <- plot_grid(fig3a,pdiff,nrow=1,ncol=2,scale=0.96,rel_widths=c(1.5, 1.1),labels=c("a","b"), align = "v")
 a
-b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3, scale=0.9, rel_widths=c(0.7, 0.6,1.1),labels=c("c","d","e"), align="v", axis="t")
+b <- plot_grid(shannon, richness,bc_full,nrow=1,ncol=3, scale=0.9, rel_widths=c(1, 1,1),labels=c("c","d","e"), align="v", axis="tb")
 b
 three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
 three
 
-ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=9, w=16)
-ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=9, w=16)
+ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=9, w=17)
+ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=9, w=17)
 
 ##### GENUS HEATMAP #####
 genus_sig <- read.csv(here("QSU_Data/genus_significance.csv"), header=TRUE)
@@ -933,7 +941,7 @@ bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=bc_model, inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=bc_model, inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
-  ylim(0,1) +
+  ylim(0,0.75) +
   stat_pvalue_manual(bc_sig %>% filter(p.adj <= 0.05), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -981,7 +989,7 @@ bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=bc_model, inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=bc_model, inherit.aes=FALSE, aes(x=Condition, y=estimate), size=2.5) +
-  ylim(0,1) +
+  ylim(0,0.75) +
   stat_pvalue_manual(bc_sig %>% filter(p.adj <= 0.05), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 

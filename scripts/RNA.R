@@ -150,7 +150,8 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
   ylim(-0.05, 0.05) +
   theme_void() + 
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))+ 
+  theme(text = element_text(size=10))
 b
 
 stackedbargenus <- plot_grid(r,b, nrow=2, ncol=1, rel_heights=c(1, 0.1), align="v", axis='lr')
@@ -189,7 +190,7 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
   theme_void() +
   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
 b
-shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='l')
+shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 shannon
 
 ggsave(here("QSU_Data/Fig4B_Shannon.jpeg"), dpi=300, width=5, h=5)
@@ -628,7 +629,8 @@ dummy <- ggplot(bracken_pheno %>% filter(Condition != "OH"), aes(x=reorder(Sampl
   scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
   theme(legend.direction="horizontal", legend.position = "bottom") + 
   guides(fill = guide_legend(nrow = 1)) +
-  theme(plot.margin = unit(c(0,0,0,0), "cm"))
+  theme(plot.margin = unit(c(0,0,0,0), "cm"))+ 
+  theme(text = element_text(size=10))
 dummy
 b <- get_legend(dummy)
 stacked_bar <- plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
@@ -637,12 +639,18 @@ ggsave(here("QSU_Data/Supplement_RNA_stackedbar.pdf"), dpi=300, h=6, w=15)
 ggsave(here("QSU_Data/Supplement_RNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
 
 #Plot Figure 4
-a <- plot_grid(stacked_bar,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"), align = "v")
+# a <- plot_grid(stacked_bar,shannon,nrow=1,ncol=2,scale=0.9,rel_widths=c(1, 0.3),labels=c("a","b"), align = "v")
+# a
+# b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3, scale=0.9, rel_widths=c(0.7, 0.6,1.1),labels=c("c","d","e"), align="v", axis="t")
+# b
+# three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
+# three
+a <- plot_grid(stacked_bar,pdiff,nrow=1,ncol=2,scale=0.95,rel_widths=c(1.5,1.1),labels=c("a","b"), align = "v")
 a
-b <- plot_grid(richness,bc_full,pdiff,nrow=1,ncol=3, scale=0.9, rel_widths=c(0.7, 0.6,1.1),labels=c("c","d","e"), align="v", axis="t")
+b <- plot_grid(shannon,richness,bc_full,nrow=1,ncol=3, scale=0.9, rel_widths=c(1,1,1),labels=c("c","d","e"), align="v", axis="t")
 b
 three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
 three
 
-ggsave(here("QSU_Data/Figure4.pdf"), dpi=300, h=9, w=16)
-ggsave(here("QSU_Data/Figure4.jpeg"), dpi=300, h=9, w=16)
+ggsave(here("QSU_Data/Figure4.pdf"), dpi=300, h=9, w=17)
+ggsave(here("QSU_Data/Figure4.jpeg"), dpi=300, h=9, w=17)
