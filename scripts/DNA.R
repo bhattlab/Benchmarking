@@ -442,6 +442,39 @@ b
 shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 shannon
 
+
+#inverse simpson 
+simpson <- ggplot(raw , aes(Sample_Type, Inv.Simpson)) + 
+  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
+  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
+  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=2) + 
+  scale_color_manual(values=condition_palette) +
+  scale_x_discrete(labels=condition_labels) +
+  geom_errorbar(data=model %>% filter(feature == "Inv Simpson"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Inv Simpson"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
+  ylim(0,20) +
+  stat_pvalue_manual(sig %>% filter(feature == "Inv Simpson") %>% filter(p.adj <= 0.05), y.position=c(19, 20, 18,19), 
+                      tip.length=0, label = "p.signif") +
+  theme_bw() + 
+  ylab("Inverse Simpson Index") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+simpson
+
+#Legend formatting
+b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  ylim(-0.1, 0.1) +
+  theme_void() +
+  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+b
+simpsonplot <- plot_grid(simpson,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
+simpsonplot
+
+ggsave(here("QSU_Data/InverseSimpson.pdf"), width=6, h=6, dpi=300)
+ggsave(here("QSU_Data/InverseSimpson.jpeg"), width=6, h=6, dpi=300)
+
+
 #Figure 3E:Phylum forest plotting testing
 
 raw <- mutate(raw, PlotOrder=ifelse(Sample_Type == "NF", 1, 
@@ -530,14 +563,30 @@ fungi <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..F
   xlab("Fungi") + 
   ylim(0,0.5) +
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
+        legend.position = "none", 
+        text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
         axis.ticks.y = element_blank(), axis.text.y = element_blank())
 
 fungi
 
 pdiff <- plot_grid(bact, firm, act, vir, fungi, nrow=1, ncol=5, rel_widths = c(1.3, 1, 1, 1.1, 1))
 pdiff
-ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=4)
+
+
+dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
+  geom_point(stat="identity", aes(color=Condition)) + 
+  theme_bw() + 
+  scale_color_manual(values=condition_palette, labels=condition_labels2) + 
+  theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
+  theme(text = element_text(size=12)) 
+dummy
+b <- get_legend(dummy)
+
+pdiff_all <- plot_grid(pdiff, b, nrow=1, ncol=2, rel_widths = c(1, 0.24))
+pdiff_all
+ggsave(here("QSU_Data/PhylumEnrichmentDraft.pdf"), dpi=300, h=3.2, w=10)
+ggsave(here("QSU_Data/PhylumEnrichmentDraft.jpeg"), dpi=300, h=3.2, w=10)
+
 
 #Figure 3D: Metagenomic Bray Curtis #
 bc_raw <- read.csv(here("QSU_Data/raw_data_all_braycurtis.csv"), header=TRUE)
@@ -624,15 +673,15 @@ richness
 # three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
 # three
 
-a <- plot_grid(fig3a,pdiff,nrow=1,ncol=2,scale=0.96,rel_widths=c(1.5, 1.1),labels=c("a","b"), align = "v")
+a <- plot_grid(fig3a,nrow=1,ncol=1,scale=0.96,labels=c("a"))
 a
-b <- plot_grid(shannon, richness,bc_full,nrow=1,ncol=3, scale=0.9, rel_widths=c(1, 1,1),labels=c("c","d","e"), align="v", axis="tb")
+b <- plot_grid(shannon, richness,bc_full,nrow=1,ncol=3, scale=0.9, rel_widths=c(1, 1,1),labels=c("b","c","d"), align="v", axis="tb")
 b
-three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1, 1), align="h", axis="lr")
+three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1.6, 1), align="h", axis="lr")
 three
 
-ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=9, w=17)
-ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=9, w=17)
+ggsave(here("QSU_Data/Figure3.pdf"), dpi=300, h=11, w=17)
+ggsave(here("QSU_Data/Figure3.jpeg"), dpi=300, h=11, w=17)
 
 ##### GENUS HEATMAP #####
 genus_sig <- read.csv(here("QSU_Data/genus_significance.csv"), header=TRUE)
