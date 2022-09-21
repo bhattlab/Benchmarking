@@ -911,7 +911,7 @@ ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.pdf"), dpi=300, w=17, h=6)
 ggsave(here("QSU_Data/Figure3_heatmap_phylumlabels.jpeg"), dpi=300, w=17, h=6)
 
 
-##### SUPPLEMENT
+##### SUPPLEMENT #####
 # DNA BC
 bc_raw <- read.csv(here("QSU_Data/raw_data_all_braycurtis.csv"), header=TRUE)
 bc_raw <- bc_raw %>% mutate(UniqueComparison = ifelse(Protocol_1 > Protocol_2, paste(Patient, Protocol_1, Protocol_2, sep="_"), paste(Patient, Protocol_2, Protocol_1, sep="_")))
@@ -1013,4 +1013,111 @@ bc_full_rna
 plot_grid(bc_full_dna, bc_full_rna, nrow=1, ncol=2, scale=0.9, labels=c("a", "b"))
 ggsave(here("QSU_Data/Supplement_BC.jpg"), dpi=300, w=12, h=5)
 ggsave(here("QSU_Data/Supplement_BC.pdf"), dpi=300, w=12, h=5)
+
+#Actino Absolute Abundance
+#Figure2B: Changing Absolute count of Bacteroidetes and Firmicutes across conditions
+abs<- raw[c("Sample_Type","Absolute.Abundance..Actinobacteria")]
+meltabs <- melt(abs, id.vars = "Sample_Type", variable.name = "Phyla", value.name = "MicrobesPerGram")
+amodel <- filter(model, feature%in%c("Absolute Abundance: Actinobacteria"))
+asig <- filter(sig, feature%in%c("Absolute Abundance: Actinobacteria"))
+
+#Plot Order
+amodel <- mutate(amodel, PlotOrder=ifelse(Sample_Type == "NF", 1, 
+                                            ifelse(Sample_Type == "OF", 2, 
+                                                   ifelse(Sample_Type == "OR", 3, 
+                                                          ifelse(Sample_Type == "OH", 4, 
+                                                                 ifelse(Sample_Type == "ZF", 5,
+                                                                        ifelse(Sample_Type == "ZR", 6, 7)))))))
+
+#Plot Actinobacteria Absolute Abundance by Condition
+amodel$feature <- gsub("Absolute Abundance: Actinobacteria","Actinobacteria",amodel$feature)
+
+#Plot Actinobacteria NFvOF
+nfof <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="OF"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette, guide="none") +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=amodel%>%filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=1))+
+  geom_point(data=amodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits = c(5e10, 2e11)) +
+  theme_bw() + 
+  ylab("OMNIgene\n\nMicrobes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
+        axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  ggtitle("Preservative Effect")
+
+nfof
+
+#Plot Actiobacteria OFvORvOH
+omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette, guide="none") +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=amodel%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=1))+
+  geom_point(data=amodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits = c(5e10, 2e11)) +
+  theme_bw() + 
+  ylab("Microbes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
+        axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+  ggtitle("Temperature Effect")
+
+omni
+
+o <- plot_grid(nfof, omni, nrow=1, ncol=2, align="h", rel_widths = c(0.8,1))
+o
+
+#Plot Actinobacteria NFvZF
+nfzf <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="ZF"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette, guide="none") +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=amodel%>%filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=1))+
+  geom_point(data=amodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits = c(2e9,7e10)) +
+  theme_bw() + 
+  ylab("Zymo\n\nMicrobes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
+        axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+nfzf
+
+#Plot Actinobacteria ZFvZRvZH
+zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
+  scale_color_manual(values=condition_palette, guide="none") +
+  scale_x_discrete(labels=condition_labels) +
+  geom_line(data=amodel%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=1))+
+  geom_point(data=amodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, fill=feature, color=Sample_Type), size=2.5, show.legend = FALSE) +
+  scale_y_log10(limits = c(2e9,7e10)) +
+  theme_bw() + 
+  ylab("Microbes per Gram") + 
+  theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
+        axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(), axis.ticks.y=element_blank())
+
+zymo
+
+z <- plot_grid(nfzf, zymo, nrow=1, ncol=2, align="h", rel_widths = c(0.8,1))
+z
+
+oz <- plot_grid(o, z, nrow=2, ncol=1, align="v")
+oz
+
+#Make legend
+line <- c("solid")
+names(line) <- c("Actinobacteria")
+l <- ggplot(amodel, aes(x=prediction, y=CI_low, linetype=feature)) +
+  geom_line()+
+  scale_linetype_manual(values=line)+
+  theme_bw()+
+  theme(legend.title = element_blank(),legend.direction="horizontal", legend.position = "bottom")
+l
+
+le <- get_legend(l)
+
+asupp <- plot_grid(oz, le, nrow=2, ncol=1, rel_heights=c(1, 0.1))
+asupp
+ggsave(here("QSU_Data/Supplement_ActinoAbs.jpeg"), dpi=300, w=8, h=5)
 
