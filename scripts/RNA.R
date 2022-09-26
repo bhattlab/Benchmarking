@@ -20,9 +20,14 @@ condition_labels <- c("40°C","23°C","-80°C","-80°C","-80°C","23°C","40°C"
 names(condition_labels) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
 # read in the QSU data as three separate dataframes 
-raw <- read.csv(here("QSU_Data/raw_data_rna_all.csv"), header=TRUE) # raw per sample information
-model <- read.csv(here("QSU_Data/raw_data_rna_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
-sig <- read.csv(here("QSU_Data/raw_data_rna_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+# raw <- read.csv(here("QSU_Data/raw_data_rna_all.csv"), header=TRUE) # raw per sample information
+# model <- read.csv(here("QSU_Data/raw_data_rna_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
+# sig <- read.csv(here("QSU_Data/raw_data_rna_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+
+raw <- read.csv(here("QSU_Data/raw_data_rna_full.csv"), header=TRUE) # raw per sample information
+model <- read.csv(here("QSU_Data/model_data_rna_full.csv"), header=TRUE) # means and confidence intervals for all conditions
+sig <- read.csv(here("QSU_Data/sig_data_rna_full.tsv"), sep="\t", header=TRUE) # p-values and percent enrichment/depletion for all tests
+
 
 # format and edit dataframes 
 sig <- sig %>% mutate(y.position=15) # significance table requires a column called y.position for plotting - 15 is a dummy value
@@ -191,14 +196,26 @@ se <- ggplot(raw , aes(Sample_Type, Shannon)) +
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 se
 
-#Legend formatting
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
-  ylim(-0.1, 0.1) +
-  theme_void() +
-  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
-b
-shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
+# #Legend formatting
+# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
+#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+#   ylim(-0.1, 0.1) +
+#   theme_void() +
+#   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+# b
+
+foodf <- data.frame(xvals = c(0.3, 2, 4.6), labels=c("None", "OMNIgene", "Zymo"))
+
+test <- ggplot(foodf, aes(x=xvals, y=0)) + 
+  geom_text(aes(y=0, label=labels), fontface = "bold") + 
+  ylim(-0.5, 0.5) +
+  xlim(0,6) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
+  theme_void()
+test
+
+
+shannon <- plot_grid(se,test, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 shannon
 
 
@@ -221,14 +238,24 @@ p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 
 p
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
-  ylim(-0.5, 0.5) +
-  theme_void() + 
-  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
-b
+# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
+#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+#   ylim(-0.5, 0.5) +
+#   theme_void() + 
+#   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
+# b
 
-richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
+foodf <- data.frame(xvals = c(0.3, 2, 4.6), labels=c("None", "OMNIgene", "Zymo"))
+
+test <- ggplot(foodf, aes(x=xvals, y=0)) + 
+  geom_text(aes(y=0, label=labels), fontface = "bold") + 
+  ylim(-0.5, 0.5) +
+  xlim(0,6) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
+  theme_void()
+test
+
+richness <- plot_grid(p,test, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
 richness
 
 
@@ -363,14 +390,24 @@ bc_plot <- ggplot(bc_across, aes(x=group1, y=bcdist)) +
         legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
 bc_plot
 
-#Legend formatting
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") %>% filter(Sample_Type != "NF"), aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
-  ylim(-0.05, 0.05) +
-  theme_void() +
-  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
-b
-bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='lr')
+# #Legend formatting
+# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") %>% filter(Sample_Type != "NF"), aes(x=Sample_Type, y=0)) +
+#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+#   ylim(-0.05, 0.05) +
+#   theme_void() +
+#   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+# b
+
+foodf <- data.frame(xvals = c(1, 4.3), labels=c("OMNIgene", "Zymo"))
+
+test <- ggplot(foodf, aes(x=xvals, y=0)) + 
+  geom_text(aes(y=0, label=labels), fontface = "bold") + 
+  ylim(-0.5, 0.5) +
+  xlim(0,6) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
+  theme_void()
+test
+bc_full <- plot_grid(bc_plot,test, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='lr')
 bc_full
 
 #Plot Figure 4
@@ -387,8 +424,8 @@ ggsave(here("outputs/figures/Figure4.jpeg"), dpi=300, h=9, w=17)
 
 
 ### HEATMAP ####
-
-genus_sig <- read.csv(here("QSU_Data/sig_data_rna_full.tsv"), sep="\t", header=TRUE)
+genus_sig <- sig
+#genus_sig <- read.csv(here("QSU_Data/sig_data_rna_full.tsv"), sep="\t", header=TRUE)
 genus_sig <- genus_sig %>% mutate(PercentFormatted = as.numeric(gsub("%.*", "", percentchange)))
 genus_sig <- genus_sig %>% mutate(PFormatted = as.numeric(ifelse(p == "< 0.001", "0.001", p)))
 genus_sig <- genus_sig %>% filter(grepl(":", feature)) %>% filter(!grepl("Absolute ", feature)) %>% 
@@ -402,8 +439,10 @@ genus_sig <- genus_sig %>% mutate(y.position = ifelse(Condition == "OF", 2,
                                                              ifelse(Condition=="OR", 3, 
                                                                     ifelse(Condition == "ZR", 2, 1)))))
 
-raw_abundance <- read.csv(here("QSU_Data/model_data_rna_full.csv"), header=TRUE)
+raw_abundance <- model
+#raw_abundance <- read.csv(here("QSU_Data/model_data_rna_full.csv"), header=TRUE)
 raw_abundance <- raw_abundance %>% mutate(Condition=Sample_Type)
+raw_abundance <- raw_abundance %>% mutate(prediction = Mean)
 raw_abundance <- raw_abundance %>% filter(Condition == "NF") %>% select(feature, prediction)
 names(raw_abundance) <- c("feature", "NFMean")
 raw_abundance <- raw_abundance %>% filter(grepl(":", feature)) %>% filter(!grepl("Absolute ", feature)) %>% 

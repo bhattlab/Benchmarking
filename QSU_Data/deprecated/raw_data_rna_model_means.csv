@@ -1,0 +1,152 @@
+﻿feature,Sample_Type,prediction,CI_low,CI_high
+Relative Abundance: Firmicutes,NF,0.439773628,0.345834519,0.559229437
+Relative Abundance: Firmicutes,OF,0.33470939,0.26859593,0.417096326
+Relative Abundance: Firmicutes,OR,0.269450156,0.198213127,0.366289497
+Relative Abundance: Firmicutes,ZF,0.347926142,0.275015487,0.440166484
+Relative Abundance: Firmicutes,ZR,0.264923555,0.205625435,0.341322025
+Relative Abundance: Firmicutes,ZH,0.144320844,0.105296757,0.197807668
+Relative Abundance: Bacteroidetes,NF,0.139275023,0.107488218,0.180461937
+Relative Abundance: Bacteroidetes,OF,0.27421246,0.217793481,0.345246667
+Relative Abundance: Bacteroidetes,OR,0.223985111,0.145750594,0.344213553
+Relative Abundance: Bacteroidetes,ZF,0.27801428,0.205484024,0.376145739
+Relative Abundance: Bacteroidetes,ZR,0.320314213,0.243049642,0.422140902
+Relative Abundance: Bacteroidetes,ZH,0.566862446,0.4712353,0.681895079
+Relative Abundance: Actinobacteria,NF,0.024934309,0.014165135,0.043890848
+Relative Abundance: Actinobacteria,OF,0.019272748,0.011216037,0.03311676
+Relative Abundance: Actinobacteria,OR,0.047906422,0.030363274,0.075585565
+Relative Abundance: Actinobacteria,ZF,0.013141803,0.007723788,0.0223604
+Relative Abundance: Actinobacteria,ZR,0.012016176,0.007140089,0.020222223
+Relative Abundance: Actinobacteria,ZH,0.00609877,0.00443576,0.008385259
+Relative Abundance: Other Bacteria,NF,0.035748769,0.026004552,0.04914426
+Relative Abundance: Other Bacteria,OF,0.05914229,0.037054719,0.094395815
+Relative Abundance: Other Bacteria,OR,0.068568418,0.051829995,0.090712491
+Relative Abundance: Other Bacteria,ZF,0.050762242,0.03079994,0.08366267
+Relative Abundance: Other Bacteria,ZR,0.063479099,0.037434019,0.107645297
+Relative Abundance: Other Bacteria,ZH,0.085554424,0.057105293,0.128176552
+Relative Abundance: Viruses,NF,0.016645529,0.00301264,0.091970362
+Relative Abundance: Viruses,OF,0.00936994,0.001472402,0.059627581
+Relative Abundance: Viruses,OR,0.02454197,0.005763765,0.104499117
+Relative Abundance: Viruses,ZF,0.005028425,0.000985649,0.025653214
+Relative Abundance: Viruses,ZR,0.006620439,0.001321009,0.033179336
+Relative Abundance: Viruses,ZH,0.005936048,0.001740709,0.020242713
+Relative Abundance: Fungi,NF,0.003929738,0.002600788,0.005937755
+Relative Abundance: Fungi,OF,0.002790052,0.001707038,0.004560174
+Relative Abundance: Fungi,OR,0.017275678,0.011829356,0.025229527
+Relative Abundance: Fungi,ZF,0.001732104,0.000908615,0.003301933
+Relative Abundance: Fungi,ZR,0.001944802,0.001022377,0.003699472
+Relative Abundance: Fungi,ZH,0.005720166,0.003858349,0.008480389
+Relative Abundance: Unclassified + Root,NF,0.090154972,0.069066459,0.11768258
+Relative Abundance: Unclassified + Root,OF,0.085294379,0.059572483,0.122122342
+Relative Abundance: Unclassified + Root,OR,0.094135659,0.066022126,0.134220493
+Relative Abundance: Unclassified + Root,ZF,0.099232334,0.059109538,0.166589968
+Relative Abundance: Unclassified + Root,ZR,0.097082898,0.058030668,0.162415657
+Relative Abundance: Unclassified + Root,ZH,0.065571379,0.043160901,0.09961807
+Relative Abundance: Unclassified,NF,0.088752722,0.067802215,0.116176819
+Relative Abundance: Unclassified,OF,0.084024812,0.058459357,0.120770556
+Relative Abundance: Unclassified,OR,0.091124211,0.063694687,0.130366003
+Relative Abundance: Unclassified,ZF,0.098296288,0.058426292,0.165373497
+Relative Abundance: Unclassified,ZR,0.096052576,0.057284847,0.161056506
+Relative Abundance: Unclassified,ZH,0.063560176,0.04159603,0.097122154
+Ratio of Bacteroidetes to Firmicutes,NF,0.305399,0.101669,0.237138
+Ratio of Bacteroidetes to Firmicutes,OF,0.751427,0.099595,0.545488
+Ratio of Bacteroidetes to Firmicutes,OR,0.728096,0.135064,0.477838
+Ratio of Bacteroidetes to Firmicutes,ZF,0.72866,0.094324,0.539336
+Ratio of Bacteroidetes to Firmicutes,ZR,1.081731,0.060924,0.855782
+Ratio of Bacteroidetes to Firmicutes,ZH,3.29747,0.041596,2.415665
+Richness 0.01%,NF,110.0733252,91.54070515,132.3579155
+Richness 0.01%,OF,101.6264215,86.09918078,119.9538655
+Richness 0.01%,OR,172.7085727,139.5344011,213.769872
+Richness 0.01%,ZF,99.00549076,77.03341795,127.2446097
+Richness 0.01%,ZR,96.70837806,74.5248208,125.4952415
+Richness 0.01%,ZH,97.96318238,80.69793745,118.9223096
+Richness 0.001%,NF,420.8253539,337.4732423,524.7645036
+Richness 0.001%,OF,352.0543419,284.4820277,435.6769412
+Richness 0.001%,OR,679.1116191,558.0587336,826.4230329
+Richness 0.001%,ZF,334.1761684,255.4263907,437.2050642
+Richness 0.001%,ZR,323.8157024,245.6025481,426.9361613
+Richness 0.001%,ZH,358.8570013,296.2328463,434.7200149
+Richness 0.0001%,NF,1291.84922,1128.930535,1478.279094
+Richness 0.0001%,OF,1120.612549,961.4217738,1306.161894
+Richness 0.0001%,OR,1326.715032,1180.828785,1490.624889
+Richness 0.0001%,ZF,1074.770949,911.5007266,1267.28653
+Richness 0.0001%,ZR,1018.329047,852.8791955,1215.874479
+Richness 0.0001%,ZH,1097.188047,1004.504053,1198.423846
+Richness 0.00001%,NF,1962.981656,1791.07508,2151.387747
+Richness 0.00001%,OF,2082.345378,1893.671961,2289.817013
+Richness 0.00001%,OR,1530.036332,1378.986328,1697.631897
+Richness 0.00001%,ZF,2225.65705,2095.684387,2363.690512
+Richness 0.00001%,ZR,2116.69054,1974.228138,2269.43318
+Richness 0.00001%,ZH,1814.50666,1704.655857,1931.436428
+Richness Any%,NF,2042.488171,1839.832001,2267.466771
+Richness Any%,OF,2236.289017,2026.027768,2468.371187
+Richness Any%,OR,1519.381538,1367.454022,1688.188575
+Richness Any%,ZF,2440.07613,2338.781333,2545.7581
+Richness Any%,ZR,2357.334831,2211.039023,2513.31046
+Richness Any%,ZH,1850.114445,1751.892981,1953.842784
+Shannon Entropy,NF,2.559850718,2.199966513,2.97860702
+Shannon Entropy,OF,2.522565577,2.29866674,2.768273007
+Shannon Entropy,OR,2.79142642,2.447021364,3.184304629
+Shannon Entropy,ZF,2.585173684,2.350725606,2.843004286
+Shannon Entropy,ZR,2.391987681,2.123545302,2.694364494
+Shannon Entropy,ZH,1.813272722,1.403142028,2.343282361
+Inv Simpson,NF,6.662657106,4.783617422,9.279797232
+Inv Simpson,OF,6.173409912,5.032022989,7.57369154
+Inv Simpson,OR,6.407418527,4.821368083,8.515220466
+Inv Simpson,ZF,6.35679211,5.000838908,8.080405442
+Inv Simpson,ZR,5.157006517,4.018366816,6.618289825
+Inv Simpson,ZH,3.30867237,2.385861447,4.588410976
+RNAConcentration,NF,152.0435582,118.2227373,195.5397424
+RNAConcentration,OF,21.70770812,12.69193069,37.12788885
+RNAConcentration,OR,10.90853541,8.169215058,14.56641108
+RNAConcentration,ZF,8.344440466,6.404683795,10.87168218
+RNAConcentration,ZR,7.895840272,6.459130969,9.652117893
+RNAConcentration,ZH,21.85763131,16.15251548,29.57781077
+Actinobacteria: Cutibacterium,NF,0.000135,NA,NA
+Actinobacteria: Corynebacterium,NF,0.000285,NA,NA
+Actinobacteria: Enterorhabdus,NF,0.000473,NA,NA
+Actinobacteria: Eggerthella,NF,0.00106,NA,NA
+Actinobacteria: Bifidobacterium,NF,0.006396,NA,NA
+Actinobacteria: Collinsella,NF,0.003552,NA,NA
+Bacteroidetes: unclassified Rikenellaceae,NF,0.000395,NA,NA
+Bacteroidetes: Odoribacter,NF,0.000555,NA,NA
+Bacteroidetes: Parabacteroides,NF,0.002598,NA,NA
+Bacteroidetes: Prevotella,NF,0.000519,NA,NA
+Bacteroidetes: Alistipes,NF,0.041704,NA,NA
+Bacteroidetes: Bacteroides,NF,0.063423,NA,NA
+Basidiomycota: Malassezia,NF,0.000668,NA,NA
+Firmicutes: Staphylococcus,NF,0.000164,NA,NA
+Firmicutes: Weissella,NF,0.00012,NA,NA
+Firmicutes: Lachnospiraceae: environmental sam...,NF,0.000978,NA,NA
+Firmicutes: unclassified Clostridiaceae,NF,0.001108,NA,NA
+Firmicutes: Streptococcus,NF,0.000991,NA,NA
+Firmicutes: Dorea,NF,0.001624,NA,NA
+Firmicutes: Lachnoclostridium,NF,0.001624,NA,NA
+Firmicutes: Anaerotruncus,NF,0.00134,NA,NA
+Firmicutes: Intestinimonas,NF,0.001447,NA,NA
+Firmicutes: Blautia,NF,0.003386,NA,NA
+Firmicutes: Subdoligranulum,NF,0.004119,NA,NA
+Firmicutes: Eubacterium,NF,0.004399,NA,NA
+Firmicutes: unclassified Firmicutes sensu stri...,NF,0.003293,NA,NA
+Firmicutes: unclassified Lachnospiraceae,NF,0.00537,NA,NA
+Firmicutes: Coprococcus,NF,0.005467,NA,NA
+Firmicutes: Gemmiger,NF,0.004675,NA,NA
+Firmicutes: unclassified Oscillospiraceae,NF,0.003164,NA,NA
+Firmicutes: Flavonifractor,NF,0.006324,NA,NA
+Firmicutes: Clostridiales: environmental samples,NF,0.007285,NA,NA
+Firmicutes: Butyricicoccus,NF,0.008907,NA,NA
+Firmicutes: Ruminococcus,NF,0.015973,NA,NA
+Firmicutes: Oscillibacter,NF,0.021786,NA,NA
+Firmicutes: Clostridium,NF,0.020535,NA,NA
+Firmicutes: Roseburia,NF,0.011958,NA,NA
+Firmicutes: Firmicutes: environmental samples,NF,0.024236,NA,NA
+Firmicutes: unclassified Ruminococcaceae,NF,0.02936,NA,NA
+Firmicutes: unclassified Clostridiales (miscel...,NF,0.043516,NA,NA
+Firmicutes: Faecalibacterium,NF,0.083801,NA,NA
+Proteobacteria: Sphingomonas,NF,0.000158,NA,NA
+Proteobacteria: Methylobacterium,NF,0.000148,NA,NA
+Proteobacteria: Pelomonas,NF,0.000238,NA,NA
+Proteobacteria: Pseudomonas,NF,0.000547,NA,NA
+Proteobacteria: Bilophila,NF,0.001808,NA,NA
+Proteobacteria: Sutterella,NF,0.000886,NA,NA
+null: Viruses: environmental samples,NF,0.00088,NA,NA
+null: Tobamovirus,NF,0.007675,NA,NA

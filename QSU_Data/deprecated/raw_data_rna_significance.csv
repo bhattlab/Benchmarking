@@ -1,0 +1,331 @@
+﻿feature,group1,group2,percentchange,p,p.adj,p.format,p.signif,method
+Relative Abundance: Firmicutes,NF,OF,"-23.9% [-36.7%, -8.4%] **",0.004,0.004,0.004,**,NA
+Relative Abundance: Bacteroidetes,NF,OF,"96.9% [47.6%, 162.6%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Actinobacteria,NF,OF,"-22.7% [-41.4%, 1.9%]",0.067,0.067,0.067,,NA
+Relative Abundance: Other Bacteria,NF,OF,"65.4% [15.9%, 136.1%] **",0.006,0.006,0.006,**,NA
+Relative Abundance: Viruses,NF,OF,"-43.7% [-65.9%, -7.1%] *",0.025,0.025,0.025,*,NA
+Relative Abundance: Fungi,NF,OF,"-29.0% [-51.1%, 3.1%]",0.072,0.072,0.072,,NA
+Relative Abundance: Unclassified + Root,NF,OF,"-5.4% [-18.9%, 10.4%]",0.48,0.48,0.48,,NA
+Relative Abundance: Unclassified,NF,OF,"-5.3% [-18.8%, 10.4%]",0.485,0.485,0.485,,NA
+Ratio of Bacteroidetes to Firmicutes,NF,OF,0,< 0.001,0.001,0.001,***,NA
+Richness 0.01%,NF,OF,"-7.7% [-17.4%, 3.2%]",0.159,0.159,0.159,,NA
+Richness 0.001%,NF,OF,"-16.3% [-27.2%, -3.8%] *",0.012,0.012,0.012,*,NA
+Richness 0.0001%,NF,OF,"-13.3% [-20.4%, -5.5%] ***",0.001,0.001,0.001,***,NA
+Richness 0.00001%,NF,OF,"6.1% [-0.5%, 13.1%]",0.071,0.071,0.071,,NA
+Richness Any%,NF,OF,"9.5% [1.0%, 18.6%] *",0.027,0.027,0.027,*,NA
+Shannon Entropy,NF,OF,"-1.5% [-13.0%, 11.6%]",0.817,0.817,0.817,,NA
+Inv Simpson,NF,OF,"-7.3% [-30.3%, 23.2%]",0.599,0.599,0.599,,NA
+Relative Abundance: Firmicutes,NF,ZF,"-20.9% [-33.6%, -5.8%] **",0.009,0.009,0.009,**,NA
+Relative Abundance: Bacteroidetes,NF,ZF,"99.6% [39.0%, 186.6%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Actinobacteria,NF,ZF,"-47.3% [-64.6%, -21.6%] **",0.002,0.002,0.002,**,NA
+Relative Abundance: Other Bacteria,NF,ZF,"42.0% [-10.5%, 125.2%]",0.136,0.136,0.136,,NA
+Relative Abundance: Viruses,NF,ZF,"-69.8% [-86.0%, -34.8%] **",0.002,0.002,0.002,**,NA
+Relative Abundance: Fungi,NF,ZF,"-55.9% [-78.6%, -9.3%] *",0.026,0.026,0.026,*,NA
+Relative Abundance: Unclassified + Root,NF,ZF,"10.1% [-19.4%, 50.2%]",0.546,0.546,0.546,,NA
+Relative Abundance: Unclassified,NF,ZF,"10.8% [-18.7%, 50.8%]",0.517,0.517,0.517,,NA
+Ratio of Bacteroidetes to Firmicutes,NF,ZF,0,< 0.001,0.001,0.001,***,NA
+Richness 0.01%,NF,ZF,"-10.1% [-29.0%, 14.0%]",0.38,0.38,0.38,,NA
+Richness 0.001%,NF,ZF,"-20.6% [-37.0%, 0.1%]",0.051,0.051,0.051,,NA
+Richness 0.0001%,NF,ZF,"-16.8% [-24.8%, -8.0%] ***",< 0.001,0.001,0.001,***,NA
+Richness 0.00001%,NF,ZF,"13.4% [4.5%, 23.0%] **",0.003,0.003,0.003,**,NA
+Richness Any%,NF,ZF,"19.5% [8.6%, 31.4%] ***",< 0.001,0.001,0.001,***,NA
+Shannon Entropy,NF,ZF,"1.0% [-10.1%, 13.4%]",0.868,0.868,0.868,,NA
+Inv Simpson,NF,ZF,"-4.6% [-27.8%, 26.1%]",0.741,0.741,0.741,,NA
+Relative Abundance: Firmicutes,OF,OR,"-19.5% [-38.1%, 4.6%]",0.105,0.105,0.105,,NA
+Relative Abundance: Bacteroidetes,OF,OR,"-18.3% [-39.0%, 9.4%]",0.175,0.175,0.175,,NA
+Relative Abundance: Actinobacteria,OF,OR,"148.6% [67.5%, 268.9%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Other Bacteria,OF,OR,"15.9% [-28.6%, 88.2%]",0.55,0.55,0.55,,NA
+Relative Abundance: Viruses,OF,OR,"161.9% [2.8%, 567.6%] *",0.044,0.044,0.044,*,NA
+Relative Abundance: Fungi,OF,OR,"519.2% [240.1%, 1027.2%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Unclassified + Root,OF,OR,"10.4% [-6.3%, 30.0%]",0.238,0.238,0.238,,NA
+Relative Abundance: Unclassified,OF,OR,"8.4% [-7.6%, 27.3%]",0.321,0.321,0.321,,NA
+Ratio of Bacteroidetes to Firmicutes,OF,OR,0,0.85,0.85,0.85,,NA
+Richness 0.01%,OF,OR,"69.9% [33.1%, 117.0%] ***",< 0.001,0.001,0.001,***,NA
+Richness 0.001%,OF,OR,"92.9% [57.2%, 136.7%] ***",< 0.001,0.001,0.001,***,NA
+Richness 0.0001%,OF,OR,"18.4% [4.4%, 34.3%] **",0.009,0.009,0.009,**,NA
+Richness 0.00001%,OF,OR,"-26.5% [-34.4%, -17.7%] ***",< 0.001,0.001,0.001,***,NA
+Richness Any%,OF,OR,"-32.1% [-40.2%, -22.8%] ***",< 0.001,0.001,0.001,***,NA
+Shannon Entropy,OF,OR,"10.7% [-1.6%, 24.4%]",0.09,0.09,0.09,,NA
+Inv Simpson,OF,OR,"3.8% [-22.0%, 38.1%]",0.799,0.799,0.799,,NA
+Relative Abundance: Firmicutes,ZF,ZR,"-23.9% [-36.9%, -8.2%] **",0.004,0.004,0.004,**,NA
+Relative Abundance: Bacteroidetes,ZF,ZR,"15.2% [-5.8%, 40.9%]",0.168,0.168,0.168,,NA
+Relative Abundance: Actinobacteria,ZF,ZR,"-8.6% [-31.4%, 21.8%]",0.541,0.541,0.541,,NA
+Relative Abundance: Other Bacteria,ZF,ZR,"25.1% [10.3%, 41.8%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Viruses,ZF,ZR,"31.7% [-7.8%, 88.0%]",0.13,0.13,0.13,,NA
+Relative Abundance: Fungi,ZF,ZR,"12.3% [3.2%, 22.1%] **",0.007,0.007,0.007,**,NA
+Relative Abundance: Unclassified + Root,ZF,ZR,"-2.2% [-9.7%, 6.0%]",0.593,0.593,0.593,,NA
+Relative Abundance: Unclassified,ZF,ZR,"-2.3% [-9.9%, 6.0%]",0.577,0.577,0.577,,NA
+Ratio of Bacteroidetes to Firmicutes,ZF,ZR,0,0.047,0.047,0.047,*,NA
+Richness 0.01%,ZF,ZR,"-2.3% [-10.1%, 6.1%]",0.578,0.578,0.578,,NA
+Richness 0.001%,ZF,ZR,"-3.1% [-11.3%, 5.8%]",0.485,0.485,0.485,,NA
+Richness 0.0001%,ZF,ZR,"-5.3% [-12.3%, 2.3%]",0.169,0.169,0.169,,NA
+Richness 0.00001%,ZF,ZR,"-4.9% [-9.2%, -0.4%] *",0.032,0.032,0.032,*,NA
+Richness Any%,ZF,ZR,"-3.4% [-7.7%, 1.2%]",0.141,0.141,0.141,,NA
+Shannon Entropy,ZF,ZR,"-7.5% [-14.4%, 0.0%]",0.051,0.051,0.051,,NA
+Inv Simpson,ZF,ZR,"-18.9% [-33.1%, -1.7%] *",0.033,0.033,0.033,*,NA
+Relative Abundance: Firmicutes,ZF,ZH,"-58.5% [-72.5%, -37.5%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Bacteroidetes,ZF,ZH,"103.9% [66.5%, 149.7%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Actinobacteria,ZF,ZH,"-53.6% [-75.9%, -10.7%] *",0.021,0.021,0.021,*,NA
+Relative Abundance: Other Bacteria,ZF,ZH,"68.5% [30.9%, 117.0%] ***",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Viruses,ZF,ZH,"18.0% [-29.9%, 98.9%]",< 0.001,0.001,0.001,***,NA
+Relative Abundance: Fungi,ZF,ZH,"230.2% [103.2%, 436.7%] ***",0,0,0,**,NA
+Relative Abundance: Unclassified + Root,ZF,ZH,"-33.9% [-49.4%, -13.6%] **",0.002,0.002,0.002,**,NA
+Relative Abundance: Unclassified,ZF,ZH,"-35.3% [-50.9%, -14.9%] **",0.002,0.002,0.002,**,NA
+Ratio of Bacteroidetes to Firmicutes,ZF,ZH,0,< 0.001,0.001,0.001,***,NA
+Richness 0.01%,ZF,ZH,"-1.1% [-18.0%, 19.4%]",0.912,0.912,0.912,,NA
+Richness 0.001%,ZF,ZH,"7.4% [-12.2%, 31.3%]",0.488,0.488,0.488,,NA
+Richness 0.0001%,ZF,ZH,"2.1% [-9.2%, 14.8%]",0.731,0.731,0.731,,NA
+Richness 0.00001%,ZF,ZH,"-18.5% [-22.2%, -14.5%] ***",< 0.001,0.001,0.001,***,NA
+Richness Any%,ZF,ZH,"-24.2% [-27.1%, -21.1%] ***",< 0.001,0.001,0.001,***,NA
+Shannon Entropy,ZF,ZH,"-29.9% [-44.7%, -11.1%] **",0.003,0.003,0.003,**,NA
+Inv Simpson,ZF,ZH,"-48.0% [-62.7%, -27.4%] ***",< 0.001,0.001,0.001,***,NA
+Actinobacteria: Cutibacterium,NF,OF,"-74.6% [-84.7%, -57.8%] *",0,0,0,*,NA
+Actinobacteria: Corynebacterium,NF,OF,"-54.4% [-65.4%, -40.0%] *",0,0,0,*,NA
+Actinobacteria: Enterorhabdus,NF,OF,"111.9% [41.5%, 217.3%] *",0,0,0,*,NA
+Actinobacteria: Eggerthella,NF,OF,"-32.6% [-52.6%, -4.1%] *",0,0,0,*,NA
+Actinobacteria: Bifidobacterium,NF,OF,"-50.9% [-68.1%, -24.2%] *",0,0,0,*,NA
+Actinobacteria: Collinsella,NF,OF,"-41.2% [-61.6%, -9.9%] *",0,0,0,*,NA
+Bacteroidetes: unclassified Rikenellaceae,NF,OF,"24.8% [-25.3%, 108.6%]",1,1,1,,NA
+Bacteroidetes: Odoribacter,NF,OF,"279.1% [171.6%, 429.1%] *",0,0,0,*,NA
+Bacteroidetes: Parabacteroides,NF,OF,"140.5% [42.4%, 306.1%] *",0,0,0,*,NA
+Bacteroidetes: Prevotella,NF,OF,"54.9% [18.0%, 103.3%] *",0,0,0,*,NA
+Bacteroidetes: Alistipes,NF,OF,"50.5% [-1.3%, 129.5%]",1,1,1,,NA
+Bacteroidetes: Bacteroides,NF,OF,"138.2% [76.8%, 220.8%] *",0,0,0,*,NA
+Basidiomycota: Malassezia,NF,OF,"-63.8% [-79.5%, -36.0%] *",0,0,0,*,NA
+Firmicutes: Staphylococcus,NF,OF,"-48.9% [-68.5%, -17.0%] *",0,0,0,*,NA
+Firmicutes: Weissella,NF,OF,"-57.6% [-72.8%, -33.8%] *",0,0,0,*,NA
+Firmicutes: Lachnospiraceae: environmental sam...,NF,OF,"-16.7% [-36.0%, 8.3%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiaceae,NF,OF,"-8.9% [-28.3%, 15.7%]",1,1,1,,NA
+Firmicutes: Streptococcus,NF,OF,"121.1% [55.5%, 214.4%] *",0,0,0,*,NA
+Firmicutes: Dorea,NF,OF,"0.0% [-39.2%, 64.5%]",1,1,1,,NA
+Firmicutes: Lachnoclostridium,NF,OF,"-26.1% [-43.1%, -4.0%] *",0,0,0,*,NA
+Firmicutes: Anaerotruncus,NF,OF,"-48.9% [-68.9%, -16.0%] *",0,0,0,*,NA
+Firmicutes: Intestinimonas,NF,OF,"-50.1% [-65.0%, -28.8%] *",0,0,0,*,NA
+Firmicutes: Blautia,NF,OF,"-11.2% [-31.5%, 15.2%]",1,1,1,,NA
+Firmicutes: Subdoligranulum,NF,OF,"-39.5% [-56.4%, -16.1%] *",0,0,0,*,NA
+Firmicutes: Eubacterium,NF,OF,"7.0% [-23.7%, 50.2%]",1,1,1,,NA
+Firmicutes: unclassified Firmicutes sensu stri...,NF,OF,"-24.6% [-48.3%, 9.8%]",1,1,1,,NA
+Firmicutes: unclassified Lachnospiraceae,NF,OF,"6.4% [-18.5%, 38.8%]",1,1,1,,NA
+Firmicutes: Coprococcus,NF,OF,"-41.3% [-63.5%, -5.4%] *",0,0,0,*,NA
+Firmicutes: Gemmiger,NF,OF,"-34.5% [-54.2%, -6.3%] *",0,0,0,*,NA
+Firmicutes: unclassified Oscillospiraceae,NF,OF,"-36.5% [-52.5%, -15.0%] *",0,0,0,*,NA
+Firmicutes: Flavonifractor,NF,OF,"-54.8% [-68.6%, -35.0%] *",0,0,0,*,NA
+Firmicutes: Clostridiales: environmental samples,NF,OF,"-35.5% [-51.2%, -14.7%] *",0,0,0,*,NA
+Firmicutes: Butyricicoccus,NF,OF,"-33.5% [-56.5%, 1.7%]",1,1,1,,NA
+Firmicutes: Ruminococcus,NF,OF,"-14.1% [-39.4%, 21.6%]",1,1,1,,NA
+Firmicutes: Oscillibacter,NF,OF,"-42.3% [-54.5%, -26.9%] *",0,0,0,*,NA
+Firmicutes: Clostridium,NF,OF,"-25.2% [-49.1%, 10.1%]",1,1,1,,NA
+Firmicutes: Roseburia,NF,OF,"-33.0% [-58.3%, 7.7%]",1,1,1,,NA
+Firmicutes: Firmicutes: environmental samples,NF,OF,"-35.6% [-56.1%, -5.5%] *",0,0,0,*,NA
+Firmicutes: unclassified Ruminococcaceae,NF,OF,"-25.7% [-42.2%, -4.5%] *",0,0,0,*,NA
+Firmicutes: unclassified Clostridiales (miscel...,NF,OF,"-33.2% [-53.2%, -4.7%] *",0,0,0,*,NA
+Firmicutes: Faecalibacterium,NF,OF,"-35.2% [-55.4%, -5.8%] *",0,0,0,*,NA
+Proteobacteria: Sphingomonas,NF,OF,"-51.7% [-64.4%, -34.6%] *",0,0,0,*,NA
+Proteobacteria: Methylobacterium,NF,OF,"-60.7% [-71.3%, -46.3%] *",0,0,0,*,NA
+Proteobacteria: Pelomonas,NF,OF,"-65.3% [-75.1%, -51.6%] *",0,0,0,*,NA
+Proteobacteria: Pseudomonas,NF,OF,"-28.7% [-47.9%, -2.4%] *",0,0,0,*,NA
+Proteobacteria: Bilophila,NF,OF,"-27.7% [-58.9%, 27.2%]",1,1,1,,NA
+Proteobacteria: Sutterella,NF,OF,"50.0% [-22.6%, 190.9%]",1,1,1,,NA
+null: Viruses: environmental samples,NF,OF,"-21.3% [-52.3%, 29.9%]",1,1,1,,NA
+null: Tobamovirus,NF,OF,"-47.4% [-73.1%, 3.1%]",1,1,1,,NA
+Actinobacteria: Cutibacterium,NF,ZF,"-88.1% [-94.2%, -75.9%] *",0,0,0,*,NA
+Actinobacteria: Corynebacterium,NF,ZF,"-73.1% [-85.6%, -49.9%] *",0,0,0,*,NA
+Actinobacteria: Enterorhabdus,NF,ZF,"22.1% [-19.7%, 85.9%]",1,1,1,,NA
+Actinobacteria: Eggerthella,NF,ZF,"-43.5% [-63.1%, -13.5%] *",0,0,0,*,NA
+Actinobacteria: Bifidobacterium,NF,ZF,"-65.8% [-75.8%, -51.8%] *",0,0,0,*,NA
+Actinobacteria: Collinsella,NF,ZF,"-39.2% [-66.3%, 9.9%]",1,1,1,,NA
+Bacteroidetes: unclassified Rikenellaceae,NF,ZF,"41.6% [-13.5%, 131.8%]",1,1,1,,NA
+Bacteroidetes: Odoribacter,NF,ZF,"235.5% [94.8%, 477.9%] *",0,0,0,*,NA
+Bacteroidetes: Parabacteroides,NF,ZF,"136.7% [47.1%, 280.9%] *",0,0,0,*,NA
+Bacteroidetes: Prevotella,NF,ZF,"53.6% [0.9%, 134.0%] *",0,0,0,*,NA
+Bacteroidetes: Alistipes,NF,ZF,"42.7% [-2.3%, 108.5%]",1,1,1,,NA
+Bacteroidetes: Bacteroides,NF,ZF,"138.3% [50.9%, 276.3%] *",0,0,0,*,NA
+Basidiomycota: Malassezia,NF,ZF,"-84.7% [-94.3%, -58.7%] *",0,0,0,*,NA
+Firmicutes: Staphylococcus,NF,ZF,"-68.9% [-86.9%, -26.2%] *",0,0,0,*,NA
+Firmicutes: Weissella,NF,ZF,"-84.4% [-92.5%, -67.4%] *",0,0,0,*,NA
+Firmicutes: Lachnospiraceae: environmental sam...,NF,ZF,"-7.9% [-22.9%, 10.2%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiaceae,NF,ZF,"18.6% [-14.0%, 63.6%]",1,1,1,,NA
+Firmicutes: Streptococcus,NF,ZF,"-33.1% [-60.0%, 11.8%]",1,1,1,,NA
+Firmicutes: Dorea,NF,ZF,"15.2% [-13.3%, 53.2%]",1,1,1,,NA
+Firmicutes: Lachnoclostridium,NF,ZF,"-25.7% [-37.7%, -11.5%] *",0,0,0,*,NA
+Firmicutes: Anaerotruncus,NF,ZF,"-73.8% [-83.7%, -57.8%] *",0,0,0,*,NA
+Firmicutes: Intestinimonas,NF,ZF,"-60.4% [-76.7%, -32.9%] *",0,0,0,*,NA
+Firmicutes: Blautia,NF,ZF,"44.0% [8.2%, 91.7%] *",0,0,0,*,NA
+Firmicutes: Subdoligranulum,NF,ZF,"-0.1% [-25.2%, 33.4%]",1,1,1,,NA
+Firmicutes: Eubacterium,NF,ZF,"11.5% [-26.4%, 69.0%]",1,1,1,,NA
+Firmicutes: unclassified Firmicutes sensu stri...,NF,ZF,"11.0% [-21.6%, 57.2%]",1,1,1,,NA
+Firmicutes: unclassified Lachnospiraceae,NF,ZF,"8.5% [-10.9%, 32.1%]",1,1,1,,NA
+Firmicutes: Coprococcus,NF,ZF,"8.3% [-18.9%, 44.7%]",1,1,1,,NA
+Firmicutes: Gemmiger,NF,ZF,"-5.8% [-25.3%, 18.8%]",1,1,1,,NA
+Firmicutes: unclassified Oscillospiraceae,NF,ZF,"-46.6% [-63.0%, -23.1%] *",0,0,0,*,NA
+Firmicutes: Flavonifractor,NF,ZF,"-70.6% [-81.0%, -54.3%] *",0,0,0,*,NA
+Firmicutes: Clostridiales: environmental samples,NF,ZF,"-26.8% [-38.3%, -13.3%] *",0,0,0,*,NA
+Firmicutes: Butyricicoccus,NF,ZF,"-0.3% [-30.0%, 42.0%]",1,1,1,,NA
+Firmicutes: Ruminococcus,NF,ZF,"123.0% [66.6%, 198.3%] *",0,0,0,*,NA
+Firmicutes: Oscillibacter,NF,ZF,"-53.2% [-62.3%, -41.9%] *",0,0,0,*,NA
+Firmicutes: Clostridium,NF,ZF,"-27.5% [-49.7%, 4.6%]",1,1,1,,NA
+Firmicutes: Roseburia,NF,ZF,"-48.4% [-64.0%, -26.1%] *",0,0,0,*,NA
+Firmicutes: Firmicutes: environmental samples,NF,ZF,"-0.5% [-20.3%, 24.3%]",1,1,1,,NA
+Firmicutes: unclassified Ruminococcaceae,NF,ZF,"17.1% [-1.7%, 39.5%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiales (miscel...,NF,ZF,"9.3% [-19.9%, 49.2%]",1,1,1,,NA
+Firmicutes: Faecalibacterium,NF,ZF,"-40.2% [-60.4%, -9.6%] *",0,0,0,*,NA
+Proteobacteria: Sphingomonas,NF,ZF,"-71.3% [-85.9%, -41.4%] *",0,0,0,*,NA
+Proteobacteria: Methylobacterium,NF,ZF,"-78.0% [-88.6%, -57.4%] *",0,0,0,*,NA
+Proteobacteria: Pelomonas,NF,ZF,"-86.6% [-92.7%, -75.5%] *",0,0,0,*,NA
+Proteobacteria: Pseudomonas,NF,ZF,"-42.1% [-70.3%, 12.7%]",1,1,1,,NA
+Proteobacteria: Bilophila,NF,ZF,"-73.4% [-84.6%, -53.9%] *",0,0,0,*,NA
+Proteobacteria: Sutterella,NF,ZF,"16.9% [-55.8%, 209.7%]",1,1,1,,NA
+null: Viruses: environmental samples,NF,ZF,"-49.9% [-77.1%, 9.7%]",1,1,1,,NA
+null: Tobamovirus,NF,ZF,"-78.5% [-90.0%, -53.9%] *",0,0,0,*,NA
+Actinobacteria: Cutibacterium,OF,OR,"3871.1% [1056.6%, 13534.4%] *",0,0,0,*,NA
+Actinobacteria: Corynebacterium,OF,OR,"1640.9% [592.3%, 4278.0%] *",0,0,0,*,NA
+Actinobacteria: Enterorhabdus,OF,OR,"-45.0% [-77.1%, 32.1%]",1,1,1,,NA
+Actinobacteria: Eggerthella,OF,OR,"-12.8% [-50.0%, 52.0%]",1,1,1,,NA
+Actinobacteria: Bifidobacterium,OF,OR,"102.4% [40.5%, 191.5%] *",0,0,0,*,NA
+Actinobacteria: Collinsella,OF,OR,"12.5% [-45.4%, 131.7%]",1,1,1,,NA
+Bacteroidetes: unclassified Rikenellaceae,OF,OR,"133.4% [39.4%, 290.8%] *",0,0,0,*,NA
+Bacteroidetes: Odoribacter,OF,OR,"-67.4% [-81.8%, -41.6%] *",0,0,0,*,NA
+Bacteroidetes: Parabacteroides,OF,OR,"-20.9% [-43.8%, 11.4%]",1,1,1,,NA
+Bacteroidetes: Prevotella,OF,OR,"100.4% [17.2%, 242.6%] *",0,0,0,*,NA
+Bacteroidetes: Alistipes,OF,OR,"72.2% [29.0%, 129.8%] *",0,0,0,*,NA
+Bacteroidetes: Bacteroides,OF,OR,"-45.5% [-62.8%, -20.2%] *",0,0,0,*,NA
+Basidiomycota: Malassezia,OF,OR,"2554.4% [795.3%, 7769.4%] *",0,0,0,*,NA
+Firmicutes: Staphylococcus,OF,OR,"1403.3% [422.0%, 4229.0%] *",0,0,0,*,NA
+Firmicutes: Weissella,OF,OR,"2100.0% [689.1%, 6034.0%] *",0,0,0,*,NA
+Firmicutes: Lachnospiraceae: environmental sam...,OF,OR,"32.2% [-28.2%, 143.4%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiaceae,OF,OR,"-46.5% [-64.3%, -19.8%] *",0,0,0,*,NA
+Firmicutes: Streptococcus,OF,OR,"-0.0% [-51.9%, 107.7%]",1,1,1,,NA
+Firmicutes: Dorea,OF,OR,"-5.8% [-43.3%, 56.6%]",1,1,1,,NA
+Firmicutes: Lachnoclostridium,OF,OR,"24.3% [-15.1%, 82.0%]",1,1,1,,NA
+Firmicutes: Anaerotruncus,OF,OR,"-63.7% [-77.6%, -41.2%] *",0,0,0,*,NA
+Firmicutes: Intestinimonas,OF,OR,"-34.6% [-52.4%, -10.1%] *",0,0,0,*,NA
+Firmicutes: Blautia,OF,OR,"-30.0% [-59.2%, 20.2%]",1,1,1,,NA
+Firmicutes: Subdoligranulum,OF,OR,"-18.9% [-42.0%, 13.3%]",1,1,1,,NA
+Firmicutes: Eubacterium,OF,OR,"-23.2% [-53.7%, 27.3%]",1,1,1,,NA
+Firmicutes: unclassified Firmicutes sensu stri...,OF,OR,"-31.0% [-56.0%, 8.2%]",1,1,1,,NA
+Firmicutes: unclassified Lachnospiraceae,OF,OR,"-5.5% [-40.6%, 50.3%]",1,1,1,,NA
+Firmicutes: Coprococcus,OF,OR,"14.5% [-26.3%, 77.9%]",1,1,1,,NA
+Firmicutes: Gemmiger,OF,OR,"-31.7% [-51.6%, -3.8%]",1,1,1,,NA
+Firmicutes: unclassified Oscillospiraceae,OF,OR,"38.6% [-8.8%, 110.5%]",1,1,1,,NA
+Firmicutes: Flavonifractor,OF,OR,"-15.5% [-42.1%, 23.4%]",1,1,1,,NA
+Firmicutes: Clostridiales: environmental samples,OF,OR,"-0.8% [-32.9%, 46.8%]",1,1,1,,NA
+Firmicutes: Butyricicoccus,OF,OR,"-9.7% [-51.4%, 67.7%]",1,1,1,,NA
+Firmicutes: Ruminococcus,OF,OR,"-40.8% [-58.6%, -15.4%] *",0,0,0,*,NA
+Firmicutes: Oscillibacter,OF,OR,"-6.3% [-37.7%, 40.9%]",1,1,1,,NA
+Firmicutes: Clostridium,OF,OR,"2.1% [-42.3%, 80.6%]",1,1,1,,NA
+Firmicutes: Roseburia,OF,OR,"137.0% [7.5%, 422.8%]",1,1,1,,NA
+Firmicutes: Firmicutes: environmental samples,OF,OR,"10.5% [-26.8%, 66.9%]",1,1,1,,NA
+Firmicutes: unclassified Ruminococcaceae,OF,OR,"-27.8% [-47.4%, -0.9%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiales (miscel...,OF,OR,"8.2% [-21.2%, 48.6%]",1,1,1,,NA
+Firmicutes: Faecalibacterium,OF,OR,"-72.0% [-81.0%, -58.7%] *",0,0,0,*,NA
+Proteobacteria: Sphingomonas,OF,OR,"1280.5% [553.3%, 2817.2%] *",0,0,0,*,NA
+Proteobacteria: Methylobacterium,OF,OR,"2087.1% [884.9%, 4756.7%] *",0,0,0,*,NA
+Proteobacteria: Pelomonas,OF,OR,"2650.7% [1117.4%, 6115.4%] *",0,0,0,*,NA
+Proteobacteria: Pseudomonas,OF,OR,"358.5% [125.0%, 834.0%] *",0,0,0,*,NA
+Proteobacteria: Bilophila,OF,OR,"46.5% [-18.2%, 162.6%]",1,1,1,,NA
+Proteobacteria: Sutterella,OF,OR,"71.5% [-21.9%, 276.4%]",1,1,1,,NA
+null: Viruses: environmental samples,OF,OR,"1018.8% [429.2%, 2265.4%] *",0,0,0,*,NA
+null: Tobamovirus,OF,OR,"271.9% [-9.0%, 1419.5%]",1,1,1,,NA
+Actinobacteria: Cutibacterium,ZF,ZR,"13.6% [-37.7%, 107.2%]",1,1,1,,NA
+Actinobacteria: Corynebacterium,ZF,ZR,"0.3% [-25.3%, 34.7%]",1,1,1,,NA
+Actinobacteria: Enterorhabdus,ZF,ZR,"9.5% [-19.5%, 49.1%]",1,1,1,,NA
+Actinobacteria: Eggerthella,ZF,ZR,"-8.4% [-35.9%, 31.0%]",1,1,1,,NA
+Actinobacteria: Bifidobacterium,ZF,ZR,"-29.4% [-50.9%, 1.4%]",1,1,1,,NA
+Actinobacteria: Collinsella,ZF,ZR,"-33.1% [-53.5%, -3.8%] *",0,0,0,*,NA
+Bacteroidetes: unclassified Rikenellaceae,ZF,ZR,"11.5% [-13.4%, 43.6%]",1,1,1,,NA
+Bacteroidetes: Odoribacter,ZF,ZR,"17.1% [-11.5%, 55.1%]",1,1,1,,NA
+Bacteroidetes: Parabacteroides,ZF,ZR,"5.0% [-16.2%, 31.6%]",1,1,1,,NA
+Bacteroidetes: Prevotella,ZF,ZR,"7.9% [-10.9%, 30.7%]",1,1,1,,NA
+Bacteroidetes: Alistipes,ZF,ZR,"19.6% [-6.0%, 52.1%]",1,1,1,,NA
+Bacteroidetes: Bacteroides,ZF,ZR,"17.7% [-2.8%, 42.6%]",1,1,1,,NA
+Basidiomycota: Malassezia,ZF,ZR,"35.2% [-18.4%, 123.8%]",1,1,1,,NA
+Firmicutes: Staphylococcus,ZF,ZR,"-4.9% [-27.6%, 24.8%]",1,1,1,,NA
+Firmicutes: Weissella,ZF,ZR,"36.2% [-13.2%, 113.6%]",1,1,1,,NA
+Firmicutes: Lachnospiraceae: environmental sam...,ZF,ZR,"-15.0% [-32.4%, 6.8%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiaceae,ZF,ZR,"-36.6% [-50.1%, -19.6%] *",0,0,0,*,NA
+Firmicutes: Streptococcus,ZF,ZR,"-31.0% [-48.9%, -6.8%] *",0,0,0,*,NA
+Firmicutes: Dorea,ZF,ZR,"-22.5% [-45.7%, 10.6%]",1,1,1,,NA
+Firmicutes: Lachnoclostridium,ZF,ZR,"-21.6% [-37.2%, -2.2%] *",0,0,0,*,NA
+Firmicutes: Anaerotruncus,ZF,ZR,"-19.8% [-37.7%, 3.1%]",1,1,1,,NA
+Firmicutes: Intestinimonas,ZF,ZR,"-6.7% [-31.8%, 27.8%]",1,1,1,,NA
+Firmicutes: Blautia,ZF,ZR,"-33.6% [-55.0%, -2.1%] *",0,0,0,*,NA
+Firmicutes: Subdoligranulum,ZF,ZR,"-33.5% [-47.6%, -15.7%] *",0,0,0,*,NA
+Firmicutes: Eubacterium,ZF,ZR,"-18.4% [-36.0%, 4.1%]",1,1,1,,NA
+Firmicutes: unclassified Firmicutes sensu stri...,ZF,ZR,"-18.1% [-35.7%, 4.4%]",1,1,1,,NA
+Firmicutes: unclassified Lachnospiraceae,ZF,ZR,"-18.3% [-35.3%, 3.2%]",1,1,1,,NA
+Firmicutes: Coprococcus,ZF,ZR,"-21.3% [-42.7%, 8.2%]",1,1,1,,NA
+Firmicutes: Gemmiger,ZF,ZR,"-20.1% [-39.6%, 5.7%]",1,1,1,,NA
+Firmicutes: unclassified Oscillospiraceae,ZF,ZR,"-14.8% [-29.3%, 2.7%]",1,1,1,,NA
+Firmicutes: Flavonifractor,ZF,ZR,"-20.1% [-36.5%, 0.6%]",1,1,1,,NA
+Firmicutes: Clostridiales: environmental samples,ZF,ZR,"-22.2% [-35.2%, -6.6%] *",0,0,0,*,NA
+Firmicutes: Butyricicoccus,ZF,ZR,"-19.4% [-38.6%, 5.7%]",1,1,1,,NA
+Firmicutes: Ruminococcus,ZF,ZR,"-26.9% [-40.3%, -10.5%] *",0,0,0,*,NA
+Firmicutes: Oscillibacter,ZF,ZR,"-6.1% [-24.8%, 17.1%]",1,1,1,,NA
+Firmicutes: Clostridium,ZF,ZR,"-16.9% [-32.4%, 2.1%]",1,1,1,,NA
+Firmicutes: Roseburia,ZF,ZR,"-14.3% [-28.3%, 2.4%]",1,1,1,,NA
+Firmicutes: Firmicutes: environmental samples,ZF,ZR,"-27.0% [-44.8%, -3.3%] *",0,0,0,*,NA
+Firmicutes: unclassified Ruminococcaceae,ZF,ZR,"-22.3% [-40.0%, 0.7%]",1,1,1,,NA
+Firmicutes: unclassified Clostridiales (miscel...,ZF,ZR,"-29.4% [-42.4%, -13.4%] *",0,0,0,*,NA
+Firmicutes: Faecalibacterium,ZF,ZR,"-46.4% [-61.3%, -25.9%] *",0,0,0,*,NA
+Proteobacteria: Sphingomonas,ZF,ZR,"4.2% [-19.2%, 34.5%]",1,1,1,,NA
+Proteobacteria: Methylobacterium,ZF,ZR,"-1.6% [-26.1%, 31.0%]",1,1,1,,NA
+Proteobacteria: Pelomonas,ZF,ZR,"25.8% [-4.1%, 65.0%]",1,1,1,,NA
+Proteobacteria: Pseudomonas,ZF,ZR,"-4.9% [-22.0%, 15.9%]",1,1,1,,NA
+Proteobacteria: Bilophila,ZF,ZR,"23.7% [-18.6%, 88.1%]",1,1,1,,NA
+Proteobacteria: Sutterella,ZF,ZR,"63.9% [12.5%, 139.0%] *",0,0,0,*,NA
+null: Viruses: environmental samples,ZF,ZR,"45.1% [-5.6%, 123.0%]",1,1,1,,NA
+null: Tobamovirus,ZF,ZR,"25.2% [-13.0%, 80.2%]",1,1,1,,NA
+Actinobacteria: Cutibacterium,ZF,ZH,"1368.8% [828.2%, 2224.3%] *",0,0,0,*,NA
+Actinobacteria: Corynebacterium,ZF,ZH,"433.8% [251.9%, 709.9%] *",0,0,0,*,NA
+Actinobacteria: Enterorhabdus,ZF,ZH,"-91.2% [-96.1%, -80.2%] *",0,0,0,*,NA
+Actinobacteria: Eggerthella,ZF,ZH,"-86.8% [-93.5%, -73.0%] *",0,0,0,*,NA
+Actinobacteria: Bifidobacterium,ZF,ZH,"-66.5% [-81.2%, -40.4%] *",0,0,0,*,NA
+Actinobacteria: Collinsella,ZF,ZH,"-91.3% [-95.9%, -81.4%] *",0,0,0,*,NA
+Bacteroidetes: unclassified Rikenellaceae,ZF,ZH,"-5.1% [-33.4%, 35.1%]",1,1,1,,NA
+Bacteroidetes: Odoribacter,ZF,ZH,"33.9% [-3.6%, 86.0%]",1,1,1,,NA
+Bacteroidetes: Parabacteroides,ZF,ZH,"123.9% [79.7%, 178.8%] *",0,0,0,*,NA
+Bacteroidetes: Prevotella,ZF,ZH,"114.2% [88.5%, 143.4%] *",0,0,0,*,NA
+Bacteroidetes: Alistipes,ZF,ZH,"23.7% [-12.8%, 75.4%]",1,1,1,,NA
+Bacteroidetes: Bacteroides,ZF,ZH,"137.4% [91.9%, 193.6%] *",0,0,0,*,NA
+Basidiomycota: Malassezia,ZF,ZH,"1017.7% [493.0%, 2006.7%] *",0,0,0,*,NA
+Firmicutes: Staphylococcus,ZF,ZH,"536.1% [269.5%, 995.0%] *",0,0,0,*,NA
+Firmicutes: Weissella,ZF,ZH,"921.0% [587.3%, 1416.6%] *",0,0,0,*,NA
+Firmicutes: Lachnospiraceae: environmental sam...,ZF,ZH,"-52.4% [-75.1%, -9.2%] *",0,0,0,*,NA
+Firmicutes: unclassified Clostridiaceae,ZF,ZH,"-74.1% [-85.7%, -53.1%] *",0,0,0,*,NA
+Firmicutes: Streptococcus,ZF,ZH,"-28.7% [-65.9%, 49.4%]",1,1,1,,NA
+Firmicutes: Dorea,ZF,ZH,"-85.1% [-91.6%, -73.7%] *",0,0,0,*,NA
+Firmicutes: Lachnoclostridium,ZF,ZH,"-37.0% [-57.4%, -6.7%] *",0,0,0,*,NA
+Firmicutes: Anaerotruncus,ZF,ZH,"-42.3% [-64.8%, -5.4%] *",0,0,0,*,NA
+Firmicutes: Intestinimonas,ZF,ZH,"-53.4% [-72.5%, -21.0%] *",0,0,0,*,NA
+Firmicutes: Blautia,ZF,ZH,"-86.4% [-92.5%, -75.3%] *",0,0,0,*,NA
+Firmicutes: Subdoligranulum,ZF,ZH,"-85.6% [-92.1%, -73.6%] *",0,0,0,*,NA
+Firmicutes: Eubacterium,ZF,ZH,"-49.9% [-74.5%, -1.3%] *",0,0,0,*,NA
+Firmicutes: unclassified Firmicutes sensu stri...,ZF,ZH,"-72.1% [-83.6%, -52.6%] *",0,0,0,*,NA
+Firmicutes: unclassified Lachnospiraceae,ZF,ZH,"-75.4% [-85.5%, -58.2%] *",0,0,0,*,NA
+Firmicutes: Coprococcus,ZF,ZH,"-83.4% [-90.4%, -71.2%] *",0,0,0,*,NA
+Firmicutes: Gemmiger,ZF,ZH,"-88.0% [-92.7%, -80.1%] *",0,0,0,*,NA
+Firmicutes: unclassified Oscillospiraceae,ZF,ZH,"-62.2% [-75.9%, -40.6%] *",0,0,0,*,NA
+Firmicutes: Flavonifractor,ZF,ZH,"-50.7% [-71.1%, -15.9%] *",0,0,0,*,NA
+Firmicutes: Clostridiales: environmental samples,ZF,ZH,"-67.9% [-81.4%, -44.8%] *",0,0,0,*,NA
+Firmicutes: Butyricicoccus,ZF,ZH,"-84.9% [-91.9%, -71.7%] *",0,0,0,*,NA
+Firmicutes: Ruminococcus,ZF,ZH,"-80.7% [-88.5%, -67.6%] *",0,0,0,*,NA
+Firmicutes: Oscillibacter,ZF,ZH,"-35.3% [-53.6%, -9.8%] *",0,0,0,*,NA
+Firmicutes: Clostridium,ZF,ZH,"-45.8% [-67.4%, -10.0%] *",0,0,0,*,NA
+Firmicutes: Roseburia,ZF,ZH,"-61.5% [-75.5%, -39.5%] *",0,0,0,*,NA
+Firmicutes: Firmicutes: environmental samples,ZF,ZH,"-80.8% [-89.5%, -65.0%] *",0,0,0,*,NA
+Firmicutes: unclassified Ruminococcaceae,ZF,ZH,"-74.4% [-84.6%, -57.4%] *",0,0,0,*,NA
+Firmicutes: unclassified Clostridiales (miscel...,ZF,ZH,"-59.5% [-72.2%, -40.9%] *",0,0,0,*,NA
+Firmicutes: Faecalibacterium,ZF,ZH,"-50.9% [-69.7%, -20.7%] *",0,0,0,*,NA
+Proteobacteria: Sphingomonas,ZF,ZH,"387.5% [169.4%, 782.2%] *",0,0,0,*,NA
+Proteobacteria: Methylobacterium,ZF,ZH,"627.0% [378.9%, 1003.8%] *",0,0,0,*,NA
+Proteobacteria: Pelomonas,ZF,ZH,"1407.0% [925.8%, 2113.9%] *",0,0,0,*,NA
+Proteobacteria: Pseudomonas,ZF,ZH,"67.7% [21.0%, 132.2%] *",0,0,0,*,NA
+Proteobacteria: Bilophila,ZF,ZH,"167.3% [55.0%, 360.7%] *",0,0,0,*,NA
+Proteobacteria: Sutterella,ZF,ZH,"95.1% [22.3%, 211.2%] *",0,0,0,*,NA
+null: Viruses: environmental samples,ZF,ZH,"-5.0% [-46.3%, 68.2%]",1,1,1,,NA
+null: Tobamovirus,ZF,ZH,"46.9% [-31.9%, 216.9%]",1,1,1,,NA
+RNAConcentration,NF,OF,"-85.7% [-92.1%, -74.2%] ***",< 0.001,0.001,0.001,***,NA
+RNAConcentration,NF,ZF,"-94.5% [-95.5%, -93.3%] ***",< 0.001,0.001,0.001,***,NA
+RNAConcentration,OF,OR,"-49.7% [-72.6%, -7.9%] *",0.026,0.026,0.026,*,NA
+RNAConcentration,ZF,ZR,"-5.4% [-26.6%, 22.0%]",0.67,0.67,0.67,,NA
+RNAConcentration,ZF,ZH,"161.9% [86.0%, 268.8%] ***",< 0.001,0.001,0.001,***,NA

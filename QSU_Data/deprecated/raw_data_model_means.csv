@@ -1,120 +1,106 @@
-﻿feature,Condition,Mean,CI_low,CI_high,,,,,,,
-MicrobesPerGram,NF,1.33E+12,5.65E+11,3.13E+12,,,,,,,
-MicrobesPerGram,OF,1.41E+12,7.12E+11,2.78E+12,,,,,,,
-MicrobesPerGram,OR,1.45E+12,8.83E+11,2.40E+12,,,,,,,
-MicrobesPerGram,OH,2.04E+12,1.15E+12,3.63E+12,,,,,,,
-MicrobesPerGram,ZF,4.70E+10,2.29E+10,9.65E+10,,,,,,,
-MicrobesPerGram,ZR,2.47E+10,1.37E+10,4.46E+10,,,,,,,
-MicrobesPerGram,ZH,1.14E+10,5.77E+09,2.27E+10,,,,,,,
-mean_16s_count,NF,4.627857,4.58688,4.6692,,,,,,,
-mean_16s_count,OF,4.566823,4.518977,4.615176,,,,,,,
-mean_16s_count,OR,4.562806,4.49622,4.630378,,,,,,,
-mean_16s_count,OH,4.62757,4.567615,4.688312,,,,,,,
-mean_16s_count,ZF,4.589575,4.55174,4.627724,,,,,,,
-mean_16s_count,ZR,4.526586,4.454901,4.599425,,,,,,,
-mean_16s_count,ZH,4.536607,4.467888,4.606383,,,,,,,
-DNAConcentration,NF,59.372503,39.242136,89.829314,,,,,,,
-DNAConcentration,OF,38.285919,27.601875,53.105508,,,,,,,
-DNAConcentration,OR,53.902574,44.066048,65.934832,,,,,,,
-DNAConcentration,OH,46.641841,34.80957,62.496071,,,,,,,
-DNAConcentration,ZF,9.229848,7.349305,11.591586,,,,,,,
-DNAConcentration,ZR,5.381136,4.212303,6.874298,,,,,,,
-DNAConcentration,ZH,4.786299,3.716756,6.163617,,,,,,,
-Relative Abundance: Firmicutes,NF,0.568912,0.529099,0.611721,,,,,,,
-Relative Abundance: Firmicutes,OF,0.449451,0.401384,0.503274,,,,,,,
-Relative Abundance: Firmicutes,OR,0.443321,0.398995,0.492571,,,,,,,
-Relative Abundance: Firmicutes,OH,0.470031,0.417319,0.529402,,,,,,,
-Relative Abundance: Firmicutes,ZF,0.519303,0.485959,0.554935,,,,,,,
-Relative Abundance: Firmicutes,ZR,0.455766,0.404781,0.513173,,,,,,,
-Relative Abundance: Firmicutes,ZH,0.430493,0.378844,0.489184,,,,,,,
-Relative Abundance: Bacteroidetes,NF,0.224767,0.173528,0.291136,,,,,,,
-Relative Abundance: Bacteroidetes,OF,0.350342,0.280541,0.43751,,,,,,,
-Relative Abundance: Bacteroidetes,OR,0.355035,0.275721,0.457165,,,,,,,
-Relative Abundance: Bacteroidetes,OH,0.339399,0.271902,0.423651,,,,,,,
-Relative Abundance: Bacteroidetes,ZF,0.298841,0.257253,0.347153,,,,,,,
-Relative Abundance: Bacteroidetes,ZR,0.346904,0.287013,0.419292,,,,,,,
-Relative Abundance: Bacteroidetes,ZH,0.376996,0.315229,0.450866,,,,,,,
-Relative Abundance: Actinobacteria,NF,0.044721,0.030331,0.065938,,,,,,,
-Relative Abundance: Actinobacteria,OF,0.031536,0.020748,0.047934,,,,,,,
-Relative Abundance: Actinobacteria,OR,0.026639,0.017175,0.041319,,,,,,,
-Relative Abundance: Actinobacteria,OH,0.022889,0.014325,0.036573,,,,,,,
-Relative Abundance: Actinobacteria,ZF,0.03268,0.02031,0.052584,,,,,,,
-Relative Abundance: Actinobacteria,ZR,0.028687,0.018595,0.044256,,,,,,,
-Relative Abundance: Actinobacteria,ZH,0.020795,0.0131,0.03301,,,,,,,
-Relative Abundance: Other Bacteria,NF,0.010172,0.005441,0.019018,,,,,,,
-Relative Abundance: Other Bacteria,OF,0.010485,0.005688,0.019326,,,,,,,
-Relative Abundance: Other Bacteria,OR,0.011241,0.00591,0.02138,,,,,,,
-Relative Abundance: Other Bacteria,OH,0.011034,0.005999,0.020296,,,,,,,
-Relative Abundance: Other Bacteria,ZF,0.010257,0.005543,0.01898,,,,,,,
-Relative Abundance: Other Bacteria,ZR,0.011327,0.006069,0.021139,,,,,,,
-Relative Abundance: Other Bacteria,ZH,0.012849,0.00704,0.023453,,,,,,,
-Relative Abundance: Viruses,NF,0.000744,0.000305,0.001818,,,,,,,
-Relative Abundance: Viruses,OF,0.000501,0.0002,0.001252,,,,,,,
-Relative Abundance: Viruses,OR,0.000637,0.000242,0.001678,,,,,,,
-Relative Abundance: Viruses,OH,0.000779,0.00031,0.001956,,,,,,,
-Relative Abundance: Viruses,ZF,0.00077,0.000306,0.001937,,,,,,,
-Relative Abundance: Viruses,ZR,0.001098,0.00041,0.002937,,,,,,,
-Relative Abundance: Viruses,ZH,0.001316,0.000477,0.003628,,,,,,,
-Relative Abundance: Fungi,NF,0.000742,0.000578,0.000952,,,,,,,
-Relative Abundance: Fungi,OF,0.000694,0.000518,0.00093,,,,,,,
-Relative Abundance: Fungi,OR,0.000712,0.000525,0.000966,,,,,,,
-Relative Abundance: Fungi,OH,0.000722,0.000517,0.001008,,,,,,,
-Relative Abundance: Fungi,ZF,0.000688,0.000535,0.000885,,,,,,,
-Relative Abundance: Fungi,ZR,0.000688,0.000513,0.000922,,,,,,,
-Relative Abundance: Fungi,ZH,0.000751,0.000557,0.001013,,,,,,,
-Relative Abundance: Unclassified,NF,0.073985,0.060263,0.090832,,,,,,,
-Relative Abundance: Unclassified,OF,0.06486,0.052116,0.08072,,,,,,,
-Relative Abundance: Unclassified,OR,0.066809,0.054789,0.081466,,,,,,,
-Relative Abundance: Unclassified,OH,0.070988,0.057351,0.087868,,,,,,,
-Relative Abundance: Unclassified,ZF,0.069162,0.057569,0.08309,,,,,,,
-Relative Abundance: Unclassified,ZR,0.071629,0.059055,0.08688,,,,,,,
-Relative Abundance: Unclassified,ZH,0.075604,0.062537,0.091402,,,,,,,
-Richness 0.01%,NF,91.668193,84.365424,99.603098,,,,,,,
-Richness 0.01%,OF,85.912798,79.423567,92.932226,,,,,,,
-Richness 0.01%,OR,87.732974,81.454916,94.494908,,,,,,,
-Richness 0.01%,OH,87.335258,81.066413,94.088871,,,,,,,
-Richness 0.01%,ZF,87.5512,82.012386,93.464086,,,,,,,
-Richness 0.01%,ZR,88.529543,82.339099,95.185399,,,,,,,
-Richness 0.01%,ZH,88.777476,81.782246,96.371042,,,,,,,
-Richness 0.001%,NF,271.476594,238.379587,309.168842,,,,,,,
-Richness 0.001%,OF,246.829179,216.37208,281.573499,,,,,,,
-Richness 0.001%,OR,248.907306,219.309858,282.499144,,,,,,,
-Richness 0.001%,OH,256.316215,222.593826,295.147459,,,,,,,
-Richness 0.001%,ZF,253.234743,226.287707,283.390715,,,,,,,
-Richness 0.001%,ZR,251.657399,222.496075,284.640736,,,,,,,
-Richness 0.001%,ZH,257.024282,227.126076,290.858199,,,,,,,
-Richness 0.0001%,NF,1011.403465,910.750255,1123.180546,,,,,,,
-Richness 0.0001%,OF,922.149807,808.417085,1051.883096,,,,,,,
-Richness 0.0001%,OR,937.135861,822.676823,1067.519586,,,,,,,
-Richness 0.0001%,OH,960.49935,843.579046,1093.624842,,,,,,,
-Richness 0.0001%,ZF,942.402701,844.050523,1052.215272,,,,,,,
-Richness 0.0001%,ZR,948.334022,836.934813,1074.56089,,,,,,,
-Richness 0.0001%,ZH,963.513625,853.481934,1087.730705,,,,,,,
-Richness 0.00001%,NF,2416.500301,2299.647714,2539.290549,,,,,,,
-Richness 0.00001%,OF,2292.923412,2158.130986,2436.134695,,,,,,,
-Richness 0.00001%,OR,2313.95641,2197.362529,2436.736859,,,,,,,
-Richness 0.00001%,OH,2325.500842,2213.472091,2443.199617,,,,,,,
-Richness 0.00001%,ZF,2317.460005,2183.91229,2459.174253,,,,,,,
-Richness 0.00001%,ZR,2304.25997,2178.980793,2436.741998,,,,,,,
-Richness 0.00001%,ZH,2354.514151,2228.095321,2488.105798,,,,,,,
-Richness Any%,NF,2793.966947,2707.99257,2882.670871,,,,,,,
-Richness Any%,OF,2782.183973,2661.946804,2907.852121,,,,,,,
-Richness Any%,OR,2745.351132,2680.030797,2812.263518,,,,,,,
-Richness Any%,OH,2760.475323,2689.05268,2833.794988,,,,,,,
-Richness Any%,ZF,2790.797132,2683.977482,2901.868098,,,,,,,
-Richness Any%,ZR,2761.527627,2653.28596,2874.185049,,,,,,,
-Richness Any%,ZH,2762.352836,2668.756495,2859.231707,,,,,,,
-Shannon Entropy,NF,2.907837,2.737415,3.088869,,,,,,,
-Shannon Entropy,OF,2.645312,2.409506,2.904196,,,,,,,
-Shannon Entropy,OR,2.64262,2.410817,2.896711,,,,,,,
-Shannon Entropy,OH,2.655799,2.457602,2.86998,,,,,,,
-Shannon Entropy,ZF,2.809036,2.637205,2.992063,,,,,,,
-Shannon Entropy,ZR,2.703725,2.484314,2.942513,,,,,,,
-Shannon Entropy,ZH,2.645166,2.405559,2.908639,,,,,,,
-Inv Simpson,NF,8.9997,7.030367,11.520678,,,,,,,
-Inv Simpson,OF,6.443444,4.683404,8.864914,,,,,,,
-Inv Simpson,OR,6.294618,4.584771,8.642137,,,,,,,
-Inv Simpson,OH,6.551127,4.929548,8.706126,,,,,,,
-Inv Simpson,ZF,7.858293,6.187727,9.979879,,,,,,,
-Inv Simpson,ZR,6.799324,5.024774,9.200574,,,,,,,
-Inv Simpson,ZH,6.28513,4.600289,8.587038,,,,,,,
+﻿feature,Sample_Type,prediction,CI_low,CI_high
+MicrobesPerGram,NF,1.33E+12,5.65E+11,3.13E+12
+MicrobesPerGram,OF,4.00E+12,2.03E+12,7.91E+12
+MicrobesPerGram,OR,4.14E+12,2.51E+12,6.82E+12
+MicrobesPerGram,OH,5.82E+12,3.28E+12,1.03E+13
+MicrobesPerGram,ZF,6.27E+11,3.05E+11,1.29E+12
+MicrobesPerGram,ZR,3.29E+11,1.82E+11,5.94E+11
+MicrobesPerGram,ZH,1.52E+11,76970644880,3.02E+11
+mean_16s_count,NF,4.627857021,4.586880262,4.669199846
+mean_16s_count,OF,4.566822955,4.518976539,4.615175963
+mean_16s_count,OR,4.562805636,4.496219541,4.630377828
+mean_16s_count,OH,4.627569854,4.56761491,4.688311772
+mean_16s_count,ZF,4.589575442,4.551740671,4.627724702
+mean_16s_count,ZR,4.526586482,4.454901176,4.599425299
+mean_16s_count,ZH,4.53660695,4.467887787,4.606383061
+DNAConcentration,NF,59.37250261,39.24213523,89.82931347
+DNAConcentration,OF,38.28591916,27.60187497,53.10550851
+DNAConcentration,OR,53.90257409,44.06604809,65.93483236
+DNAConcentration,OH,46.64184125,34.80956987,62.49607114
+DNAConcentration,ZF,9.229847829,7.349304396,11.59158559
+DNAConcentration,ZR,5.381136413,4.212303076,6.874298591
+DNAConcentration,ZH,4.786299113,3.716755981,6.163616692
+Absolute Abundance: Firmicutes,NF,7.57E+11,3.07E+11,1.87E+12
+Absolute Abundance: Firmicutes,OF,1.80E+12,8.77E+11,3.69E+12
+Absolute Abundance: Firmicutes,OR,1.84E+12,1.10E+12,3.07E+12
+Absolute Abundance: Firmicutes,OH,2.74E+12,1.42E+12,5.25E+12
+Absolute Abundance: Firmicutes,ZF,3.26E+11,1.52E+11,6.99E+11
+Absolute Abundance: Firmicutes,ZR,1.50E+11,78326087539,2.87E+11
+Absolute Abundance: Firmicutes,ZH,65416688739,30512712347,1.40E+11
+Absolute Abundance: Bacteroidetes,NF,2.99E+11,1.35E+11,6.62E+11
+Absolute Abundance: Bacteroidetes,OF,1.40E+12,6.96E+11,2.83E+12
+Absolute Abundance: Bacteroidetes,OR,1.47E+12,8.56E+11,2.52E+12
+Absolute Abundance: Bacteroidetes,OH,1.98E+12,1.27E+12,3.07E+12
+Absolute Abundance: Bacteroidetes,ZF,1.87E+11,96548699006,3.63E+11
+Absolute Abundance: Bacteroidetes,ZR,1.14E+11,67647794594,1.93E+11
+Absolute Abundance: Bacteroidetes,ZH,57788727365,31923930568,1.05E+11
+Absolute Abundance: Actinobacteria,NF,59503438930,24075606381,1.47E+11
+Absolute Abundance: Actinobacteria,OF,1.26E+11,65576444934,2.43E+11
+Absolute Abundance: Actinobacteria,OR,1.10E+11,60953703318,1.99E+11
+Absolute Abundance: Actinobacteria,OH,1.33E+11,58843932490,3.02E+11
+Absolute Abundance: Actinobacteria,ZF,20484947488,10127137604,41436493706
+Absolute Abundance: Actinobacteria,ZR,9441079259,4401904370,20248958198
+Absolute Abundance: Actinobacteria,ZH,3142055341,1263306819,7814817126
+Absolute Abundance: Other Bacteria,NF,13534049478,4162506953,44004850287
+Absolute Abundance: Other Bacteria,OF,41974556877,16646738056,1.06E+11
+Absolute Abundance: Other Bacteria,OR,46531999241,20023364460,1.08E+11
+Absolute Abundance: Other Bacteria,OH,64214237943,22874782276,1.80E+11
+Absolute Abundance: Other Bacteria,ZF,6429556418,2582248840,16008989953
+Absolute Abundance: Other Bacteria,ZR,3727874422,1585827236,8763279749
+Absolute Abundance: Other Bacteria,ZH,1942708415,695057983.8,5429929694
+Absolute Abundance: Viruses,NF,989292835.7,241128785.4,4058828203
+Absolute Abundance: Viruses,OF,2006464023,647651075.4,6216152537
+Absolute Abundance: Viruses,OR,2638310935,816037622.2,8529857450
+Absolute Abundance: Viruses,OH,4534494135,2429473911,8463411343
+Absolute Abundance: Viruses,ZF,482971210.5,163186524.8,1429414534
+Absolute Abundance: Viruses,ZR,361421403.5,123154089.9,1060666608
+Absolute Abundance: Viruses,ZH,197953216.8,66663374.39,587811168.9
+Absolute Abundance: Fungi,NF,986828112.2,379306834.9,2567393027
+Absolute Abundance: Fungi,OF,2779332170,1395053649,5537197307
+Absolute Abundance: Fungi,OR,2945358805,1559642753,5562259994
+Absolute Abundance: Fungi,OH,4204365418,1959977780,9018820901
+Absolute Abundance: Fungi,ZF,431023430.1,199441714.4,931506219.3
+Absolute Abundance: Fungi,ZR,226298268.3,104878181.4,488289418.9
+Absolute Abundance: Fungi,ZH,113765468.9,47739973.19,271105764.2
+Absolute Abundance: Unclassified + Root,NF,1.40E+11,59373186615,3.29E+11
+Absolute Abundance: Unclassified + Root,OF,4.14E+11,2.07E+11,8.24E+11
+Absolute Abundance: Unclassified + Root,OR,4.39E+11,2.52E+11,7.65E+11
+Absolute Abundance: Unclassified + Root,OH,6.22E+11,3.36E+11,1.15E+12
+Absolute Abundance: Unclassified + Root,ZF,62956319164,30408757441,1.30E+11
+Absolute Abundance: Unclassified + Root,ZR,34842086897,18618800060,65201356446
+Absolute Abundance: Unclassified + Root,ZH,16990076267,8626327093,33462989341
+Absolute Abundance: Unclassified,NF,98440352555,39556704996,2.45E+11
+Absolute Abundance: Unclassified,OF,2.60E+11,1.34E+11,5.05E+11
+Absolute Abundance: Unclassified,OR,2.77E+11,1.56E+11,4.91E+11
+Absolute Abundance: Unclassified,OH,4.13E+11,2.14E+11,7.99E+11
+Absolute Abundance: Unclassified,ZF,43352986201,20806069396,90333324222
+Absolute Abundance: Unclassified,ZR,23573854599,12090511322,45963864214
+Absolute Abundance: Unclassified,ZH,11477069435,5502631527,23938205233
+Richness 100M,NF,106.7849999,90.47386456,126.036798
+Richness 100M,OF,137.3490373,100.1221278,188.4174703
+Richness 100M,OR,142.3910935,112.5157644,180.198958
+Richness 100M,OH,175.045601,125.2147904,244.7072133
+Richness 100M,ZF,67.37786227,50.18934889,90.45298305
+Richness 100M,ZR,56.99166261,45.30531598,71.69246117
+Richness 100M,ZH,41.46435956,31.42806057,54.70567009
+Richness 10M,NF,285.0843651,185.9738968,437.013455
+Richness 10M,OF,481.4026296,354.1825629,654.3193145
+Richness 10M,OR,472.8161342,348.315577,641.8176835
+Richness 10M,OH,584.4266038,415.6611902,821.7136056
+Richness 10M,ZF,184.2199097,134.9347626,251.5065391
+Richness 10M,ZR,135.6062775,99.95122327,183.9803647
+Richness 10M,ZH,102.4275892,75.54830076,138.8702449
+Richness 1M,NF,947.5479832,617.7913423,1453.317842
+Richness 1M,OF,1443.7327,1078.396303,1932.836846
+Richness 1M,OR,1476.293703,1178.115402,1849.940248
+Richness 1M,OH,1587.727119,1250.07554,2016.580057
+Richness 1M,ZF,612.251058,421.4644358,889.4021089
+Richness 1M,ZR,424.3835722,287.5852325,626.2540493
+Richness 1M,ZH,293.4936152,190.8980363,451.2278065
+Bacteroidetes/Firmicutes,NF,0.379481,0.27636,0.537278
+Bacteroidetes/Firmicutes,OF,0.724332,0.522294,1.058888
+Bacteroidetes/Firmicutes,OR,0.739732,0.508159,1.157852
+Bacteroidetes/Firmicutes,OH,0.679689,0.490267,0.990961
+Bacteroidetes/Firmicutes,ZF,0.55795,0.455925,0.693683
+Bacteroidetes/Firmicutes,ZR,0.716693,0.535529,0.999016
+Bacteroidetes/Firmicutes,ZH,0.829184,0.622763,1.152623

@@ -1,0 +1,8 @@
+﻿feature,Sample_Type,prediction,CI_low,CI_high
+Bacteroidetes/Firmicutes,NF,0.379481,0.27636,0.537278
+Bacteroidetes/Firmicutes,OF,0.724332,0.522294,1.058888
+Bacteroidetes/Firmicutes,OR,0.739732,0.508159,1.157852
+Bacteroidetes/Firmicutes,OH,0.679689,0.490267,0.990961
+Bacteroidetes/Firmicutes,ZF,0.55795,0.455925,0.693683
+Bacteroidetes/Firmicutes,ZR,0.716693,0.535529,0.999016
+Bacteroidetes/Firmicutes,ZH,0.829184,0.622763,1.152623

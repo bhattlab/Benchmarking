@@ -1,103 +1,91 @@
-﻿Feature,group1,group2,p,p.adj,p.format,p.signif,method
-MicrobesPerGram,NF,OF,0.917,0.917,0.917,,NA
-mean_16s_count,NF,OF,0.075,0.075,0.075,,NA
-DNAConcentration,NF,OF,0.066,0.066,0.066,,NA
-Relative Abundance: Firmicutes,NF,OF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Bacteroidetes,NF,OF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Actinobacteria,NF,OF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Other Bacteria,NF,OF,0.804,0.804,0.804,,NA
-Relative Abundance: Viruses,NF,OF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Fungi,NF,OF,0.167,0.167,0.167,,NA
-Relative Abundance: Unclassified,NF,OF,0.007,0.007,0.007,**,NA
-Richness 0.01%,NF,OF,<0.001,0.001,0.001,***,NA
-Richness 0.001%,NF,OF,<0.001,0.001,0.001,***,NA
-Richness 0.0001%,NF,OF,<0.001,0.001,0.001,***,NA
-Richness 0.00001%,NF,OF,<0.001,0.001,0.001,***,NA
-Richness Any%,NF,OF,0.645,0.645,0.645,,NA
-Shannon Entropy,NF,OF,<0.001,0.001,0.001,***,NA
-Inv Simpson,NF,OF,<0.001,0.001,0.001,***,NA
-MicrobesPerGram,NF,ZF,<0.001,0.001,0.001,***,NA
-mean_16s_count,NF,ZF,0.168,0.168,0.168,,NA
-DNAConcentration,NF,ZF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Firmicutes,NF,ZF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Bacteroidetes,NF,ZF,<0.001,0.001,0.001,***,NA
-Relative Abundance: Actinobacteria,NF,ZF,0.004,0.004,0.004,**,NA
-Relative Abundance: Other Bacteria,NF,ZF,0.945,0.945,0.945,,NA
-Relative Abundance: Viruses,NF,ZF,0.736,0.736,0.736,,NA
-Relative Abundance: Fungi,NF,ZF,0.033,0.033,0.033,*,NA
-Relative Abundance: Unclassified,NF,ZF,0.053,0.053,0.053,,NA
-Richness 0.01%,NF,ZF,0.015,0.015,0.015,*,NA
-Richness 0.001%,NF,ZF,0.002,0.002,0.002,**,NA
-Richness 0.0001%,NF,ZF,<0.001,0.001,0.001,***,NA
-Richness 0.00001%,NF,ZF,<0.001,0.001,0.001,***,NA
-Richness Any%,NF,ZF,0.925,0.925,0.925,,NA
-Shannon Entropy,NF,ZF,0.002,0.002,0.002,**,NA
-Inv Simpson,NF,ZF,0.001,0.001,0.001,***,NA
-MicrobesPerGram,OF,OR,0.902,0.902,0.902,,NA
-mean_16s_count,OF,OR,0.814,0.814,0.814,,NA
-DNAConcentration,OF,OR,0.055,0.055,0.055,,NA
-Relative Abundance: Firmicutes,OF,OR,0.599,0.599,0.599,,NA
-Relative Abundance: Bacteroidetes,OF,OR,0.648,0.648,0.648,,NA
-Relative Abundance: Actinobacteria,OF,OR,0.001,0.001,0.001,***,NA
-Relative Abundance: Other Bacteria,OF,OR,0.073,0.073,0.073,,NA
-Relative Abundance: Viruses,OF,OR,0.007,0.007,0.007,**,NA
-Relative Abundance: Fungi,OF,OR,0.238,0.238,0.238,,NA
-Relative Abundance: Unclassified,OF,OR,0.105,0.105,0.105,,NA
-Richness 0.01%,OF,OR,0.007,0.007,0.007,**,NA
-Richness 0.001%,OF,OR,0.47,0.47,0.47,,NA
-Richness 0.0001%,OF,OR,0.062,0.062,0.062,,NA
-Richness 0.00001%,OF,OR,0.168,0.168,0.168,,NA
-Richness Any%,OF,OR,0.358,0.358,0.358,,NA
-Shannon Entropy,OF,OR,0.879,0.879,0.879,,NA
-Inv Simpson,OF,OR,0.423,0.423,0.423,,NA
-MicrobesPerGram,OF,OH,0.376,0.376,0.376,,NA
-mean_16s_count,OF,OH,0.003,0.003,0.003,**,NA
-DNAConcentration,OF,OH,0.446,0.446,0.446,,NA
-Relative Abundance: Firmicutes,OF,OH,0.329,0.329,0.329,,NA
-Relative Abundance: Bacteroidetes,OF,OH,0.499,0.499,0.499,,NA
-Relative Abundance: Actinobacteria,OF,OH,0.002,0.002,0.002,**,NA
-Relative Abundance: Other Bacteria,OF,OH,0.236,0.236,0.236,,NA
-Relative Abundance: Viruses,OF,OH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Fungi,OF,OH,0.371,0.371,0.371,,NA
-Relative Abundance: Unclassified,OF,OH,0.004,0.004,0.004,**,NA
-Richness 0.01%,OF,OH,0.135,0.135,0.135,,NA
-Richness 0.001%,OF,OH,0.071,0.071,0.071,,NA
-Richness 0.0001%,OF,OH,0.086,0.086,0.086,,NA
-Richness 0.00001%,OF,OH,0.256,0.256,0.256,,NA
-Richness Any%,OF,OH,0.56,0.56,0.56,,NA
-Shannon Entropy,OF,OH,0.849,0.849,0.849,,NA
-Inv Simpson,OF,OH,0.781,0.781,0.781,,NA
-MicrobesPerGram,ZF,ZR,0.05,0.05,0.05,*,NA
-mean_16s_count,ZF,ZR,0.007,0.007,0.007,**,NA
-DNAConcentration,ZF,ZR,<0.001,0.001,0.001,***,NA
-Relative Abundance: Firmicutes,ZF,ZR,<0.001,0.001,0.001,***,NA
-Relative Abundance: Bacteroidetes,ZF,ZR,<0.001,0.001,0.001,***,NA
-Relative Abundance: Actinobacteria,ZF,ZR,0.063,0.063,0.063,,NA
-Relative Abundance: Other Bacteria,ZF,ZR,0.013,0.013,0.013,*,NA
-Relative Abundance: Viruses,ZF,ZR,<0.001,0.001,0.001,***,NA
-Relative Abundance: Fungi,ZF,ZR,1,1,1,,NA
-Relative Abundance: Unclassified,ZF,ZR,0.104,0.104,0.104,,NA
-Richness 0.01%,ZF,ZR,0.222,0.222,0.222,,NA
-Richness 0.001%,ZF,ZR,0.599,0.599,0.599,,NA
-Richness 0.0001%,ZF,ZR,0.681,0.681,0.681,,NA
-Richness 0.00001%,ZF,ZR,0.6,0.6,0.6,,NA
-Richness Any%,ZF,ZR,0.236,0.236,0.236,,NA
-Shannon Entropy,ZF,ZR,0.009,0.009,0.009,**,NA
-Inv Simpson,ZF,ZR,0.002,0.002,0.002,**,NA
-MicrobesPerGram,ZF,ZH,0.004,0.004,0.004,**,NA
-mean_16s_count,ZF,ZH,0.005,0.005,0.005,**,NA
-DNAConcentration,ZF,ZH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Firmicutes,ZF,ZH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Bacteroidetes,ZF,ZH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Actinobacteria,ZF,ZH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Other Bacteria,ZF,ZH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Viruses,ZF,ZH,<0.001,0.001,0.001,***,NA
-Relative Abundance: Fungi,ZF,ZH,0.003,0.003,0.003,**,NA
-Relative Abundance: Unclassified,ZF,ZH,<0.001,0.001,0.001,***,NA
-Richness 0.01%,ZF,ZH,0.325,0.325,0.325,,NA
-Richness 0.001%,ZF,ZH,0.302,0.302,0.302,,NA
-Richness 0.0001%,ZF,ZH,0.044,0.044,0.044,*,NA
-Richness 0.00001%,ZF,ZH,0.05,0.05,0.05,*,NA
-Richness Any%,ZF,ZH,0.255,0.255,0.255,,NA
-Shannon Entropy,ZF,ZH,0.001,0.001,0.001,***,NA
-Inv Simpson,ZF,ZH,<0.001,0.001,0.001,***,NA
+﻿feature,group1,group2,percentchange,p,p.adj,p.format,p.signif,method
+MicrobesPerGram,NF,OF,"200.9% [6.1%, 753.1%] *",0.038,0.038,0.038,*,NA
+mean_16s_count,NF,OF,"-1.3% [-2.8%, 0.1%]",0.075,0.075,0.075,,NA
+DNAConcentration,NF,OF,"-35.5% [-59.6%, 2.9%]",0.066,0.066,0.066,,NA
+Absolute Abundance: Firmicutes,NF,OF,"137.7% [-19.2%, 599.0%]",0.116,0.116,0.116,,NA
+Absolute Abundance: Bacteroidetes,NF,OF,"369.0% [79.1%, 1127.8%] **",0.002,0.002,0.002,**,NA
+Absolute Abundance: Actinobacteria,NF,OF,"112.2% [-25.1%, 500.7%]",0.157,0.157,0.157,,NA
+Absolute Abundance: Other Bacteria,NF,OF,"210.1% [9.4%, 779.3%] *",0.033,0.033,0.033,*,NA
+Absolute Abundance: Viruses,NF,OF,"102.8% [-20.0%, 414.4%]",0.136,0.136,0.136,,NA
+Absolute Abundance: Fungi,NF,OF,"181.6% [2.5%, 674.0%] *",0.045,0.045,0.045,*,NA
+Absolute Abundance: Unclassified + Root,NF,OF,"195.8% [7.6%, 713.2%] *",0.036,0.036,0.036,*,NA
+Absolute Abundance: Unclassified,NF,OF,"163.8% [-1.8%, 608.4%]",0.054,0.054,0.054,,NA
+Richness 100M,NF,OF,"28.6% [-8.4%, 80.7%]",0.147,0.147,0.147,,NA
+Richness 10M,NF,OF,"68.9% [10.3%, 158.5%] *",0.016,0.016,0.016,*,NA
+Richness 1M,NF,OF,"52.4% [-3.3%, 140.1%]",0.07,0.07,0.07,,NA
+MicrobesPerGram,NF,ZF,"-52.9% [-82.7%, 28.3%]",0.141,0.141,0.141,,NA
+mean_16s_count,NF,ZF,"-0.8% [-2.0%, 0.3%]",0.168,0.168,0.168,,NA
+DNAConcentration,NF,ZF,"-84.5% [-90.1%, -75.5%] ***",0,0,0,***,NA
+Absolute Abundance: Firmicutes,NF,ZF,"-57.0% [-84.6%, 20.4%]",0.108,0.108,0.108,,NA
+Absolute Abundance: Bacteroidetes,NF,ZF,"-37.4% [-76.0%, 63.7%]",0.34,0.34,0.34,,NA
+Absolute Abundance: Actinobacteria,NF,ZF,"-65.6% [-86.7%, -10.9%] *",0.028,0.028,0.028,*,NA
+Absolute Abundance: Other Bacteria,NF,ZF,"-52.5% [-83.6%, 37.4%]",0.17,0.17,0.17,,NA
+Absolute Abundance: Viruses,NF,ZF,"-51.2% [-80.7%, 23.7%]",0.131,0.131,0.131,,NA
+Absolute Abundance: Fungi,NF,ZF,"-56.3% [-84.0%, 19.1%]",0.106,0.106,0.106,,NA
+Absolute Abundance: Unclassified + Root,NF,ZF,"-55.0% [-83.1%, 20.4%]",0.112,0.112,0.112,,NA
+Absolute Abundance: Unclassified,NF,ZF,"-56.0% [-83.4%, 16.9%]",0.1,0.1,0.1,,NA
+Richness 100M,NF,ZF,"-36.9% [-53.5%, -14.4%] **",0.003,0.003,0.003,**,NA
+Richness 10M,NF,ZF,"-35.4% [-58.2%, -0.1%] *",0.05,0.05,0.05,*,NA
+Richness 1M,NF,ZF,"-35.4% [-59.2%, 2.4%]",0.063,0.063,0.063,,NA
+MicrobesPerGram,OF,OR,"3.4% [-39.3%, 76.0%]",0.902,0.902,0.902,,NA
+mean_16s_count,OF,OR,"-0.1% [-0.8%, 0.6%]",0.814,0.814,0.814,,NA
+DNAConcentration,OF,OR,"40.8% [-0.7%, 99.7%]",0.055,0.055,0.055,,NA
+Absolute Abundance: Firmicutes,OF,OR,"2.0% [-41.9%, 79.0%]",0.945,0.945,0.945,,NA
+Absolute Abundance: Bacteroidetes,OF,OR,"4.8% [-36.2%, 72.2%]",0.854,0.854,0.854,,NA
+Absolute Abundance: Actinobacteria,OF,OR,"-12.7% [-51.7%, 58.0%]",0.655,0.655,0.655,,NA
+Absolute Abundance: Other Bacteria,OF,OR,"10.9% [-35.5%, 90.6%]",0.709,0.709,0.709,,NA
+Absolute Abundance: Viruses,OF,OR,"31.5% [-19.8%, 115.5%]",0.277,0.277,0.277,,NA
+Absolute Abundance: Fungi,OF,OR,"6.0% [-37.4%, 79.4%]",0.829,0.829,0.829,,NA
+Absolute Abundance: Unclassified + Root,OF,OR,"6.3% [-37.1%, 79.5%]",0.821,0.821,0.821,,NA
+Absolute Abundance: Unclassified,OF,OR,"6.5% [-37.0%, 80.0%]",0.814,0.814,0.814,,NA
+Richness 100M,OF,OR,"3.7% [-20.3%, 34.9%]",0.788,0.788,0.788,,NA
+Richness 10M,OF,OR,"-1.8% [-26.1%, 30.6%]",0.901,0.901,0.901,,NA
+Richness 1M,OF,OR,"2.3% [-17.2%, 26.3%]",0.836,0.836,0.836,,NA
+MicrobesPerGram,OF,OH,"45.4% [-36.5%, 232.6%]",0.376,0.376,0.376,,NA
+mean_16s_count,OF,OH,"1.3% [0.4%, 2.2%] **",0.003,0.003,0.003,**,NA
+DNAConcentration,OF,OH,"21.8% [-26.7%, 102.5%]",0.446,0.446,0.446,,NA
+Absolute Abundance: Firmicutes,OF,OH,"52.0% [-35.7%, 259.7%]",0.34,0.34,0.34,,NA
+Absolute Abundance: Bacteroidetes,OF,OH,"40.8% [-37.5%, 217.6%]",0.409,0.409,0.409,,NA
+Absolute Abundance: Actinobacteria,OF,OH,"5.5% [-56.6%, 156.5%]",0.906,0.906,0.906,,NA
+Absolute Abundance: Other Bacteria,OF,OH,"53.0% [-33.9%, 254.2%]",0.321,0.321,0.321,,NA
+Absolute Abundance: Viruses,OF,OH,"126.0% [4.1%, 390.4%] *",0.039,0.039,0.039,*,NA
+Absolute Abundance: Fungi,OF,OH,"51.3% [-35.5%, 254.7%]",0.341,0.341,0.341,,NA
+Absolute Abundance: Unclassified + Root,OF,OH,"50.5% [-33.4%, 240.4%]",0.326,0.326,0.326,,NA
+Absolute Abundance: Unclassified,OF,OH,"59.1% [-28.8%, 255.8%]",0.258,0.258,0.258,,NA
+Richness 100M,OF,OH,"27.4% [-15.0%, 91.2%]",0.241,0.241,0.241,,NA
+Richness 10M,OF,OH,"21.4% [-17.7%, 79.2%]",0.329,0.329,0.329,,NA
+Richness 1M,OF,OH,"10.0% [-19.9%, 51.0%]",0.556,0.556,0.556,,NA
+MicrobesPerGram,ZF,ZR,"-47.5% [-72.5%, 0.1%] *",0.05,0.05,0.05,*,NA
+mean_16s_count,ZF,ZR,"-1.4% [-2.4%, -0.4%] **",0.007,0.007,0.007,**,NA
+DNAConcentration,ZF,ZR,"-41.7% [-55.3%, -24.0%] ***",0,0,0,***,NA
+Absolute Abundance: Firmicutes,ZF,ZR,"-53.9% [-75.1%, -14.6%] *",0.014,0.014,0.014,*,NA
+Absolute Abundance: Bacteroidetes,ZF,ZR,"-39.1% [-69.2%, 20.6%]",0.155,0.155,0.155,,NA
+Absolute Abundance: Actinobacteria,ZF,ZR,"-53.9% [-75.2%, -14.5%] *",0.014,0.014,0.014,*,NA
+Absolute Abundance: Other Bacteria,ZF,ZR,"-42.0% [-70.6%, 14.5%]",0.116,0.116,0.116,,NA
+Absolute Abundance: Viruses,ZF,ZR,"-25.2% [-63.3%, 52.5%]",0.425,0.425,0.425,,NA
+Absolute Abundance: Fungi,ZF,ZR,"-47.5% [-71.9%, -1.9%] *",0.044,0.044,0.044,*,NA
+Absolute Abundance: Unclassified + Root,ZF,ZR,"-44.7% [-71.1%, 6.1%]",0.075,0.075,0.075,,NA
+Absolute Abundance: Unclassified,ZF,ZR,"-45.6% [-71.5%, 3.8%]",0.065,0.065,0.065,,NA
+Richness 100M,ZF,ZR,"-15.4% [-34.7%, 9.6%]",0.205,0.205,0.205,,NA
+Richness 10M,ZF,ZR,"-26.4% [-42.7%, -5.4%] *",0.017,0.017,0.017,*,NA
+Richness 1M,ZF,ZR,"-30.7% [-49.1%, -5.7%] *",0.02,0.02,0.02,*,NA
+MicrobesPerGram,ZF,ZH,"-75.7% [-90.8%, -35.6%] **",0.004,0.004,0.004,**,NA
+mean_16s_count,ZF,ZH,"-1.2% [-2.0%, -0.3%] **",0.005,0.005,0.005,**,NA
+DNAConcentration,ZF,ZH,"-48.1% [-61.1%, -30.9%] ***",0,0,0,***,NA
+Absolute Abundance: Firmicutes,ZF,ZH,"-79.9% [-92.5%, -46.5%] ***",0.001,0.001,0.001,***,NA
+Absolute Abundance: Bacteroidetes,ZF,ZH,"-69.2% [-88.2%, -19.0%] *",0.017,0.017,0.017,*,NA
+Absolute Abundance: Actinobacteria,ZF,ZH,"-84.7% [-94.4%, -58.3%] ***",0,0,0,***,NA
+Absolute Abundance: Other Bacteria,ZF,ZH,"-69.8% [-88.3%, -22.0%] *",0.013,0.013,0.013,*,NA
+Absolute Abundance: Viruses,ZF,ZH,"-59.0% [-84.2%, 6.4%]",0.067,0.067,0.067,,NA
+Absolute Abundance: Fungi,ZF,ZH,"-73.6% [-90.0%, -30.1%] **",0.007,0.007,0.007,**,NA
+Absolute Abundance: Unclassified + Root,ZF,ZH,"-73.0% [-89.6%, -29.8%] **",0.007,0.007,0.007,**,NA
+Absolute Abundance: Unclassified,ZF,ZH,"-73.5% [-89.9%, -30.8%] **",0.007,0.007,0.007,**,NA
+Richness 100M,ZF,ZH,"-38.5% [-57.5%, -10.8%] **",0.01,0.01,0.01,**,NA
+Richness 10M,ZF,ZH,"-44.4% [-61.5%, -19.7%] **",0.002,0.002,0.002,**,NA
+Richness 1M,ZF,ZH,"-52.1% [-70.5%, -22.2%] **",0.003,0.003,0.003,**,NA
+Bacteroidetes/Firmicutes,NF,OF,NA,0.001,0.001,0.001,***,NA
+Bacteroidetes/Firmicutes,NF,ZF,NA,0.001,0.001,0.001,***,NA
+Bacteroidetes/Firmicutes,OF,OR,NA,0.42,0.42,0.42,,NA
+Bacteroidetes/Firmicutes,OF,OH,NA,0.69,0.69,0.69,,NA
+Bacteroidetes/Firmicutes,ZF,ZR,NA,0.001,0.001,0.001,***,NA
+Bacteroidetes/Firmicutes,ZF,ZH,NA,0.001,0.001,0.001,***,NA

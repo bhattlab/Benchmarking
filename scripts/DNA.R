@@ -20,28 +20,33 @@ names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 condition_labels <- c("40°C","23°C","-80°C","-80°C","-80°C","23°C","40°C")
 names(condition_labels) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
-#read in the QSU relative data as three separate dataframes
-raw <- read.csv(here("QSU_Data/raw_data_relative.csv"), header=TRUE) # raw per sample information
-model <- read.csv(here("QSU_Data/raw_model_relative.csv"), header=TRUE) # means and confidence intervals for all conditions
-sig <- read.csv(here("QSU_Data/raw_significance_relative.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+# #read in the QSU relative data as three separate dataframes
+# raw <- read.csv(here("QSU_Data/raw_data_relative.csv"), header=TRUE) # raw per sample information
+# model <- read.csv(here("QSU_Data/raw_model_relative.csv"), header=TRUE) # means and confidence intervals for all conditions
+# sig <- read.csv(here("QSU_Data/raw_significance_relative.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+# 
+# #Filter QSU relative data to remove outdated absolute data
+# model <- filter(model, feature!="MicrobesPerGram" & feature!="mean_16s_count" & feature!="DNAConcentration")
+# raw <- raw %>% select(-mean_16s_count)
+# raw <-raw %>% select(-DNAConcentration)
+# raw <-raw %>% select(-Patient, -Sample_Type, -Replication)
+# sig <- filter(sig, feature!="mean_16s_count")
+# colnames(model)[colnames(model) == "estimate"] <- "prediction"
+# 
+# # read in the QSU absolute data as three separate dataframes 
+# rawabs <- read.csv(here("QSU_Data/raw_data_all.csv"), header=TRUE) # raw per sample information
+# modelabs <- read.csv(here("QSU_Data/raw_data_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
+# sigabs <- read.csv(here("QSU_Data/raw_data_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+# 
+# #merge the absolute and relative QSU data
+# raw <- merge(raw,rawabs, by="Sample")
+# model <- rbind(model, modelabs)
+# sig <- rbind(sig,sigabs)
 
-#Filter QSU relative data to remove outdated absolute data
-model <- filter(model, feature!="MicrobesPerGram" & feature!="mean_16s_count" & feature!="DNAConcentration")
-raw <- raw %>% select(-mean_16s_count)
-raw <-raw %>% select(-DNAConcentration)
-raw <-raw %>% select(-Patient, -Sample_Type, -Replication)
-sig <- filter(sig, feature!="mean_16s_count")
-colnames(model)[colnames(model) == "estimate"] <- "prediction"
+raw <- read.csv(here("QSU_Data/raw_data_dna_full.csv"), header=TRUE) # raw per sample information
+model <- read.csv(here("QSU_Data/model_data_dna_full.csv"), header=TRUE) # means and confidence intervals for all conditions
+sig <- read.csv(here("QSU_Data/sig_data_dna_full.tsv"), sep="\t", header=TRUE) # p-values and percent enrichment/depletion for all tests
 
-# read in the QSU absolute data as three separate dataframes 
-rawabs <- read.csv(here("QSU_Data/raw_data_all.csv"), header=TRUE) # raw per sample information
-modelabs <- read.csv(here("QSU_Data/raw_data_model_means.csv"), header=TRUE) # means and confidence intervals for all conditions
-sigabs <- read.csv(here("QSU_Data/raw_data_significance.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
-
-#merge the absolute and relative QSU data
-raw <- merge(raw,rawabs, by="Sample")
-model <- rbind(model, modelabs)
-sig <- rbind(sig,sigabs)
 
 # format and edit dataframes 
 sig <- sig %>% mutate(y.position=15) # significance table requires a column called y.position for plotting - 15 is a dummy value
@@ -248,7 +253,14 @@ rratio <- mutate(rratio, PlotOrder=ifelse(Sample_Type == "NF", 1,
                                                                ifelse(Sample_Type == "ZF", 5,
                                                                       ifelse(Sample_Type == "ZR", 6, 7)))))))
 
-r <- ggplot(rratio, aes(x = reorder(Sample_Type, PlotOrder), y=ratio.of.B.F)) + 
+raw <- mutate(raw, PlotOrder=ifelse(Sample_Type == "NF", 1, 
+                                          ifelse(Sample_Type == "OF", 2, 
+                                                 ifelse(Sample_Type == "OR", 3, 
+                                                        ifelse(Sample_Type == "OH", 4, 
+                                                               ifelse(Sample_Type == "ZF", 5,
+                                                                      ifelse(Sample_Type == "ZR", 6, 7)))))))
+
+r <- ggplot(raw, aes(x = reorder(Sample_Type, PlotOrder), y=ratio.of.B.F)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
   #geom_violin(aes(color=Sample_Type)) + 
@@ -256,11 +268,9 @@ r <- ggplot(rratio, aes(x = reorder(Sample_Type, PlotOrder), y=ratio.of.B.F)) +
   scale_fill_manual(values=condition_palette) +
   scale_color_manual(values=condition_palette) + 
   scale_x_discrete(labels=condition_labels) +
-  geom_errorbar(data=mratio %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=mratio %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
-  #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121), 
-  #                   tip.length=0, label = "p.signif") +
-  stat_pvalue_manual(sratio %>% filter(feature == "Bacteroidetes/Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(2.5, 2.4,2.3,2.2), 
+  geom_errorbar(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_point(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
+  stat_pvalue_manual(sig %>% filter(feature == "Bacteroidetes/Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(2.5, 2.4,2.3,2.2), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bacteroidetes/Firmicutes \n") + 
@@ -782,13 +792,23 @@ bc_plot <- ggplot(bc_unique, aes(x=Condition, y=bcdist)) +
 bc_plot
 
 #Legend formatting
-b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") , aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
-  ylim(-0.05, 0.05) +
-  theme_void() +
-  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
-b
-bc_full_rna <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
+# b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") , aes(x=Sample_Type, y=0)) +
+#   geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+#   ylim(-0.05, 0.05) +
+#   theme_void() +
+#   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+# b
+
+foodf <- data.frame(xvals = c(0.3, 2, 4.6), labels=c("None", "OMNIgene", "Zymo"))
+
+test <- ggplot(foodf, aes(x=xvals, y=0)) + 
+  geom_text(aes(y=0, label=labels), fontface = "bold") + 
+  ylim(-0.5, 0.5) +
+  xlim(0,6) +
+  theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
+  theme_void()
+test
+bc_full_rna <- plot_grid(bc_plot,test, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 bc_full_rna
 
 
@@ -797,7 +817,8 @@ ggsave(here("outputs/figures/SupplementaryFigure4_BrayCurtis.pdf"), dpi=300, w=1
 ggsave(here("outputs/figures/SupplementaryFigure4_BrayCurtis.jpeg"), dpi=300, w=12, h=5)
 
 ##### GENUS HEATMAP
-genus_sig <- read.csv(here("QSU_Data/sig_data_dna_full.tsv"), sep="\t", header=TRUE)
+#genus_sig <- read.csv(here("QSU_Data/sig_data_dna_full.tsv"), sep="\t", header=TRUE)
+genus_sig <- sig
 genus_sig <- genus_sig %>% mutate(PercentFormatted = as.numeric(gsub("%.*", "", percentchange)))
 genus_sig <- genus_sig %>% mutate(PFormatted = as.numeric(ifelse(p == "< 0.001", "0.001", p)))
 genus_sig <- genus_sig %>% filter(grepl(":", feature)) %>% filter(!grepl("Absolute ", feature)) %>% 
@@ -812,7 +833,8 @@ genus_sig <- genus_sig %>% mutate(y.position = ifelse(Condition == "OF", 2,
                                                                     ifelse(Condition == "OH", 3, 
                                                                            ifelse(Condition == "ZR", 2, 1))))))
 
-raw_abundance <- read.csv(here("QSU_Data/model_data_dna_full.csv"), header=TRUE)
+#raw_abundance <- read.csv(here("QSU_Data/model_data_dna_full.csv"), header=TRUE)
+raw_abundance <- model
 raw_abundance <- raw_abundance %>% mutate(Condition=Sample_Type)
 raw_abundance <- raw_abundance %>% filter(Condition == "NF") %>% select(feature, prediction)
 names(raw_abundance) <- c("feature", "NFMean")
@@ -1014,13 +1036,15 @@ names(condition_palette) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 condition_labels <- c("40°C","23°C","-80°C","-80°C","-80°C","23°C","40°C")
 names(condition_labels) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
-dna <- read.csv(here("QSU_Data/raw_data_dna_full.csv"), head=TRUE) #FIXME WHy only 170 - ten samples have 0 concentration
+#dna <- read.csv(here("QSU_Data/raw_data_dna_full.csv"), head=TRUE) 
+dna <- raw
 dna <- dna %>% separate(Sample, c("Donor", "Condition", "Replicate"), remove = FALSE)
 dna <- dna %>% mutate(hiddenLabel=ifelse(Condition == "OR", "OMNIgene", ifelse(Condition== "ZR", "Zymo", ifelse(Condition == "NF", "None", "")))) # make a label just for the "R" samples
 
-model <- read.csv(here("QSU_Data/model_data_dna_full.csv"), header=TRUE) # means and confidence intervals for all conditions
+#model <- read.csv(here("QSU_Data/model_data_dna_full.csv"), header=TRUE) # means and confidence intervals for all conditions
+
 model <- model %>% mutate(Condition = Sample_Type)
-sig <- read.csv(here("QSU_Data/sig_data_dna_full.tsv"), header=TRUE, sep="\t") # p-values and percent enrichment/depletion for all tests
+#sig <- read.csv(here("QSU_Data/sig_data_dna_full.tsv"), header=TRUE, sep="\t") # p-values and percent enrichment/depletion for all tests
 sig <- sig %>% mutate(y.position=15) # significance table requires a column called y.position for plotting - 15 is a dummy value
 sig <- sig %>% mutate(p.signif=ifelse(p.signif == "", "ns", p.signif)) # add a label called "ns" for non-significant p-values
 
