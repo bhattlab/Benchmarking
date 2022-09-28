@@ -234,7 +234,7 @@ l
 
 le <- get_legend(l)
 
-fig2b <- plot_grid(oz, le, nrow=2, ncol=1, rel_heights=c(1, 0.05))
+fig2b <- plot_grid(oz, le, nrow=2, ncol=1, rel_heights=c(1, 0.1))
 fig2b
 
 #ggsave(here("QSU_Data/Fig2Bline.jpeg"), dpi=300, h=5, w=8)
@@ -295,10 +295,10 @@ r
 #ggsave(here("QSU_Data/Figure2Ceven.jpeg"), w=6.5, h=6.5, dpi=300)
 
 #Plot Figure 2!
-two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("A","B", "C"), align = "v",axis="tb")
+two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("a","b", "c"), align = "v",axis="tb")
 two
-ggsave(here("outputs/figures/Figure2.jpeg"), dpi=300, h=8, w=22)
-ggsave(here("outputs/figures/Figure2.pdf"), dpi=300, h=5.5, w=16)
+ggsave(here("outputs/figures/Figure2.jpeg"), dpi=300, h=7, w=18)
+ggsave(here("outputs/figures/Figure2.pdf"), dpi=300, h=7, w=18)
 
 
 ##### FIGURE 3 #####
