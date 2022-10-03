@@ -164,12 +164,12 @@ nfof <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="OF"), aes(x=Sa
 nfof
 
 #Plot Firmicutes and Bacteroidetes OFvORvOH
-omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=reorder(Sample_Type, PlotOrder), y=MicrobesPerGram)) + 
+omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=reorder(Sample_Type, PlotPhyOrder), y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labels) +
   geom_line(data=fbmodel%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey")+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
-  geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
+  geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits = c(1e11, 5.5e12)) +
   theme_bw() + 
   ylab("Microbes per Gram") + 
@@ -201,12 +201,12 @@ nfzf <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="ZF"), aes(x=Sa
 nfzf
 
 #Plot Firmicutes and Bacteroidetes ZFvZRvZH
-zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=reorder(Sample_Type, PlotOrder), y=MicrobesPerGram)) + 
+zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=reorder(Sample_Type, PlotPhyOrder), y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labelss) +
   geom_line(data=fbmodel%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey")+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
-  geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
+  geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits=c(3e10,2e12)) +
   theme_bw() + 
   ylab("Microbes per Gram") + 

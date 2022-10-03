@@ -43,6 +43,21 @@ XTvFlex/03_GC/03_windows/*err
 XTvFlex/03_GC/03_windows/*out
 XTvFlex/03_GC/03_windows/concat_windowvals_500k.tsv
 
+#exclude Maaslin2 figures
+outputs/figures/DNA_MDS_Scree_genus.pdf
+outputs/figures/DNA_NFOF_maasli2.pdf
+outputs/figures/DNA_NFOF_maasli2.pdf.jpeg
+outputs/figures/DNA_NFZF_maasli2.pdf
+outputs/figures/DNA_NFZF_maasli2.pdf.jpeg
+outputs/figures/DNA_OFOH_maasli2.pdf
+outputs/figures/DNA_OFOH_maasli2.pdf.jpeg
+outputs/figures/DNA_ZFZH_maasli2.pdf
+outputs/figures/DNA_ZFZH_maasli2.pdf.jpeg
+outputs/figures/DNA_heatmap.jpeg
+outputs/figures/DNA_heatmap_phylum.pdf
+outputs/tables/Maaslin_heatmap_126.csv
+outputs/tables/Maaslin_heatmap_32.csv
+
 #exclude qPCR extraneous files
 qPCR/Plate_1/Plate1 Layout.xlsx
 qPCR/Plate_1/5522_HotPooPlate1.eds 
