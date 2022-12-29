@@ -9,6 +9,7 @@ library(tidyr)
 library(RColorBrewer)
 library(reshape2)
 library(ggnewscale)
+library(ggdist)
 
 ##### SET UP #####
 # build a named color palette for each condition
@@ -543,3 +544,99 @@ plot_grid(main, legend_plot, nrow=1, ncol=2, rel_widths=c(1, 0.1)) # seems to wo
 
 ggsave(here("outputs/figures/SupplementaryFigure7_RNAHeatmap_raw.pdf"), dpi=300, w=12, h=3.5)
 ggsave(here("outputs/figures/SupplementaryFigure7_RNAHeatmap_raw.jpeg"), dpi=300, w=12, h=3.5)
+
+##### PREPROCESSING
+
+# read in tables
+rna_raw <- read.table(here("outputs/tables/Supplementary/Metatranscriptomic_fulldata.tsv"), header=TRUE)
+rna_preprocess <- rna_raw %>% select(Sample, RawReads, DeduplicatedReads, TrimmedReads, HostRemovedReads, OrphanReads, rRNARemovedReads)
+
+readcounts.melt.count <- melt(rna_preprocess[,c('Sample', 'RawReads', 
+                                           'DeduplicatedReads', 'TrimmedReads', 
+                                           'HostRemovedReads', 'rRNARemovedReads')], id.vars = 'Sample') 
+
+rna_preprocess <- rna_preprocess %>% mutate(fractionRibosomal=((1 - rRNARemovedReads/HostRemovedReads)*100))
+  
+preprocessing_plot <- ggplot(rna_preprocess, aes(x=1, y=fractionRibosomal)) + 
+    ggdist::stat_halfeye(adjust = .5, width = .3, .width = c(0.5, 1)) + 
+    ggdist::stat_dots(side = "left", dotsize = .2, justification = 1.05, binwidth = 5) + 
+  theme_bw() + 
+  ylab("Percent of Reads Mapping to rRNA") +
+  xlab("Samples") +
+  theme( axis.ticks.x = element_blank(), axis.text.x = element_blank()) 
+
+median(rna_preprocess$fractionRibosomal)
+
+ggsave(here("outputs/figures/ReviewFigure_RibosomalRNASampleLevels.pdf"), dpi=300, w=2, h=3)
+ggsave(here("outputs/figures/ReviewFigure_RibosomalRNASampleLevels.jpeg"), dpi=300, w=2, h=3)
+
+
+
+rna_cleanup <- read.table(here("data/RNAcleanup.tsv"), header=TRUE, sep="\t")
+
+rna_cleanup <- rna_cleanup %>% mutate(Undepleted.rRNA = as.numeric(gsub("%", "", Undepleted.rRNA)))
+
+cleanup_plot <- ggplot(rna_cleanup, aes(x=fct_rev(reorder(SampleStatus, SampleStatus)), y=Undepleted.rRNA)) + 
+  geom_point(size=2) + 
+  stat_compare_means(method="wilcox.test") +
+  geom_line(aes(group = SampleCode), alpha=0.3) +
+  geom_boxplot(outlier.shape=NA, alpha=0.5, width=0.4) +
+  ylab("Percent of Reads Mapping to rRNA") + 
+  xlab("Cleanup Status") +
+  theme_bw() 
+
+cleanup_plot
+
+plot_grid(cleanup_plot, preprocessing_plot, labels = c("a", "b"), align = "hv", scale = 0.95)
+ggsave(here("outputs/figures/ReviewFigure_RibosomalRNAPilot.pdf"), dpi=300, w=6, h=4)
+ggsave(here("outputs/figures/ReviewFigure_RibosomalRNAPilot.jpeg"), dpi=300, w=6, h=4)
+
+temp <- rna_cleanup %>% filter(SampleStatus=="Pre")
+median(temp$Undepleted.rRNA)
+
+
+
+# Rarefied taxonomic classifications
+library(vegan)
+
+taxonomy_table <- read.table(here("RNA/02_kraken2_classification/processed_results_krakenonly/taxonomy_matrices_classified_only/kraken_genus_reads.txt"), sep="\t", header=TRUE)
+taxonomy_table <- t(taxonomy_table)
+
+
+z <- rrarefy(taxonomy_table, 0)
+z <- z/rowSums(z)
+z[z < 0.0001] <- 0
+subsamp <- data.frame(specnumber(z))
+names(subsamp) <- c("0")
+subsamp <- subsamp %>% replace(is.na(.), 0)
+subsamp$sample <- rownames(subsamp)
+rownames(subsamp) <- NULL
+
+for(i in seq(from=25000, to=2000000, by=25000)){
+  z <- rrarefy(taxonomy_table, i)
+  z <- z/rowSums(z)
+  z[z < 0.0001] <- 0
+  temp <- data.frame(specnumber(z))
+  names(temp) <- c(i)
+  temp$sample <- rownames(temp)
+  rownames(temp) <- NULL
+  subsamp <- merge(subsamp, temp, by="sample")
+}
+
+subsamp_long <- melt(subsamp, id.vars=c("sample"))
+names(subsamp_long) <- c("Sample", "Reads", "Genera")
+subsamp_long <- mutate(subsamp_long, Reads = as.numeric(Reads)*25000-25000)
+
+library(paletteer) 
+temppal <- paletteer_d("khroma::oslo")
+
+ggplot(subsamp_long, aes(x=Reads, y=Genera, group=Sample)) + 
+  geom_line(aes(color=Sample)) +
+  theme_bw() + 
+  theme(legend.position = "none") + 
+  scale_color_manual(values=temppal) + 
+  ylab("Number of Genera with >0.01% Abundance") + 
+  scale_x_continuous(labels = function(x) format(x, scientific = TRUE))
+
+ggsave(here("outputs/figures/ReviewFigure_Subsampling.pdf"), dpi=300, w=6, h=4)
+ggsave(here("outputs/figures/ReviewFigure_Subsampling.jpeg"), dpi=300, w=6, h=4)

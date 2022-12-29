@@ -114,6 +114,7 @@ b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample
 absolute <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
 absolute
 
+
 #Figure2B: Changing Absolute count of Bacteroidetes and Firmicutes across conditions
 abs<- raw[c("Sample_Type","Absolute.Abundance..Firmicutes", "Absolute.Abundance..Bacteroidetes")]
 meltabs <- melt(abs, id.vars = "Sample_Type", variable.name = "Phyla", value.name = "MicrobesPerGram")
@@ -1138,5 +1139,29 @@ plot_grid(dna_plot, rna_plot, ncol=2, nrow=1, scale=0.9, labels=c("a", "b"))
 
 ggsave(here("outputs/figures/SupplementaryFigure1_Concentration.jpeg"), dpi=300, w=10, h=5)
 ggsave(here("outputs/figures/SupplementaryFigure1_Concentration.pdf"), dpi=300, w=10, h=5)
+
+
+##### REVISIONS #####
+#Absolute Count across Conditions, By Donor
+raw_extended <- raw %>% mutate(Donor = gsub("-.*", "", Sample))
+p <- ggplot(raw_extended, aes(x = Sample_Type, y=MicrobesPerGram)) + 
+  geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
+  geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
+  geom_point(aes(color=Sample_Type),  shape=16, size=1.5) + 
+  scale_color_manual(values=condition_palette, labels = c("OMNI 40°C", "OMNI 23°C", "OMNI -80°C", "No Preservative -80°C", "Zymo -80°C", "Zymo 23°C", "Zymo 40°C")) +
+  scale_x_discrete(labels=condition_labels) +
+  scale_y_log10() +
+  theme_bw() + 
+  ylab("Total Microbes per Gram") + 
+  xlab("Donor and Condition") +
+  theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
+        text = element_text(size=12), axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank(), legend.title = element_blank(), 
+        legend.position = "bottom", legend.direction="horizontal") + 
+  facet_grid(~Donor) 
+p
+
+ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.pdf"), dpi=300, w=10, h=3)
+ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.jpeg"), dpi=300, w=10, h=3)
 
 
