@@ -636,7 +636,8 @@ ggplot(subsamp_long, aes(x=Reads, y=Genera, group=Sample)) +
   theme(legend.position = "none") + 
   scale_color_manual(values=temppal) + 
   ylab("Number of Genera with >0.01% Abundance") + 
-  scale_x_continuous(labels = function(x) format(x, scientific = TRUE))
+  scale_x_continuous(labels = function(x) format(x, scientific = TRUE)) + 
+  geom_vline(xintercept=183307, color="red")
 
 ggsave(here("outputs/figures/ReviewFigure_Subsampling.pdf"), dpi=300, w=6, h=4)
 ggsave(here("outputs/figures/ReviewFigure_Subsampling.jpeg"), dpi=300, w=6, h=4)

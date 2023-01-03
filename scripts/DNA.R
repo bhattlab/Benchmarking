@@ -1158,10 +1158,10 @@ p <- ggplot(raw_extended, aes(x = Sample_Type, y=MicrobesPerGram)) +
         text = element_text(size=12), axis.text.x = element_blank(), 
         axis.ticks.x = element_blank(), legend.title = element_blank(), 
         legend.position = "bottom", legend.direction="horizontal") + 
-  facet_grid(~Donor) 
+  facet_wrap(vars(Donor), nrow=2) 
 p
 
-ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.pdf"), dpi=300, w=10, h=3)
-ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.jpeg"), dpi=300, w=10, h=3)
+ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.pdf"), dpi=300, w=6, h=3.5)
+ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.jpeg"), dpi=300, w=6, h=3.5)
 
 
