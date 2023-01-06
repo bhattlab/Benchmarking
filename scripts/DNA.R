@@ -92,26 +92,27 @@ raw <- raw %>% mutate(hiddenLabel=ifelse(Sample_Type == "OR", "OMNIgene", ifelse
 p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=1.5) + 
+  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=1) + 
   scale_color_manual(values=condition_palette) +
-  scale_x_discrete(labels=condition_labels) +
+  scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
   geom_errorbar(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
+  geom_point(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2) +
   scale_y_log10() +
   stat_pvalue_manual(sig %>% filter(feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(13.8, 13, 12.8), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Total Microbes per Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+        legend.position = "none", text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), 
+        axis.title.y = element_text(size=10))
 
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3) + 
   ylim(-0.5, 0.5) +
   theme_void() + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 
-absolute <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
+absolute <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.1 ), align="v", axis='l')
 absolute
 
 
@@ -121,11 +122,11 @@ meltabs <- melt(abs, id.vars = "Sample_Type", variable.name = "Phyla", value.nam
 fbmodel <- filter(model, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Abundance: Bacteroidetes"))
 fbsig <- filter(sig, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Abundance: Bacteroidetes"))
 
-condition_labelss <- c("40°C","23°C","-80°C","No Preservative\n-80°C","-80°C","23°C","40°C")
+condition_labelss <- c("40°C","23°C","-80°C","NP","-80°C","23°C","40°C")
 names(condition_labelss) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
 #Plot Order
-fbmodel <- mutate(fbmodel, PhyCondition=paste(Condition,feature,sep=""))
+fbmodel <- mutate(fbmodel, PhyCondition=gsub("Absolute Abundance: ", "", paste(Condition,feature,sep="")))
 fbmodel <- mutate(fbmodel, PlotOrder=ifelse(PhyCondition == "NFFirmicutes", 1, 
                                             ifelse(PhyCondition == "NFBacteroidetes", 2, 
                                                    ifelse(PhyCondition == "OFFirmicutes", 3, 
@@ -146,21 +147,27 @@ fbmodel$feature <- gsub("Absolute Abundance: Firmicutes","Firmicutes",fbmodel$fe
 fbmodel$feature <- gsub("Absolute Abundance: Bacteroidetes","Bacteroidetes",fbmodel$feature)
 fbmodel <- mutate(fbmodel, PlotPhyOrder = ifelse(feature=="Firmicutes", PlotOrder*10,PlotOrder))
 
+### FIXME: need to figure out how to get y.position for significance bars in range
 #Plot Firmicutes and Bacteroidetes NFvOF
 nfof <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="OF"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labels) +
-  geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey")+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
-  geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
+  geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits = c(1e11, 5.5e12)) +
   theme_bw() + 
-  ylab("**OMNIgene**<br/>Microbes per Gram") + 
+  ylab("**OMNIgene**<br/>Microbes/Gram") + 
+  ggtitle("Preservative") +
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
-        axis.text.x=element_blank(), axis.ticks.x=element_blank(), plot.title=element_text(size=12),
-        axis.title.y = element_markdown())+
-  ggtitle("Preservative Effect")
+        text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
+        axis.text.x=element_blank(), axis.ticks.x=element_blank(), plot.title=element_text(size=8.5),
+        axis.title.y = element_markdown(size=9.5)) + 
+  # stat_pvalue_manual(sig %>% filter(feature == "Absolute Abundance: Firmicutes") %>% filter(p.adj <= 0.05) %>% filter(group1 == "NF") %>% filter(group2 == "OF"), 
+  #                    tip.length=0, label = "p.signif") +
+  stat_pvalue_manual(sig %>% filter(feature == "Absolute Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05) %>% filter(group1 == "NF") %>% filter(group2 == "OF"), 
+                     tip.length=1, label = "p.signif", y.position=c(1), position = position_dodge(0.2)) 
+
 
 nfof
 
@@ -168,59 +175,61 @@ nfof
 omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(x=reorder(Sample_Type, PlotPhyOrder), y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labels) +
-  geom_line(data=fbmodel%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey")+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
-  geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
+  geom_line(data=fbmodel%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits = c(1e11, 5.5e12)) +
   theme_bw() + 
-  ylab("Microbes per Gram") + 
+  ylab("Microbes/Gram") + 
+  ggtitle("Temperature") +
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
+        text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", 
+        axis.title.y = element_blank(),
         axis.text.x=element_blank(), axis.ticks.x=element_blank(),
-        axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(size=12)) +
-  ggtitle("Temperature Effect")
+        axis.text.y=element_blank(), axis.ticks.y=element_blank(), plot.title=element_text(size=8.5)) 
+
 
 omni
 
-o <- plot_grid(nfof, omni, nrow=1, ncol=2, align="h", rel_widths = c(0.8,1))
+o <- plot_grid(nfof, omni, nrow=1, ncol=2, align="h", rel_widths = c(1.2,1))
 o
 
 #Plot Firmicutes and Bacteroidetes NFvZF
 nfzf <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="ZF"), aes(x=Sample_Type, y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette, guide="none") +
-  scale_x_discrete(labels=condition_labelss) +
-  geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey")+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
-  geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
+  scale_x_discrete(labels=condition_labelss, guide = guide_axis(angle = 45)) +
+  geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits=c(3e10,2e12)) +
   theme_bw() + 
-  ylab("**Zymo**<br/>Microbes per Gram") + 
+  ylab("**Zymo**<br/>Microbes/Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
-        axis.title.y = element_markdown()) 
+        text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none",
+        axis.title.y = element_markdown(size=9.5)) 
 
 nfzf
 
 #Plot Firmicutes and Bacteroidetes ZFvZRvZH
 zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(x=reorder(Sample_Type, PlotPhyOrder), y=MicrobesPerGram)) + 
   scale_color_manual(values=condition_palette) +
-  scale_x_discrete(labels=condition_labelss) +
-  geom_line(data=fbmodel%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey")+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=1, width=0.1) +
-  geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=2.5, show.legend = FALSE, position=position_dodge(width=0.2)) +
+  scale_x_discrete(labels=condition_labelss, guide = guide_axis(angle = 45)) +
+  geom_line(data=fbmodel%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits=c(3e10,2e12)) +
   theme_bw() + 
-  ylab("Microbes per Gram") + 
+  ylab("Microbes/Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
+        text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.y = element_blank(),
         axis.text.y = element_blank(), axis.ticks.y = element_blank()) 
 
 zymo
 
-z <- plot_grid(nfzf, zymo, nrow=1, ncol=2, align="h", rel_widths = c(0.8,1))
+z <- plot_grid(nfzf, zymo, nrow=1, ncol=2, align="h", rel_widths = c(1.2,1))
 z
 
-oz <- plot_grid(o, z, nrow=2, ncol=1, align="v")
+oz <- plot_grid(o, z, nrow=2, ncol=1, rel_heights=c(1,1.2), align="v")
 oz
 
 #Make legend
@@ -230,7 +239,7 @@ l <- ggplot(fbmodel %>% filter(feature=="Firmicutes" | feature=="Bacteroidetes")
   geom_line()+
   scale_linetype_manual(values=line)+
   theme_bw()+
-  theme(legend.title = element_blank(),legend.direction="horizontal", legend.position = "bottom", legend.text = element_text(size=12))
+  theme(legend.title = element_blank(),legend.direction="horizontal", legend.position = "bottom", legend.text = element_text(size=8))
 l
 
 le <- get_legend(l)
@@ -243,16 +252,16 @@ fig2b
 
 #Figure 2C: Firmcutes and Bacteroidetes Ratio
 #Read in QSU ratio data as three dataframes
-rratio <- read.csv(here("QSU_Data/rawratio.csv"), header=TRUE) # raw per sample information
-mratio <- read.csv(here("QSU_Data/modelratio.csv"), header=TRUE) # means and confidence intervals for all conditions
-sratio <-read.csv(here("QSU_Data/sigratio.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
-
-rratio <- mutate(rratio, PlotOrder=ifelse(Sample_Type == "NF", 1, 
-                                          ifelse(Sample_Type == "OF", 2, 
-                                                 ifelse(Sample_Type == "OR", 3, 
-                                                        ifelse(Sample_Type == "OH", 4, 
-                                                               ifelse(Sample_Type == "ZF", 5,
-                                                                      ifelse(Sample_Type == "ZR", 6, 7)))))))
+# rratio <- read.csv(here("QSU_Data/rawratio.csv"), header=TRUE) # raw per sample information
+# mratio <- read.csv(here("QSU_Data/modelratio.csv"), header=TRUE) # means and confidence intervals for all conditions
+# sratio <-read.csv(here("QSU_Data/sigratio.csv"), header=TRUE) # p-values and percent enrichment/depletion for all tests
+# 
+# rratio <- mutate(rratio, PlotOrder=ifelse(Sample_Type == "NF", 1, 
+#                                           ifelse(Sample_Type == "OF", 2, 
+#                                                  ifelse(Sample_Type == "OR", 3, 
+#                                                         ifelse(Sample_Type == "OH", 4, 
+#                                                                ifelse(Sample_Type == "ZF", 5,
+#                                                                       ifelse(Sample_Type == "ZR", 6, 7)))))))
 
 raw <- mutate(raw, PlotOrder=ifelse(Sample_Type == "NF", 1, 
                                           ifelse(Sample_Type == "OF", 2, 
@@ -265,19 +274,20 @@ r <- ggplot(raw, aes(x = reorder(Sample_Type, PlotOrder), y=ratio.of.B.F)) +
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
   #geom_violin(aes(color=Sample_Type)) + 
-  geom_jitter(width=0.2, shape=16, size=1.5, aes(color=Sample_Type))+
+  geom_jitter(width=0.2, shape=16, size=1, aes(color=Sample_Type))+
   scale_fill_manual(values=condition_palette) +
   scale_color_manual(values=condition_palette) + 
-  scale_x_discrete(labels=condition_labels) +
+  scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
   geom_errorbar(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
+  geom_point(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Bacteroidetes/Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(2.5, 2.4,2.3,2.2), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bacteroidetes/Firmicutes \n") + 
   ylim(0,2.5) + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+        legend.position = "none", text = element_text(size=10), axis.title.y = element_text(size=10), 
+        plot.margin = unit(c(0,0,0,0), "cm"))
 r
 
 
@@ -285,7 +295,7 @@ r
 
 #Plot Figure 2C together
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") + 
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3) + 
   ylim(-0.05, 0.05) +
   theme_void() + 
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
@@ -298,8 +308,8 @@ r
 #Plot Figure 2!
 two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("a","b", "c"), align = "v",axis="tb")
 two
-ggsave(here("outputs/figures/Figure2.jpeg"), dpi=300, h=7, w=18)
-ggsave(here("outputs/figures/Figure2.pdf"), dpi=300, h=7, w=18)
+ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=3.4, w=8.5)
+ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=3.4, w=8.5)
 
 
 ##### FIGURE 3 #####
@@ -397,15 +407,18 @@ r <-ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance, f
   theme_bw() +
   scale_x_discrete(labels = NULL) +
   theme(
-    plot.title = element_text(face = "plain", size = 14),
-    legend.text = element_text(size = 10),
+    plot.title = element_text(face = "plain", size = 12),
+    legend.text = element_text(size = 9),
+    legend.title = element_text(size=9),
     axis.ticks.x = element_blank(),
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
     panel.grid = element_blank(), 
     panel.border = element_blank(),
     strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
-    strip.text = element_text(color = "black", size = 12)) + 
+    strip.text = element_text(color = "black", size = 12), 
+    axis.text.y = element_text(size = 12), 
+    axis.title.y = element_text(size=12)) + 
   scale_y_continuous(limits = c(-5, 100.1), expand = c(0, 0)) +
   facet_wrap(~DonorLabel, ncol = 5, scales = "free") + 
   new_scale_fill() +
@@ -422,18 +435,16 @@ names(condition_labels2) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
 dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundance)) +
   geom_bar(stat="identity", aes(fill=Condition)) + 
-  scale_fill_manual(values=condition_palette, labels=condition_labels2) + 
+  scale_fill_manual(values=condition_palette, labels=condition_labels2, breaks=c("NF","OF","OR","OH","ZF","ZR","ZH")) + 
   theme(legend.direction="horizontal", legend.position = "bottom") + 
   guides(fill = guide_legend(nrow = 1)) +
   theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
-  theme(text = element_text(size=10))
+  theme(legend.text = element_text(size=9), legend.title= element_blank())  
 dummy
 b <- get_legend(dummy)
-fig3a <- plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 1))
+fig3a <- plot_grid(r, b, nrow=2, ncol=1, rel_heights = c(1, 0.08), rel_widths = c(1, 0.8))
 fig3a
 
-#ggsave(here("QSU_Data/Fig3ADNA_stackedbar.pdf"), dpi=300, h=6, w=15)
-#ggsave(here("QSU_Data/Fig3ADNA_stackedbar.jpeg"), dpi=300, h=6, w=15)
 
 #3B: Shannon entropy across conditions
 #Change column name
@@ -443,9 +454,9 @@ colnames(raw)[colnames(raw) == "Shannon.Entropy"] <- "Shannon"
 se <- ggplot(raw , aes(Sample_Type, Shannon)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=2) + 
+  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=1.5) + 
   scale_color_manual(values=condition_palette) +
-  scale_x_discrete(labels=condition_labels) +
+  scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
   geom_errorbar(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   ylim(1,4.5) +
@@ -454,17 +465,18 @@ se <- ggplot(raw , aes(Sample_Type, Shannon)) +
   theme_bw() + 
   ylab("Shannon Entropy") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+        legend.position = "none", text = element_text(size=12), axis.title.y = element_text(size=10), 
+        plot.margin = unit(c(0,0,0,0), "cm"))
 se
 
 #Legend formatting
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3.5) +
   ylim(-0.1, 0.1) +
   theme_void() +
-  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"), text=element_text(size=16))
 b
-shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
+shannon <- plot_grid(se,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='l')
 shannon
 
 
@@ -472,7 +484,7 @@ shannon
 simpson <- ggplot(raw , aes(Sample_Type, Inv.Simpson)) + 
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) + 
-  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=2) + 
+  geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=1.5) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Inv Simpson"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
@@ -488,7 +500,7 @@ simpson
 
 #Legend formatting
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size = 4) +
   ylim(-0.1, 0.1) +
   theme_void() +
   theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
@@ -496,8 +508,8 @@ b
 simpsonplot <- plot_grid(simpson,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
 simpsonplot
 
-ggsave(here("outputs/figures/SupplementaryFigure3_InverseSimpson.pdf"), width=6, h=6, dpi=300)
-ggsave(here("outputs/figures/SupplementaryFigure3_InverseSimpson.jpeg"), width=6, h=6, dpi=300)
+ggsave(here("outputs/figures/SupplementaryFigure2_InverseSimpson.pdf"), width=6, h=6, dpi=300)
+ggsave(here("outputs/figures/SupplementaryFigure2_InverseSimpson.jpeg"), width=6, h=6, dpi=300)
 
 
 #Figure 3E:Phylum forest plotting 
@@ -519,7 +531,7 @@ bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction*100, color=Sample_Type), size=3) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(90, 95, 70, 75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -527,14 +539,14 @@ bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..
   ylab("Relative Abundance (%)") + 
   xlab("Bacteroidetes") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+        legend.position = "none", axis.title.y=element_text(size=10), axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.x = element_text(size=10))
 bact
 
 firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Firmicutes*100)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(90, 95, 70,75), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -543,28 +555,28 @@ firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Fi
   xlab("Firmicutes") + 
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
-        axis.ticks.y = element_blank(), axis.text.y = element_blank())
+        axis.title.x = element_text(size=10))
 
 act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Actinobacteria*100)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
-  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(25, 29, 17, 21, 17), 
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
+  stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(15, 17, 11, 13, 13), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Relative Abundance") + 
   xlab("Actinobacteria") + 
-  ylim(0,100)+
+  ylim(0,20)+
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
-        axis.ticks.y = element_blank(), axis.text.y = element_blank())
+        axis.title.x= element_text(size=10))
 act
 vir <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Viruses*100)) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Viruses") %>% filter(p.adj <= 0.05), y.position=c(0.45, 0.38, 0.41, 0.38, 0.41),
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
@@ -572,7 +584,8 @@ vir <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Vir
   xlab("Viruses") + 
   ylim(0,0.5)+
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank())
+        legend.position = "none", text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), 
+        axis.title.y = element_blank(), axis.title.x = element_text(size=10))
 
 vir
 
@@ -580,21 +593,21 @@ fungi <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..F
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels) +
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0.1, size=1) +
-  geom_point(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=3) +
+  geom_point(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Fungi") %>% filter(p.adj <= 0.05), y.position=c(0.15, 0.13),
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Relative Abundance") + 
   xlab("Fungi") + 
-  ylim(0,0.5) +
+  ylim(0,0.2) +
   theme(panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", 
         text = element_text(size=12),  axis.text.x = element_blank(), axis.ticks.x = element_blank(), axis.title.y = element_blank(), 
-        axis.ticks.y = element_blank(), axis.text.y = element_blank())
+        axis.title.x = element_text(size=10))
 
 fungi
 
-pdiff <- plot_grid(bact, firm, act, vir, fungi, nrow=1, ncol=5, rel_widths = c(1.3, 1, 1, 1.1, 1))
+pdiff <- plot_grid(bact, firm, act, vir, fungi, nrow=1, ncol=5, rel_widths = c(1.15, 1, 1, 1, 1))
 pdiff
 
 
@@ -603,14 +616,16 @@ dummy <- ggplot(bracken_pheno, aes(x=reorder(Sample, PlotOrder.x), y=rel_abundan
   theme_bw() + 
   scale_color_manual(values=condition_palette, labels=condition_labels2) + 
   theme(plot.margin = unit(c(0,0,0,0), "cm")) + 
-  theme(text = element_text(size=12)) 
+  theme(text = element_text(size=16)) 
 dummy
 b <- get_legend(dummy)
 
 pdiff_all <- plot_grid(pdiff, b, nrow=1, ncol=2, rel_widths = c(1, 0.24))
 pdiff_all
-ggsave(here("outputs/figures/SupplementaryFigure5_PhylumAbundances.pdf"), dpi=300, h=3.2, w=10)
-ggsave(here("outputs/figures/SupplementaryFigure5_PhylumAbundances.jpeg"), dpi=300, h=3.2, w=10)
+
+
+# ggsave(here("outputs/figures/SupplementaryFigure5_PhylumAbundances.pdf"), dpi=300, h=3.2, w=10)
+# ggsave(here("outputs/figures/SupplementaryFigure5_PhylumAbundances.jpeg"), dpi=300, h=3.2, w=10)
 
 
 #Figure 3D: Metagenomic Bray Curtis #
@@ -635,9 +650,9 @@ bc_across <- bc_across %>% mutate(group1 = fct_relevel(group1,  "OF", "OR", "OH"
 
 bc_plot <- ggplot(bc_across, aes(x=group1, y=bcdist)) + 
   geom_vline(aes(xintercept=3.5), alpha=0.2, size=0.3) + 
-  geom_jitter(width=0.2, aes(color=group1),  shape=16, size=2) + 
+  geom_jitter(width=0.2, aes(color=group1),  shape=16, size=1.5) + 
   scale_color_manual(values=condition_palette) +
-  scale_x_discrete(labels=condition_labels) +
+  scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
   geom_errorbar(data=bc_model, inherit.aes=FALSE, aes(x=Condition, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=bc_model, inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
   ylim(0,0.75) +
@@ -646,27 +661,28 @@ bc_plot <- ggplot(bc_across, aes(x=group1, y=bcdist)) +
   theme_bw() + 
   ylab("Bray-Curtis Dissimilarity") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+        legend.position = "none", text = element_text(size=12), axis.title.y = element_text(size=10), 
+        plot.margin = unit(c(0,0,0,0), "cm"))
 bc_plot
 
 #Legend formatting
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1") %>% filter(Sample_Type != "NF"), aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3.5) +
   ylim(-0.05, 0.05) +
   theme_void() +
-  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"))
+  theme(plot.margin = unit(c(0.0, 0, 0.0, 0), "cm"), text = element_text(size=14))
 b
-bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.05), align="v", axis='l')
+bc_full <- plot_grid(bc_plot,b, nrow=2, ncol=1, rel_heights=c(1,0.1), align="v", axis='l')
 bc_full
 
 #Figure3C: Relative Richness 0.01%
 p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
   geom_vline(aes(xintercept=1.5), alpha=0.2, size=0.3) +
   geom_vline(aes(xintercept=4.5), alpha=0.2, size=0.3) +
-  geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=2) +
+  geom_jitter(width=0.2, aes(color=Sample_Type), shape=16, size=1.5) +
   scale_fill_manual(values=condition_palette) +
   scale_color_manual(values=condition_palette) +
-  scale_x_discrete(labels=condition_labels) +
+  scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
   geom_errorbar(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
   geom_point(data=model %>% filter(feature == "Richness 0.01%"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121),
@@ -677,30 +693,56 @@ p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
   ylab("Number of Genera\n>0.01% Relative Abundance") +
   ylim(50,130) +
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
-        legend.position = "none", text = element_text(size=12), plot.margin = unit(c(0,0,0,0), "cm"))
+        legend.position = "none", text = element_text(size=12), axis.title.y = element_text(size = 10), plot.margin = unit(c(0,0,0,0), "cm"))
 
 p
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) +
-  geom_text(aes(y=0, label=hiddenLabel), fontface="bold") +
+  geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3.5) +
   ylim(-0.5, 0.5) +
   theme_void() +
   theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))
 b
 
-richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='l')
+richness <- plot_grid(p,b, nrow=2, ncol=1, rel_heights=c(1, 0.1 ), align="v", axis='l')
 richness
 
 #Plot Figure 3!
 
-a <- plot_grid(fig3a,nrow=1,ncol=1,scale=0.96,labels=c("a"))
+# Deprecated layout
+# a <- plot_grid(fig3a, pdiff, nrow=1,ncol=2,scale=0.95,rel_widths=c(1.5,1.1),labels=c("a","b"), align = "v")
+# a
+# b <- plot_grid(shannon, richness,bc_full,nrow=1,ncol=3, scale=0.9, rel_widths=c(1, 1,1),labels=c("c","d","e"), align="v", axis="tb")
+# b
+# three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1.6, 1), align="h", axis="lr")
+# three
+# 
+# ggsave(here("outputs/figures/Figure2_Test.pdf"), dpi=300, h=5, w=8)
+
+# Deprecated layout
+# a <- plot_grid(fig3a, nrow=1,ncol=1,scale=0.95, labels=c("a"))
+# a
+# b <- plot_grid(pdiff, shannon, nrow=1,ncol=2, scale=0.9, rel_widths=c(1.6, 1),labels=c("b", "c"), align="v", axis="tb")
+# b
+# c <- plot_grid(richness, NULL, bc_full, nrow=1,ncol=3, scale=0.9, rel_widths=c(1.2, 0.2, 1),labels=c("d","", "e"), align="v", axis="tb")
+# c
+# three<-plot_grid(a, b, c, nrow=3, ncol=1, rel_widths=c(1, 1,1), rel_heights=c(1,0.7,0.7), align="h", axis="lr")
+# three
+# 
+# ggsave(here("outputs/figures/Figure2.pdf"), dpi=300, h=9, w=8.5)
+# ggsave(here("outputs/figures/Figure2.jpeg"), dpi=300, h=9, w=8.5)
+
+a <- plot_grid(fig3a, nrow=1,ncol=1,scale=1, labels=c("a"))
 a
-b <- plot_grid(shannon, richness,bc_full,nrow=1,ncol=3, scale=0.9, rel_widths=c(1, 1,1),labels=c("b","c","d"), align="v", axis="tb")
+b <- plot_grid(pdiff, nrow=1,ncol=1, scale=1, rel_widths=c(1),labels=c("b"), align="v", axis="tb")
 b
-three<-plot_grid(a, b, nrow=2, ncol=1, rel_widths=c(1.6, 1), align="h", axis="lr")
+c <- plot_grid(shannon, richness, bc_full, nrow=1,ncol=3, scale=0.9, rel_widths=c(1.1, 1.2, 1),labels=c("c","d", "e"), align="v", axis="tb")
+c
+three<-plot_grid(a, NULL, b, NULL, c, nrow=5, ncol=1, rel_widths=c(1,1, 1, 1, 1), rel_heights=c(1,0.1, 0.6,0.05, 0.8), align="h", axis="lr")
 three
 
-ggsave(here("outputs/figures/Figure3.pdf"), dpi=300, h=11, w=17)
-ggsave(here("outputs/figures/Figure3.jpeg"), dpi=300, h=11, w=17)
+ggsave(here("outputs/figures/Figure2.pdf"), dpi=300, h=9, w=8.5)
+ggsave(here("outputs/figures/Figure2.jpeg"), dpi=300, h=9, w=8.5)
+
 
 ##### SUPPLEMENT #####
 # DNA BC
@@ -1161,7 +1203,7 @@ p <- ggplot(raw_extended, aes(x = Sample_Type, y=MicrobesPerGram)) +
   facet_wrap(vars(Donor), nrow=2) 
 p
 
-ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.pdf"), dpi=300, w=6, h=3.5)
-ggsave(here("outputs/figures/ReviewFigure_AbsoluteClustering.jpeg"), dpi=300, w=6, h=3.5)
+ggsave(here("outputs/figures/SupplementaryFigure6_AbsoluteClustering.pdf"), dpi=300, w=6, h=3.5)
+ggsave(here("outputs/figures/SupplementaryFigure6_AbsoluteClustering.jpeg"), dpi=300, w=6, h=3.5)
 
 
