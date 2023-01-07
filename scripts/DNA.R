@@ -155,7 +155,7 @@ nfof <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="OF"), aes(x=Sa
   geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
   geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
-  scale_y_log10(limits = c(1e11, 5.5e12)) +
+  scale_y_log10(limits = c(1.3e11, 7e12)) +
   theme_bw() + 
   ylab("**OMNIgene**<br/>Microbes/Gram") + 
   ggtitle("Preservative") +
@@ -178,7 +178,7 @@ omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Typ
   geom_line(data=fbmodel%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
   geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
-  scale_y_log10(limits = c(1e11, 5.5e12)) +
+  scale_y_log10(limits = c(1.3e11, 7e12)) +
   theme_bw() + 
   ylab("Microbes/Gram") + 
   ggtitle("Temperature") +
@@ -201,7 +201,7 @@ nfzf <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="ZF"), aes(x=Sa
   geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
   geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
-  scale_y_log10(limits=c(3e10,2e12)) +
+  scale_y_log10(limits=c(3e10,4e12)) +
   theme_bw() + 
   ylab("**Zymo**<br/>Microbes/Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
@@ -217,7 +217,7 @@ zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Typ
   geom_line(data=fbmodel%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
   geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
-  scale_y_log10(limits=c(3e10,2e12)) +
+  scale_y_log10(limits=c(3e10,4e12)) +
   theme_bw() + 
   ylab("Microbes/Gram") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
