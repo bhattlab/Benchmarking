@@ -81,6 +81,15 @@ demo_output/
 # ignore hidden files
 .*
 outputs/figures/._*
+
+# extraneous SNV analysis files
+DNA/4.SNV/0.inputreads
+DNA/4.SNV/2.seqtk_fprau/1.kraken/extracted_reads
+DNA/4.SNV/2.seqtk_fprau/1.kraken/kraken2_classification
+DNA/4.SNV/2.seqtk_fprau/1.kraken/scripts
+DNA/4.SNV/2.seqtk_fprau/1.kraken/*out
+
+
 # History files
 XTvFlex/03_GC/curatedMetagenomics_samples_metadata.tsv
 XTvFlex/Rplots.pdf
