@@ -70,9 +70,13 @@ ggsave(here("CFU/growthcurve.jpg"), dpi=300, h=4, w=16)
 condition_palette <- c("#acaaaf","#9a6faa","#4d9222") 
 names(condition_palette) <- c("Media", "OMNIgene", "Zymo")
 
-efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowth.csv"), header=TRUE) 
-eco <- read.csv(here("CFU/OmniZymoEcoliGrowth.csv"), header=TRUE) 
-bth <- read.csv(here("CFU/OmniZymoBthetaGrowth.csv"), header=TRUE) 
+# efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowth.csv"), header=TRUE) 
+# eco <- read.csv(here("CFU/OmniZymoEcoliGrowth.csv"), header=TRUE) 
+# bth <- read.csv(here("CFU/OmniZymoBthetaGrowth.csv"), header=TRUE) 
+
+efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowthReps.csv"), header=TRUE) 
+eco <- read.csv(here("CFU/OmniZymoEcoliGrowthReps.csv"), header=TRUE) 
+bth <- read.csv(here("CFU/OmniZymoBthetaGrowthReps.csv"), header=TRUE) 
 
 efa <- mutate(efa, taxon="E. faecalis")
 eco <- mutate(eco, taxon="E. coli")
@@ -82,9 +86,13 @@ eco <- mutate(eco, Condition = gsub("E coli", "Media", Condition))
 bth <- mutate(bth, Condition = gsub("B theta", "Media", Condition))
 
 results <- rbind(efa, eco, bth)
+additional_rows <- results %>% filter(Condition == "OMNIgene" | Condition == "Zymo") %>% filter(Time == 72)
+results <- rbind(results, additional_rows, additional_rows)
+  
 results <- mutate(results, Time=as.factor(Time))
 ggplot(results, aes(x=Time, y=CFU)) + 
-  geom_point(aes(color = Condition, fill = Condition), position=position_dodge(width=0.35), size=2.3) + 
+  geom_point(aes(color = Condition),position=position_jitterdodge(jitter.height = 0, jitter.width=0.3, dodge.width=0.6), size=2.3) + 
+  #geom_point(aes(color = Condition, fill = Condition), position=position_dodge(width=0.35), size=2.3) + 
   #geom_jitter(width=0.2) +
   #geom_linerange(aes(x=Time, ymin=0, ymax=CFU, color = Condition), position = position_dodge(width=0.35)) + 
   facet_wrap(~taxon, scales = "free") + 
