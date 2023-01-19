@@ -15,16 +15,16 @@ library(stringr)
 library(paletteer) 
 paletteer_d("nbapalettes::pacers_venue")
 
-efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowth.csv"), header=TRUE) 
-eco <- read.csv(here("CFU/OmniZymoEcoliGrowth.csv"), header=TRUE) 
-bth <- read.csv(here("CFU/OmniZymoBthetaGrowth.csv"), header=TRUE) 
+efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowthReps.csv"), header=TRUE) 
+eco <- read.csv(here("CFU/OmniZymoEcoliGrowthReps.csv"), header=TRUE) 
+bth <- read.csv(here("CFU/OmniZymoBthetaGrowthReps.csv"), header=TRUE) 
 
 condition_palette <- paletteer_d("nbapalettes::pacers_venue")
 
 #Plot B theta growth
 t <- ggplot(bth, aes(x = Time, y=CFU)) + 
   geom_point(width=0.2, aes(color=Condition), shape=16, size=2.5, alpha=0.4) + 
-  geom_line(aes(color=Condition), alpha=0.5) +
+  #geom_line(aes(color=Condition), alpha=0.5) +
   theme_bw() + 
   xlab("Time (hours)") +
   ylab("CFU/mL") +
@@ -85,10 +85,11 @@ results <- rbind(efa, eco, bth)
 results <- mutate(results, Time=as.factor(Time))
 ggplot(results, aes(x=Time, y=CFU)) + 
   geom_point(aes(color = Condition, fill = Condition), position=position_dodge(width=0.35), size=2.3) + 
-  geom_linerange(aes(x=Time, ymin=0, ymax=CFU, color = Condition), position = position_dodge(width=0.35)) + 
+  #geom_jitter(width=0.2) +
+  #geom_linerange(aes(x=Time, ymin=0, ymax=CFU, color = Condition), position = position_dodge(width=0.35)) + 
   facet_wrap(~taxon, scales = "free") + 
   theme_bw() +
-  ylab("CFU per Microliter") + 
+  ylab("Million CFU per Milliliter") + 
   xlab("Hours") + 
   scale_color_manual(values = condition_palette) + 
   scale_fill_manual(values = condition_palette) +

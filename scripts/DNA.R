@@ -11,6 +11,7 @@ library(reshape2)
 library(ggnewscale)
 library(ggtext)
 library(stringr)
+library(ggpmisc)
 
 # build a named color palette for each condition
 condition_palette <- c("#762983","#9a6faa","#c3a5d0","#acaaaf","#7ebd42","#4d9222","#26641a") 
@@ -1180,4 +1181,136 @@ p
 ggsave(here("outputs/figures/SupplementaryFigure6_AbsoluteClustering.pdf"), dpi=300, w=6, h=3.5)
 ggsave(here("outputs/figures/SupplementaryFigure6_AbsoluteClustering.jpeg"), dpi=300, w=6, h=3.5)
 
+#qPCR Standard Curves
+#Plate 1: Standard Curve
+#Create and edit unified sample datafile
+qPCR_samplewellp1 <- read.csv(here("qPCR/Plate_1/Plate1_Layout.csv"), sep=",", header=TRUE)
+qPCR_datap1 <- read.csv(here("qPCR/Plate_1/HotPooqPCR_Plate1.csv"), sep=",", header=TRUE)
+
+colnames(qPCR_samplewellp1)[colnames(qPCR_samplewellp1) == "Well384"] <- "Well"
+qPCRplate1 <- merge(qPCR_samplewellp1,qPCR_datap1, by="Well")
+
+#Make standard curve for plate 1
+qPCRplate1 <- qPCRplate1 %>% filter(grepl("standard", SampleName))
+qPCRplate1 <- filter(qPCRplate1, PCR_Replicate!="Rep4")
+qPCRplate1 <- qPCRplate1 %>% separate(SampleName, c("Standard", "DilutionFactor"), remove=FALSE, sep='_')
+qPCRplate1 <- mutate(qPCRplate1, DilutionFactor=as.numeric(gsub(",","",DilutionFactor)))
+qPCRplate1 <- mutate(qPCRplate1, Cq=as.numeric(Cq))
+qPCRplate1 <- mutate(qPCRplate1, Standard=gsub("standardB","B vulgatus",gsub("standardF","F prausnitzii", Standard)))
+
+#Include copy number for the standards
+copyf <- 2.456*10^11
+copyb <- 2.171*10^11
+qPCRplate1 <- mutate(qPCRplate1, CopyNumber=ifelse(Standard=="B vulgatus", copyb/DilutionFactor, copyf/DilutionFactor))
+qPCRplate1 <- qPCRplate1 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
+
+#Standard curve using both B vulgatus and F prausnitizii data
+plate1 <- ggplot(data = qPCRplate1, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x, color="black") + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE, label.y = "top", label.x = "right") +         
+  geom_point(aes(color=Standard)) +
+  theme_bw() +
+  labs(title="Plate 1") +
+  theme(legend.position="none")
+plate1
+
+#Plate 2: Standard Curve
+#Create and edit unified sample datafile
+qPCR_samplewellp2 <- read.csv(here("qPCR/Plate_2/qPCR_plate2_layout.csv"), sep=",", header=TRUE)
+qPCR_datap2 <- read.csv(here("qPCR/Plate_2/HotPooqPCR_Plate2.csv"), sep=",", header=TRUE)
+
+colnames(qPCR_samplewellp2)[colnames(qPCR_samplewellp2) == "Well384"] <- "Well"
+qPCRplate2 <- merge(qPCR_samplewellp2,qPCR_datap2, by="Well")
+#Make standard curve for plate 2
+qPCRplate2 <- qPCRplate2 %>% filter(grepl("standard", SampleName))
+qPCRplate2 <- filter(qPCRplate2, PCR_Replicate!="Rep4")
+qPCRplate2 <- qPCRplate2 %>% separate(SampleName, c("Standard", "DilutionFactor"), remove=FALSE, sep='_')
+qPCRplate2 <- mutate(qPCRplate2, DilutionFactor=as.numeric(gsub(",","",DilutionFactor)))
+qPCRplate2 <- mutate(qPCRplate2, Cq=as.numeric(Cq))
+qPCRplate2 <- mutate(qPCRplate2, Standard=gsub("standardB","B vulgatus",gsub("standardF","F prausnitzii", Standard)))
+
+#Include copy number for the standards
+copyf <- 2.456*10^11
+copyb <- 2.171*10^11
+qPCRplate2 <- mutate(qPCRplate2, CopyNumber=ifelse(Standard=="B vulgatus", copyb/DilutionFactor, copyf/DilutionFactor))
+
+#Standard curve using both B vulgatus and F prausnitizii data
+qPCRplate2 <- qPCRplate2 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
+
+plate2 <- ggplot(data = qPCRplate2, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x, color="black") + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE, label.y = "top", label.x = "right") +         
+  geom_point(aes(color=Standard)) +
+  theme_bw() +
+  labs(title="Plate 2") +
+  theme(legend.position="none")
+plate2
+
+# Plate 3: Standard Curve
+#Create and edit unified sample datafile
+qPCR_samplewellp3 <- read.csv(here("qPCR/Plate_3/qPCR_plate3_layout.csv"), sep=",", header=TRUE)
+qPCR_datap3 <- read.csv(here("qPCR/Plate_3/HotPooqPCR_Plate3.csv"), sep=",", header=TRUE)
+
+colnames(qPCR_samplewellp3)[colnames(qPCR_samplewellp3) == "Well384"] <- "Well"
+qPCRplate3 <- merge(qPCR_samplewellp3,qPCR_datap3, by="Well")
+
+#Make standard curve for plate 3
+qPCRplate3 <- qPCRplate3 %>% filter(grepl("standard", SampleName))
+qPCRplate3 <- filter(qPCRplate3, PCR_Replicate!="Rep4")
+qPCRplate3 <- qPCRplate3 %>% separate(SampleName, c("Standard", "DilutionFactor"), remove=FALSE, sep='_')
+qPCRplate3 <- mutate(qPCRplate3, DilutionFactor=as.numeric(gsub(",","",DilutionFactor)))
+qPCRplate3 <- mutate(qPCRplate3, Cq=as.numeric(Cq))
+qPCRplate3 <- mutate(qPCRplate3, Standard=gsub("standardB","B vulgatus",gsub("standardF","F prausnitzii", Standard)))
+
+#Include copy number for the standards
+copyf <- 2.456*10^11
+copyb <- 2.171*10^11
+qPCRplate3 <- mutate(qPCRplate3, CopyNumber=ifelse(Standard=="B vulgatus", copyb/DilutionFactor, copyf/DilutionFactor))
+
+#Standard curve using both B vulgatus and F prausnitizii data
+qPCRplate3 <- qPCRplate3 %>% mutate(logCopyNumber=log10(CopyNumber)) #log10 of the copy number
+
+plate3 <- ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x, color="black") + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE, label.y = "top", label.x = "right") +         
+  geom_point(aes(color=Standard)) +
+  theme_bw() +
+  labs(title="Plate 3")  +
+  xlab("log(Copy Number)") +
+  theme(legend.position="none")
+plate3
+
+#Plot legend
+p <- ggplot(data = qPCRplate3, aes(x = logCopyNumber, y = Cq)) +
+  geom_smooth(method = "lm", se=FALSE, formula = y~x) + 
+  stat_poly_eq(formula  = y~x,
+               eq.with.lhs = "italic(y)~`=`~",
+               eq.x.rhs    = "~italic(x)",
+               aes(label   = paste(..eq.label..)), 
+               parse = TRUE) +         
+  geom_point(aes(color=Standard)) +
+  theme_bw()
+l <- get_legend(p)
+
+#Plot standard curves together
+sup6 <- plot_grid(plate1, plate2, plate3, nrow=1, ncol=3, labels =c("a","b","c"))
+sup6
+
+s6 <- plot_grid(sup6, l, nrow=1, ncol=2, rel_widths=c(1, 0.1))
+s6
+
+ggsave(here("outputs/figures/SupplementaryFigure6_StandardCurves.jpeg"), dpi=300, w=13, h=5)
+ggsave(here("outputs/figures/SupplementaryFigure6_StandardCurves.pdf"), dpi=300, w=13, h=5)
 
