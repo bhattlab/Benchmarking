@@ -95,7 +95,8 @@ bt <- ggplot(results %>% filter(taxon == "B. theta"), aes(x=Time, y=CFU, color=C
   ggtitle(expression(~italic("B. theta"))) + 
   scale_color_manual(values = condition_palette) + 
   scale_fill_manual(values = condition_palette) +
-  cfu_styling
+  cfu_styling + 
+  theme(legend.position = "bottom", legend.direction = "horizontal")
 
 ec <- ggplot(results %>% filter(taxon == "E. coli"), aes(x=Time, y=CFU, color=Condition)) + 
   geom_beeswarm(dodge.width=1, size=2, cex = 4, method="square") +
@@ -119,12 +120,12 @@ ef <- ggplot(results %>% filter(taxon == "E. faecalis"), aes(x=Time, y=CFU, colo
 
 cfuleg <- get_legend(bt)
 
-plot_grid(bt + theme(legend.position = "none"), 
+temp <- plot_grid(bt + theme(legend.position = "none"), 
           ec + theme(axis.title.y = element_blank(), legend.position = "none"), 
           ef + theme(axis.title.y = element_blank(), legend.position = "none"), 
-          cfuleg, 
-          nrow=1, ncol=4, rel_widths = c(1,1,1,0.4))
+          nrow=1, ncol=3, rel_widths = c(1,1,1))
 
+plot_grid(temp, cfuleg, nrow=2, ncol=1, rel_heights = c(1, 0.1))
 
-ggsave(here("CFU/growthplot.pdf"), dpi=300, h=2.75, w=8)
-ggsave(here("CFU/growthplot.jpg"), dpi=300, h=2.75, w=8)
+ggsave(here("CFU/growthplot.pdf"), dpi=300, h=3, w=8)
+ggsave(here("CFU/growthplot.jpg"), dpi=300, h=3, w=8)
