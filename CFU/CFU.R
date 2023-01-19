@@ -86,8 +86,8 @@ eco <- mutate(eco, Condition = gsub("E coli", "Media", Condition))
 bth <- mutate(bth, Condition = gsub("B theta", "Media", Condition))
 
 results <- rbind(efa, eco, bth)
-additional_rows <- results %>% filter(Condition == "OMNIgene" | Condition == "Zymo") %>% filter(Time == 72)
-results <- rbind(results, additional_rows, additional_rows)
+#additional_rows <- results %>% filter(Condition == "OMNIgene" | Condition == "Zymo") %>% filter(Time == 72)
+#results <- rbind(results, additional_rows, additional_rows)
   
 results <- mutate(results, Time=as.factor(Time))
 ggplot(results, aes(x=Time, y=CFU)) + 
