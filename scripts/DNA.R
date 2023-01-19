@@ -103,9 +103,10 @@ p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) +
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Total Microbes per Gram") + 
+  ggtitle(" ") +
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), 
-        axis.title.y = element_text(size=10))
+        axis.title.y = element_text(size=10), plot.title=element_text(size=8.5))
 
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
   geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3) + 
@@ -285,14 +286,12 @@ r <- ggplot(raw, aes(x = reorder(Sample_Type, PlotOrder), y=ratio.of.B.F)) +
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bacteroidetes/Firmicutes \n") + 
+  ggtitle(" ") +
   ylim(0,2.5) + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=10), axis.title.y = element_text(size=10), 
-        plot.margin = unit(c(0,0,0,0), "cm"))
+        plot.margin = unit(c(0,0,0,0), "cm"), plot.title=element_text(size=8.5))
 r
-
-
-#ggsave(here("QSU_Data/Figure2ratio.jpeg"), w=5, h=4, dpi=300)
 
 #Plot Figure 2C together
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
@@ -304,13 +303,77 @@ b
 r<-plot_grid(r,b, nrow = 2, ncol = 1,rel_heights=c(1,0.1), align="v", axis="l")
 r
 
-#ggsave(here("QSU_Data/Figure2Ceven.jpeg"), w=6.5, h=6.5, dpi=300)
+cfu_palette <- c("#acaaaf","#9a6faa","#4d9222") 
+names(cfu_palette) <- c("Media", "OMNIgene", "Zymo")
+
+cfu_styling <-   theme(panel.grid.major.x = element_blank(), text = element_text(size=10), plot.title = element_text(size=8.5))
+
+efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowthReps.csv"), header=TRUE) 
+eco <- read.csv(here("CFU/OmniZymoEcoliGrowthReps.csv"), header=TRUE) 
+bth <- read.csv(here("CFU/OmniZymoBthetaGrowthReps.csv"), header=TRUE) 
+
+efa <- mutate(efa, taxon="E. faecalis")
+eco <- mutate(eco, taxon="E. coli")
+bth <- mutate(bth, taxon="B. theta")
+efa <- mutate(efa, Condition=gsub("E faecalis", "Media", Condition))
+eco <- mutate(eco, Condition = gsub("E coli", "Media", Condition))
+bth <- mutate(bth, Condition = gsub("B theta", "Media", Condition))
+
+results <- rbind(efa, eco, bth)
+
+results <- mutate(results, Time=as.factor(Time))
+bt <- ggplot(results %>% filter(taxon == "B. theta"), aes(x=Time, y=CFU, color=Condition)) + 
+  geom_beeswarm(dodge.width=1, size=1, cex = 4, method="square") +
+  theme_bw() +
+  ylab("Million CFU per Milliliter") + 
+  xlab("Hours") + 
+  ggtitle(expression(~italic("B. theta"))) + 
+  scale_color_manual(values = cfu_palette) + 
+  scale_fill_manual(values = cfu_palette) +
+  cfu_styling + 
+  theme(legend.position = "bottom")
+
+ec <- ggplot(results %>% filter(taxon == "E. coli"), aes(x=Time, y=CFU, color=Condition)) + 
+  geom_beeswarm(dodge.width=1, size=1, cex = 4, method="square") +
+  theme_bw() +
+  ylab("Million CFU per Milliliter") + 
+  xlab("Hours") + 
+  ggtitle(expression(~italic("E. coli"))) + 
+  scale_color_manual(values = cfu_palette) + 
+  scale_fill_manual(values = cfu_palette) +
+  cfu_styling
+
+ef <- ggplot(results %>% filter(taxon == "E. faecalis"), aes(x=Time, y=CFU, color=Condition)) + 
+  geom_beeswarm(dodge.width=1, size=1, cex = 4, method="square") +
+  theme_bw() +
+  ylab("Million CFU per Milliliter") + 
+  xlab("Hours") + 
+  ggtitle(expression(~italic("E. faecalis"))) + 
+  scale_color_manual(values = cfu_palette) + 
+  scale_fill_manual(values = cfu_palette) +
+  cfu_styling
+
+cfuleg <- get_legend(bt)
+
+cfu_midplot <- plot_grid(bt + theme(legend.position = "none"), 
+          ec + theme(axis.title.y = element_blank(), legend.position = "none"), 
+          ef + theme(axis.title.y = element_blank(), legend.position = "none"), 
+          nrow=1, ncol=3, rel_widths = c(1.1,1,1))
+cfu_midplot
+cfu_plot <- plot_grid(cfu_midplot, cfuleg, nrow=2, ncol=1, rel_heights= c(1, 0.1))
+cfu_plot
 
 #Plot Figure 2!
-two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("a","b", "c"), align = "v",axis="tb")
+two<-plot_grid(absolute, cfu_plot, fig2b, r, nrow=2, ncol=2, scale=0.9, labels=c("a","b", "c", "d"), align = "vh",axis="tb", rel_widths = c(1, 1.2, 1, 1.2))
 two
-ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=3.6, w=8.5)
-ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=3.6, w=8.5)
+ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=8, w=8.5)
+ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=8, w=8.5)
+
+#Plot Figure 2 without the CFU panel
+# two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("a","b", "c"), align = "v",axis="tb")
+# two
+# ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=3.6, w=8.5)
+# ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=3.6, w=8.5)
 
 
 ##### FIGURE 3 #####

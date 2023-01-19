@@ -11,6 +11,7 @@ library(reshape2)
 library(ggnewscale)
 library(ggtext)
 library(stringr)
+library(ggbeeswarm)
 
 library(paletteer) 
 paletteer_d("nbapalettes::pacers_venue")
@@ -70,9 +71,7 @@ ggsave(here("CFU/growthcurve.jpg"), dpi=300, h=4, w=16)
 condition_palette <- c("#acaaaf","#9a6faa","#4d9222") 
 names(condition_palette) <- c("Media", "OMNIgene", "Zymo")
 
-# efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowth.csv"), header=TRUE) 
-# eco <- read.csv(here("CFU/OmniZymoEcoliGrowth.csv"), header=TRUE) 
-# bth <- read.csv(here("CFU/OmniZymoBthetaGrowth.csv"), header=TRUE) 
+cfu_styling <-   theme(panel.grid.major.x = element_blank(), text = element_text(size=12))
 
 efa <- read.csv(here("CFU/OmniZymoEfaecalisGrowthReps.csv"), header=TRUE) 
 eco <- read.csv(here("CFU/OmniZymoEcoliGrowthReps.csv"), header=TRUE) 
@@ -86,23 +85,45 @@ eco <- mutate(eco, Condition = gsub("E coli", "Media", Condition))
 bth <- mutate(bth, Condition = gsub("B theta", "Media", Condition))
 
 results <- rbind(efa, eco, bth)
-#additional_rows <- results %>% filter(Condition == "OMNIgene" | Condition == "Zymo") %>% filter(Time == 72)
-#results <- rbind(results, additional_rows, additional_rows)
   
 results <- mutate(results, Time=as.factor(Time))
-ggplot(results, aes(x=Time, y=CFU)) + 
-  geom_point(aes(color = Condition),position=position_jitterdodge(jitter.height = 0, jitter.width=0.3, dodge.width=0.6), size=2.3) + 
-  #geom_point(aes(color = Condition, fill = Condition), position=position_dodge(width=0.35), size=2.3) + 
-  #geom_jitter(width=0.2) +
-  #geom_linerange(aes(x=Time, ymin=0, ymax=CFU, color = Condition), position = position_dodge(width=0.35)) + 
-  facet_wrap(~taxon, scales = "free") + 
+bt <- ggplot(results %>% filter(taxon == "B. theta"), aes(x=Time, y=CFU, color=Condition)) + 
+  geom_beeswarm(dodge.width=1, size=2, cex = 4, method="square") +
   theme_bw() +
   ylab("Million CFU per Milliliter") + 
   xlab("Hours") + 
+  ggtitle(expression(~italic("B. theta"))) + 
   scale_color_manual(values = condition_palette) + 
   scale_fill_manual(values = condition_palette) +
-  theme(panel.grid.major.x = element_blank(), strip.text.x = element_text(size = 12, color = "black", face = "bold.italic"), 
-        strip.background = element_rect(fill="white", color=NA), text = element_text(size=12))
+  cfu_styling
+
+ec <- ggplot(results %>% filter(taxon == "E. coli"), aes(x=Time, y=CFU, color=Condition)) + 
+  geom_beeswarm(dodge.width=1, size=2, cex = 4, method="square") +
+  theme_bw() +
+  ylab("Million CFU per Milliliter") + 
+  xlab("Hours") + 
+  ggtitle(expression(~italic("E. coli"))) + 
+  scale_color_manual(values = condition_palette) + 
+  scale_fill_manual(values = condition_palette) +
+  cfu_styling
+
+ef <- ggplot(results %>% filter(taxon == "E. faecalis"), aes(x=Time, y=CFU, color=Condition)) + 
+  geom_beeswarm(dodge.width=1, size=2, cex = 4, method="square") +
+  theme_bw() +
+  ylab("Million CFU per Milliliter") + 
+  xlab("Hours") + 
+  ggtitle(expression(~italic("E. faecalis"))) + 
+  scale_color_manual(values = condition_palette) + 
+  scale_fill_manual(values = condition_palette) +
+  cfu_styling
+
+cfuleg <- get_legend(bt)
+
+plot_grid(bt + theme(legend.position = "none"), 
+          ec + theme(axis.title.y = element_blank(), legend.position = "none"), 
+          ef + theme(axis.title.y = element_blank(), legend.position = "none"), 
+          cfuleg, 
+          nrow=1, ncol=4, rel_widths = c(1,1,1,0.4))
 
 
 ggsave(here("CFU/growthplot.pdf"), dpi=300, h=2.75, w=8)
