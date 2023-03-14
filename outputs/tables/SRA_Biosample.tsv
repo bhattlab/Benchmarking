@@ -1,0 +1,71 @@
+SampleName	SampleTitle	Organism	Host	IsolationSource	CollectionDate	GeoLocName	LatLong	SampCollectDevice	SampMatProcess	Donor
+D04_OR	Donor04 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D04
+D06_NF	Donor06 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D06
+D01_OF	Donor01 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D01
+D10_NF	Donor10 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D10
+D03_OH	Donor03 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D03
+D07_OH	Donor07 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D07
+D09_ZH	Donor09 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D09
+D10_ZF	Donor10 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D10
+D01_ZH	Donor01 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D01
+D05_OF	Donor05 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D05
+D03_ZR	Donor03 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D03
+D08_OR	Donor08 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D08
+D09_OF	Donor09 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D09
+D02_NF	Donor02 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D02
+D07_ZR	Donor07 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D07
+D06_ZF	Donor06 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D06
+D02_ZF	Donor02 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D02
+D05_ZH	Donor05 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D05
+D03_ZF	Donor03 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D03
+D01_OR	Donor01 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D01
+D07_ZF	Donor07 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D07
+D07_NF	Donor07 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D07
+D04_OH	Donor04 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D04
+D02_ZH	Donor02 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D02
+D10_ZH	Donor10 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D10
+D05_OR	Donor05 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D05
+D03_NF	Donor03 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D03
+D09_OR	Donor09 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D09
+D08_OH	Donor08 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D08
+D10_OF	Donor10 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D10
+D06_OF	Donor06 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D06
+D04_ZR	Donor04 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D04
+D06_ZH	Donor06 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D06
+D08_ZR	Donor08 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D08
+D02_OF	Donor02 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D02
+D03_OF	Donor03 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D03
+D07_OF	Donor07 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D07
+D03_ZH	Donor03 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D03
+D05_OH	Donor05 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D05
+D04_NF	Donor04 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D04
+D08_NF	Donor08 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D08
+D01_ZR	Donor01 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D01
+D09_OH	Donor09 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D09
+D04_ZF	Donor04 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D04
+D10_OR	Donor10 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D10
+D05_ZR	Donor05 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D05
+D09_ZR	Donor09 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D09
+D06_OR	Donor06 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D06
+D01_OH	Donor01 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D01
+D02_OR	Donor02 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D02
+D07_ZH	Donor07 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D07
+D08_ZF	Donor08 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D08
+D04_OF	Donor04 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D04
+D08_ZH	Donor08 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D08
+D10_ZR	Donor10 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D10
+D02_OH	Donor02 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D02
+D10_OH	Donor10 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D10
+D09_NF	Donor09 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D09
+D07_OR	Donor07 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D07
+D02_ZR	Donor02 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D02
+D06_ZR	Donor06 zymo 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	23C for 7 days	D06
+D09_ZF	Donor09 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D09
+D08_OF	Donor08 omnigene -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	Immediate storage at -80C	D08
+D01_NF	Donor01 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D01
+D04_ZH	Donor04 zymo 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	40C for 7 days	D04
+D05_ZF	Donor05 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D05
+D01_ZF	Donor01 zymo -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	Zymo DNA/RNA Shield	Immediate storage at -80C	D01
+D03_OR	Donor03 omnigene 23C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	23C for 7 days	D03
+D05_NF	Donor05 No Preservative -80C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	NA	Immediate storage at -80C	D05
+D06_OH	Donor06 omnigene 40C	human feces metagenome	Homo sapiens	not applicable	2021	USA:California	37.43 N 122.17 W	DNA Genotek OMR-200	40C for 7 days	D06

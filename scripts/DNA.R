@@ -12,6 +12,7 @@ library(ggnewscale)
 library(ggtext)
 library(stringr)
 library(ggpmisc)
+library(ggbeeswarm)
 
 # build a named color palette for each condition
 condition_palette <- c("#762983","#9a6faa","#c3a5d0","#acaaaf","#7ebd42","#4d9222","#26641a") 
@@ -126,6 +127,9 @@ fbsig <- filter(sig, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Ab
 
 condition_labelss <- c("40°C","23°C","-80°C","NP","-80°C","23°C","40°C")
 names(condition_labelss) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
+
+condition_labels2 <- c("OMNIgene 40°C","OMNIgene 23°C","OMNIgene -80°C","No Preservative -80°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
+names(condition_labels2) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
 #Plot Order
 fbmodel <- mutate(fbmodel, PhyCondition=gsub("Absolute Abundance: ", "", paste(Condition,feature,sep="")))
@@ -366,14 +370,23 @@ cfu_plot
 #Plot Figure 2!
 two<-plot_grid(absolute, cfu_plot, fig2b, r, nrow=2, ncol=2, scale=0.9, labels=c("a","b", "c", "d"), align = "vh",axis="tb", rel_widths = c(1, 1.2, 1, 1.2))
 two
-ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=8, w=8.5)
-ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=8, w=8.5)
 
-#Plot Figure 2 without the CFU panel
-# two<-plot_grid(absolute, fig2b, r, nrow=1, ncol=3, scale=0.9, labels=c("a","b", "c"), align = "v",axis="tb")
-# two
-# ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=3.6, w=8.5)
-# ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=3.6, w=8.5)
+# get legend: 
+miniplot <- ggplot(raw, aes(x=Sample_Type, y=0)) + 
+  geom_point(aes(color=Sample_Type)) + 
+  theme_void() +
+  theme(legend.position="bottom", legend.title=element_blank(), 
+        legend.spacing.x = unit(0.08, "cm")) + 
+  scale_color_manual(values=condition_palette, labels=condition_labels2, breaks=c("NF","OF","OR","OH","ZF","ZR","ZH")) + 
+  guides(color=guide_legend(nrow=1))
+miniplot
+
+miniplot_legend <- get_legend(miniplot)
+
+plot_grid(two, miniplot_legend, nrow=2, ncol=1, rel_heights=c(1, 0.07), rel_widths = c(1,0.9))
+
+ggsave(here("outputs/figures/Figure5.jpeg"), dpi=300, h=8.3, w=8.5)
+ggsave(here("outputs/figures/Figure5.pdf"), dpi=300, h=8.3, w=8.5)
 
 
 ##### FIGURE 3 #####
@@ -572,8 +585,19 @@ b
 simpsonplot <- plot_grid(simpson,b, nrow=2, ncol=1, rel_heights=c(1,0.1), scale=0.95, align="v", axis='l')
 simpsonplot
 
-ggsave(here("outputs/figures/SupplementaryFigure2_InverseSimpson.pdf"), width=4, h=3.5, dpi=300)
-ggsave(here("outputs/figures/SupplementaryFigure2_InverseSimpson.jpeg"), width=4, h=3.5, dpi=300)
+miniplot_simpson <- ggplot(raw, aes(x=Sample_Type, y=0)) + 
+  geom_point(aes(color=Sample_Type)) + 
+  theme_void() +
+  theme(legend.title=element_blank()) + 
+  scale_color_manual(values=condition_palette, labels=condition_labels2, breaks=c("NF","OF","OR","OH","ZF","ZR","ZH")) + 
+  guides(color=guide_legend())
+miniplot_simpson
+
+miniplot_legend_simpson <- get_legend(miniplot_simpson)
+plot_grid(simpsonplot, miniplot_legend_simpson, ncol=2, nrow=1, rel_widths=c(1, 0.4))
+
+ggsave(here("outputs/figures/SupplementaryFigure2_InverseSimpson.pdf"), width=5.7, h=3.5, dpi=300)
+ggsave(here("outputs/figures/SupplementaryFigure2_InverseSimpson.jpeg"), width=5.7, h=3.5, dpi=300)
 
 
 #Figure 3E:Phylum forest plotting 
@@ -892,9 +916,10 @@ bc_full_rna <- plot_grid(bc_plot,test, nrow=2, ncol=1, rel_heights=c(1,0.05), al
 bc_full_rna
 
 
-plot_grid(bc_full_dna, bc_full_rna, nrow=1, ncol=2, scale=0.9, labels=c("a", "b"))
-ggsave(here("outputs/figures/SupplementaryFigure4_BrayCurtis.pdf"), dpi=300, w=8, h=4)
-ggsave(here("outputs/figures/SupplementaryFigure4_BrayCurtis.jpeg"), dpi=300, w=8, h=4)
+bcplot <- plot_grid(bc_full_dna, bc_full_rna, nrow=1, ncol=2, scale=0.9, labels=c("a", "b"))
+plot_grid(bcplot, miniplot_legend, ncol=1, nrow=2, rel_heights=c(1,0.07))
+ggsave(here("outputs/figures/SupplementaryFigure4_BrayCurtis.pdf"), dpi=300, w=8.5, h=4)
+ggsave(here("outputs/figures/SupplementaryFigure4_BrayCurtis.jpeg"), dpi=300, w=8.5, h=4)
 
 ##### GENUS HEATMAP
 #genus_sig <- read.csv(here("QSU_Data/sig_data_dna_full.tsv"), sep="\t", header=TRUE)
@@ -1105,8 +1130,9 @@ z
 oz <- plot_grid(o, z, nrow=2, ncol=1, align="v")
 oz
 
-ggsave(here("outputs/figures/SupplementaryFigure2_ActinoAbsoluteAbundance.jpeg"), dpi=300, w=5.5, h=5)
-ggsave(here("outputs/figures/SupplementaryFigure2_ActinoAbsoluteAbundance.pdf"), dpi=300, w=5.5, h=5)
+plot_grid(oz, miniplot_legend_simpson, nrow=1, ncol=2, rel_widths = c(1,.3))
+ggsave(here("outputs/figures/SupplementaryFigure2_ActinoAbsoluteAbundance.jpeg"), dpi=300, w=7, h=5)
+ggsave(here("outputs/figures/SupplementaryFigure2_ActinoAbsoluteAbundance.pdf"), dpi=300, w=7, h=5)
 
 #### DNA and RNA concentration ####
 # build a named color palette for each condition
@@ -1215,10 +1241,11 @@ test
 rna_plot <- plot_grid(p,test, nrow=2, ncol=1, rel_heights=c(1, 0.05 ), align="v", axis='lr')
 rna_plot
 
-plot_grid(dna_plot, rna_plot, ncol=2, nrow=1, scale=0.9, labels=c("a", "b"))
+concentration_plot <- plot_grid(dna_plot, rna_plot, ncol=2, nrow=1, scale=0.9, labels=c("a", "b"))
+plot_grid(concentration_plot, miniplot_legend, nrow=2, ncol=1, rel_heights=c(1,0.07))
 
-ggsave(here("outputs/figures/SupplementaryFigure1_Concentration.jpeg"), dpi=300, w=8, h=3.5)
-ggsave(here("outputs/figures/SupplementaryFigure1_Concentration.pdf"), dpi=300, w=8, h=3.5)
+ggsave(here("outputs/figures/SupplementaryFigure1_Concentration.jpeg"), dpi=300, w=8.5, h=4)
+ggsave(here("outputs/figures/SupplementaryFigure1_Concentration.pdf"), dpi=300, w=8.5, h=4)
 
 
 ##### REVISIONS #####
