@@ -97,7 +97,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) +
   geom_jitter(width=0.2, aes(color=Sample_Type),  shape=16, size=1) + 
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
-  geom_errorbar(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_errorbar(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0, size=1) +
   geom_point(data=model %>% filter(feature == "MicrobesPerGram"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2) +
   scale_y_log10() +
   stat_pvalue_manual(sig %>% filter(feature == "MicrobesPerGram") %>% filter(p.adj <= 0.05), y.position=c(13.8, 13.2, 12.8), 
@@ -108,7 +108,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=MicrobesPerGram)) +
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
         legend.position = "none", text = element_text(size=10), plot.margin = unit(c(0,0,0,0), "cm"), 
         axis.title.y = element_text(size=10), plot.title=element_text(size=8.5))
-
+p
 b <- ggplot(raw %>% filter(Patient == "D01" & Replication == "R1"), aes(x=Sample_Type, y=0)) + 
   geom_text(aes(y=0, label=hiddenLabel), fontface="bold", size=3) + 
   ylim(-0.5, 0.5) +
@@ -125,7 +125,7 @@ meltabs <- melt(abs, id.vars = "Sample_Type", variable.name = "Phyla", value.nam
 fbmodel <- filter(model, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Abundance: Bacteroidetes"))
 fbsig <- filter(sig, feature%in%c("Absolute Abundance: Firmicutes", "Absolute Abundance: Bacteroidetes"))
 
-condition_labelss <- c("40°C","23°C","-80°C","NP","-80°C","23°C","40°C")
+condition_labelss <- c("40°C","23°C","-80°C","-80°C","-80°C","23°C","40°C")
 names(condition_labelss) <- c("OH", "OR", "OF", "NF", "ZF", "ZR", "ZH")
 
 condition_labels2 <- c("OMNIgene 40°C","OMNIgene 23°C","OMNIgene -80°C","No Preservative -80°C","Zymo -80°C","Zymo 23°C","Zymo 40°C")
@@ -159,7 +159,7 @@ nfof <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="OF"), aes(x=Sa
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labels) +
   geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="OF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="OF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits = c(1.3e11, 7e12)) +
   theme_bw() + 
@@ -182,7 +182,7 @@ omni <- ggplot(meltabs %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Typ
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labels) +
   geom_line(data=fbmodel%>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="OF"|Sample_Type=="OR"|Sample_Type=="OH"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotPhyOrder), y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits = c(1.3e11, 7e12)) +
   theme_bw() + 
@@ -205,7 +205,7 @@ nfzf <- ggplot(meltabs %>% filter(Sample_Type=="NF"|Sample_Type=="ZF"), aes(x=Sa
   scale_color_manual(values=condition_palette, guide="none") +
   scale_x_discrete(labels=condition_labelss, guide = guide_axis(angle = 45)) +
   geom_line(data=fbmodel%>% filter(Sample_Type =="NF" | Sample_Type=="ZF"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="NF" | Sample_Type=="ZF"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits=c(3e10,4e12)) +
   theme_bw() + 
@@ -221,7 +221,7 @@ zymo <- ggplot(meltabs %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Typ
   scale_color_manual(values=condition_palette) +
   scale_x_discrete(labels=condition_labelss, guide = guide_axis(angle = 45)) +
   geom_line(data=fbmodel%>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), aes(y=prediction, group=feature, linetype=feature),position=position_dodge(0.2), color="grey", size=0.5)+
-  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0.1) +
+  geom_errorbar(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high, group=feature),position=position_dodge(0.2), size=0.5, width=0) +
   geom_point(data=fbmodel %>% filter(Sample_Type=="ZF"|Sample_Type=="ZR"|Sample_Type=="ZH"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction, group=feature, color=Sample_Type), size=1, show.legend = FALSE, position=position_dodge(width=0.2)) +
   scale_y_log10(limits=c(3e10,4e12)) +
   theme_bw() + 
@@ -284,9 +284,9 @@ r <- ggplot(raw, aes(x = reorder(Sample_Type, PlotOrder), y=ratio.of.B.F)) +
   scale_fill_manual(values=condition_palette) +
   scale_color_manual(values=condition_palette) + 
   scale_x_discrete(labels=condition_labels, guide = guide_axis(angle = 45)) +
-  geom_errorbar(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0.1, size=1) +
+  geom_errorbar(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, ymin=CI_low, ymax=CI_high), width=0, size=1) +
   geom_point(data=model %>% filter(feature == "Bacteroidetes/Firmicutes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2) +
-  stat_pvalue_manual(sig %>% filter(feature == "Bacteroidetes/Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(2.5, 2.4,2.3,2.2), 
+  stat_pvalue_manual(sig %>% filter(feature == "Bacteroidetes/Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(2.38, 2.5, 2.14, 2.26), 
                      tip.length=0, label = "p.signif") +
   theme_bw() + 
   ylab("Bacteroidetes/Firmicutes \n") + 
@@ -538,7 +538,7 @@ se <- ggplot(raw , aes(Sample_Type, Shannon)) +
   geom_point(data=model %>% filter(feature == "Shannon Entropy"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   ylim(1,4.5) +
   stat_pvalue_manual(sig %>% filter(feature == "Shannon Entropy") %>% filter(p.adj <= 0.05), y.position=c(4.1, 4.3, 3.7,3.9), 
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylab("Shannon Entropy") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
@@ -568,7 +568,7 @@ simpson <- ggplot(raw , aes(Sample_Type, Inv.Simpson)) +
   geom_point(data=model %>% filter(feature == "Inv Simpson"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction), size=2.5) +
   ylim(0,20) +
   stat_pvalue_manual(sig %>% filter(feature == "Inv Simpson") %>% filter(p.adj <= 0.05), y.position=c(19, 20, 18,19), 
-                      tip.length=0, label = "p.signif") +
+                      tip.length=0) + #HERE
   theme_bw() + 
   ylab("Inverse Simpson Index") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
@@ -623,7 +623,7 @@ bact <- ggplot(raw , aes(x=reorder(Sample_Type, PlotOrder), Relative.Abundance..
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0, size=0.8) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Bacteroidetes"), inherit.aes=FALSE, aes(x=Sample_Type, y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Bacteroidetes") %>% filter(p.adj <= 0.05), y.position=c(88, 95, 68, 75), 
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylim(0,100) + 
   ylab("Relative Abundance (%)  ") + 
@@ -640,7 +640,7 @@ firm <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Fi
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0, size=0.8) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Firmicutes"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Firmicutes") %>% filter(p.adj <= 0.05), y.position=c(90, 95, 70,75), 
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylim(0,100) + 
   ylab("Relative Abundance") + 
@@ -657,7 +657,7 @@ act <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Act
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0, size=0.8) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Actinobacteria"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Actinobacteria") %>% filter(p.adj <= 0.05), y.position=c(15, 17, 11, 13, 13), 
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylab("Relative Abundance") + 
   xlab("Actinobacteria") + 
@@ -674,7 +674,7 @@ vir <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..Vir
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0, size=0.8) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Viruses"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Viruses") %>% filter(p.adj <= 0.05), y.position=c(0.45, 0.38, 0.41, 0.38, 0.41),
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylab("Relative Abundance") + 
   xlab("Viruses") + 
@@ -693,7 +693,7 @@ fungi <- ggplot(raw , aes(reorder(Sample_Type, PlotOrder), Relative.Abundance..F
   geom_errorbar(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), ymin=CI_low*100, ymax=CI_high*100), width=0, size=0.8) +
   geom_point(data=model %>% filter(feature == "Relative Abundance: Fungi"), inherit.aes=FALSE, aes(x=reorder(Sample_Type, PlotOrder), y=prediction*100, color=Sample_Type), size=2) +
   stat_pvalue_manual(sig %>% filter(feature == "Relative Abundance: Fungi") %>% filter(p.adj <= 0.05), y.position=c(0.2, 0.15),
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylab("Relative Abundance") + 
   xlab("Fungi") + 
@@ -750,7 +750,7 @@ bc_plot <- ggplot(bc_across, aes(x=group1, y=bcdist)) +
   geom_point(data=bc_model, inherit.aes=FALSE, aes(x=Condition, y=Mean), size=2.5) +
   ylim(0,0.75) +
   stat_pvalue_manual(bc_sig_toNF %>% filter(p.adj <= 0.05), y.position=c(0.75, .65, .55, .65), 
-                      tip.length=0, label = "p.signif") +
+                      tip.length=0, size=3, label = "p.signif") + # HERE
   theme_bw() + 
   ylab("Bray-Curtis Dissimilarity") + 
   theme(axis.title.x = element_blank(), panel.grid.major.x = element_blank(), panel.grid.minor.x = element_blank(),
@@ -781,7 +781,7 @@ p <- ggplot(raw, aes(x = Sample_Type, y=Richness.0.01.)) +
   #stat_pvalue_manual(sig %>% filter(Feature == "Richness 0.01%"), y.position=c(127, 124, 118, 121, 118, 121),
   #                   tip.length=0, label = "p.signif") +
   stat_pvalue_manual(sig %>% filter(feature == "Richness 0.01%") %>% filter(p.adj <= 0.05), y.position=c(127, 124, 121),
-                     tip.length=0, label = "p.signif") +
+                     tip.length=0, size=3, size=3, label = "p.signif") + # HERE
   theme_bw() +
   ylab("Number of Genera\n>0.01% Relative Abundance") +
   ylim(50,130) +
@@ -809,8 +809,8 @@ c
 three<-plot_grid(a, NULL, b, NULL, c, nrow=5, ncol=1, rel_widths=c(1,1, 1, 1, 1), rel_heights=c(1,0.1, 0.6,0.05, 0.8), align="h", axis="lr")
 three
 
-ggsave(here("outputs/figures/Figure2.pdf"), dpi=300, h=9, w=8.5)
-ggsave(here("outputs/figures/Figure2.jpeg"), dpi=300, h=9, w=8.5)
+ggsave(here("outputs/figures/Figure2_test.pdf"), dpi=300, h=9, w=8.5)
+ggsave(here("outputs/figures/Figure2_test.jpeg"), dpi=300, h=9, w=8.5)
 
 
 ##### SUPPLEMENT #####
