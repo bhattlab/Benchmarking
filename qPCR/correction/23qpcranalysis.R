@@ -976,6 +976,7 @@ allcopiesul <- ggplot(allcopies %>% filter(Condition %in% c("NF", "OF", "ZF", "O
   theme(legend.position = "none") 
 allcopiesul
 
+
 #ggsave(here("qPCR/2023/outputs/allplatecopiesuL.jpg"), dpi=300, w = 5, h = 5)
 #Calculate copies/gram for each sample
 massnf <- (50/0.062)
